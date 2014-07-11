@@ -100,7 +100,7 @@ class DDParser:
         self.store_name = infile.stem
         # default to most recent
 
-        self.style = styles.get(self.store_name, max(styles.values))
+        self.style = styles.get(self.store_name, max(styles.values()))
         self.regex = self.make_regex(style=self.style)
 
         self.dataframes = []
@@ -112,7 +112,7 @@ class DDParser:
         self.pos_end = 3
 
     @staticmethod
-    def self._is_consistent(self, formatted):
+    def _is_consistent(formatted):
         """
         Given a list of tuples, make sure the column numbering is
         internally consistent.

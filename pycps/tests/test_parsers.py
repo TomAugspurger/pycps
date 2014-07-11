@@ -149,3 +149,14 @@ class TestDDParser(unittest.TestCase):
         expected = ('HdLIVQRT', 2, 6, 7)
         actual = self.parser.formatter(regex.match(st))
         self.assertEqual(expected, actual)
+
+    def test_is_consistent(self):
+        formatted = [('HhMONTH', 2, 38, 39),
+                     ('foo', 3, 40, 42)]
+        # not sure why self.assertRaises doesn't handle this
+        # self.assertRaises(self.parser._is_consistent(formatted),
+        #                   StopIteration)  # worked!
+        try:
+            self.parser._is_consistent(formatted)
+        except StopIteration:
+            pass  # worked!
