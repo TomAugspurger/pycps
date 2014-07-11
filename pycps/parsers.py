@@ -55,7 +55,7 @@ def _sub_path(v, f):
     m = re.match(pat, v)
     if m:
         to_sub = m.groups()[0]
-        v = re.sub(pat, f[to_sub].rstrip('/'), v)
+        v = re.sub(pat, f[to_sub].rstrip('/\\'), v)
     return v
 
 
@@ -86,7 +86,7 @@ class DDParser:
         self.pos_len = 1
         self.pos_start = 2
         self.pos_end = 3
-        self.store_name = self.get_store_name()
+        self.store_name = 
 
     def run(self):
         with open(self.infile, 'r') as f:
