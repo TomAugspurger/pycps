@@ -58,6 +58,7 @@ def _sub_path(v, f):
         v = re.sub(pat, f[to_sub].rstrip('/\\'), v)
     return v
 
+#-----------------------------------------------------------------------------
 
 class DDParser:
     """
@@ -97,7 +98,9 @@ class DDParser:
               }
 
         self.store_name = infile.stem
-        self.style = styles.get(self.store_name, None)
+        # default to most recent
+
+        self.style = styles.get(self.store_name, max(styles.values))
         self.regex = self.make_regex(style=self.style)
 
         self.dataframes = []
@@ -108,15 +111,42 @@ class DDParser:
         self.pos_start = 2
         self.pos_end = 3
 
+    @staticmethod
+    def self._is_consistent(self, formatted):
+        """
+        Given a list of tuples, make sure the column numbering is
+        internally consistent.
+
+        Checks that
+
+        1. width == (end - start) + 1
+        2. start_1 == end_0 + 1
+        """
+        g = iter(formatted)
+        current = next(g)
+
+        while True:  # till stopIteration
+            assert current[1] == current[3] - current[2] + 1
+            try:
+                old, current = current, next(g)
+                assert current[2] == old[3] + 1
+            except StopIteration:
+                # last one should still check first criteria
+                assert old[1] == old[3] - old[2] + 1
+                raise StopIteration
+
+
     def run(self):
-        with open(self.infile, 'r') as f:
-            for line in f:
-                # if self.previous_line is None:
-                    # self.ids = []
-                    # self.lenghts = []
-                    # self.starts = []
-                    # self.ends = []
-                self.analyze(line.rstrip(), f)
+        # make this as streamlike as possible.
+        with self.infile.open() as f:
+            # get all header lines
+            lines = filter(lambda x: self.regex.matching(x), f)
+
+            # regularize format; intentional thunk
+            formatted = [self.formatter(x) for x in lines]
+
+            # ensure consistency across lines
+            assert self._is_consistent(formatted)
 
             # Finally
             to_be_df = self.holder
@@ -129,10 +159,10 @@ class DDParser:
             self.dataframes.append(df)
 
     def analyze(self, line, f):
-        maybe_groups = self.regex.match(line)
+        maybe_groups = self.regex.match(line) #
 
         if maybe_groups:
-            formatted = self.formatter(maybe_groups)
+            formatted = self.formatter(maybe_groups) #
             # Return to main for loop under run
             if len(self.holder) == 0:
                 self.holder.append(formatted)
@@ -196,9 +226,13 @@ class DDParser:
 
     @staticmethod
     def make_regex(style=None):
-        # 0: jan1989
-        # 1: jan1998
-        # 2: aug2005/jan1994 (default)
+        """
+        Regex factory to match. Each dd has a style (just an id for that regex).
+        Some dds share styles.
+        The default style is the most recent.
+        """
+        # As new styles are added the current default should be moved into the dict.
+        # TODO: this smells terrible
         default = re.compile(r'[\x0c]{0,1}(\w+)[\s\t]*(\d{1,2})[\s\t]*(.*?)[\s\t]*\(*(\d+)\s*-\s*(\d+)\)*$')
         d = {0: re.compile(r'(\w{1,2}[\$\-%]\w*|PADDING)\s*CHARACTER\*(\d{3})\s*\.{0,1}\s*\((\d*):(\d*)\).*'),
              1: re.compile(r'D (\w+) \s* (\d{1,2}) \s* (\d*)'),
@@ -212,6 +246,7 @@ class DDParser:
 
         match is a regex object.
         """
+        # TODO: namedtuple return values
         if self.style == 1:
             id_, length, start = match.groups()
             length = int(length)
