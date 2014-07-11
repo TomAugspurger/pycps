@@ -124,19 +124,20 @@ class DDParser:
         """
         g = iter(formatted)
         current = next(g)
+        i = 0
 
         while True:  # till stopIteration
             assert current[1] == current[3] - current[2] + 1
             try:
-                old, current = current, next(g)
+                old, current, i = current, next(g), i + 1
                 assert current[2] == old[3] + 1
             except AssertionError:
-                print("0: {}\n1: {}\n".format(old, current))
+                # TODO: logging
+                print("Round {}\n0: {}\n1: {}\n".format(i, old, current))
             except StopIteration:
                 # last one should still check first criteria
                 assert old[1] == old[3] - old[2] + 1
-                raise StopIteration
-
+                pass
 
     def run(self):
         # make this as streamlike as possible.
@@ -149,17 +150,27 @@ class DDParser:
             formatted = [self.formatter(x) for x in lines]
 
             # ensure consistency across lines
-            assert self._is_consistent(formatted)
+            try:
+                self._is_consistent(formatted)
+                df = pd.DataFrame(formatted,
+                                  columns=['id', 'length', 'start', 'end'])
+            except WidthError:
+                raise ValueError
+                # recover
+            except ContinuityError:
+                raise ValueError
+                # recover
 
             # Finally
-            to_be_df = self.holder
-            df = pd.DataFrame(to_be_df, columns=['id', 'length', 'start',
-                                                 'end'])
-            # Some years need to grab the very last one
-            # If there's only one, it's been picked up.
-            if len(self.dataframes) > 0:
-                df = pd.concat([self.common, df])
-            self.dataframes.append(df)
+            # to_be_df = self.holder
+            # df = pd.DataFrame(to_be_df, columns=['id', 'length', 'start',
+            #                                      'end'])
+            # # Some years need to grab the very last one
+            # # If there's only one, it's been picked up.
+            # if len(self.dataframes) > 0:
+            #     df = pd.concat([self.common, df])
+            # self.dataframes.append(df)
+            return df
 
     def analyze(self, line, f):
         maybe_groups = self.regex.match(line) #
@@ -297,3 +308,20 @@ class DDParser:
         for bad_char, good_char in replacers.items():
             id_ = id_.replace(bad_char, good_char)
         return id_
+
+
+#-----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+class WidthError(ValueError):
+    """
+    The stated width does not equal the computed width
+    """
+    def __init__(self):
+        """
+        """
+        pass
+
+class ContinuityError(ValueError):
+    """
+    Two subsequent lines don't align cleanly.
+    """
