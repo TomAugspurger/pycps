@@ -2,7 +2,7 @@ import os
 import unittest
 from contextlib import contextmanager
 
-import pycps.readers as r
+import pycps.parsers as p
 from pycps.compat import StringIO
 
 
@@ -24,20 +24,20 @@ These are reserved to substitue in other paths.
 }''')
 
     def test_skip_module_docstring(self):
-        f = r._skip_module_docstring(self.settings_file)
+        f = p._skip_module_docstring(self.settings_file)
         self.assertEqual(next(f), "{\n")
 
     def test_read_setting(self):
-        result = r.read_settings(self.settings_file)['data_path']
+        result = p.read_settings(self.settings_file)['data_path']
         expected = 'data/'
         self.assertEqual(result, expected)
 
 #     def test_open_file_or_stringio(self):
 #         import ipdb; ipdb.set_trace()
 #         with tmpfile('test_settings.json', 'foo\nbar') as f:
-#             with r._open_file_or_stringio(f) as g:
+#             with p._open_file_or_stringio(f) as g:
 #                 pass
-#             with r._open_file_or_stringio(StringIO("foo")):
+#             with p._open_file_or_stringio(StringIO("foo")):
 #                 pass
 
 # @contextmanager
