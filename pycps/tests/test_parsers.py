@@ -79,6 +79,12 @@ class TestDDParser(unittest.TestCase):
         regex = self.parser.make_regex(style=0)
         self.assertEqual(expected, regex.match(s).groups())
 
+    def test_trailing_space(self):
+        s = 'HUTYPC       2     TYPE C NON-INTERVIEW REASON                (45 - 46) '
+        expected = ('HUTYPC', '2', 'TYPE C NON-INTERVIEW REASON', '45', '46')
+        regex = self.parser.make_regex(style=2)
+        self.assertEqual(regex.match(s).groups(), expected)
+
     def test_regex_paddding(self):
         s = 'PADDING  CHARACTER*039          (0472:0600)'.rstrip()
         regex = self.parser.make_regex(style=0)

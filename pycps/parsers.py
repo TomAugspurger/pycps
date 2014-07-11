@@ -130,6 +130,8 @@ class DDParser:
             try:
                 old, current = current, next(g)
                 assert current[2] == old[3] + 1
+            except AssertionError:
+                print("0: {}\n1: {}\n".format(old, current))
             except StopIteration:
                 # last one should still check first criteria
                 assert old[1] == old[3] - old[2] + 1
@@ -140,7 +142,8 @@ class DDParser:
         # make this as streamlike as possible.
         with self.infile.open() as f:
             # get all header lines
-            lines = filter(lambda x: self.regex.matching(x), f)
+            lines = (self.regex.match(line) for line in f)
+            lines = filter(None, lines)
 
             # regularize format; intentional thunk
             formatted = [self.formatter(x) for x in lines]
@@ -233,7 +236,7 @@ class DDParser:
         """
         # As new styles are added the current default should be moved into the dict.
         # TODO: this smells terrible
-        default = re.compile(r'[\x0c]{0,1}(\w+)[\s\t]*(\d{1,2})[\s\t]*(.*?)[\s\t]*\(*(\d+)\s*-\s*(\d+)\)*$')
+        default = re.compile(r'[\x0c]{0,1}(\w+)[\s\t]*(\d{1,2})[\s\t]*(.*?)[\s\t]*\(*(\d+)\s*-\s*(\d+)\)*\s*$')
         d = {0: re.compile(r'(\w{1,2}[\$\-%]\w*|PADDING)\s*CHARACTER\*(\d{3})\s*\.{0,1}\s*\((\d*):(\d*)\).*'),
              1: re.compile(r'D (\w+) \s* (\d{1,2}) \s* (\d*)'),
              2: default}
