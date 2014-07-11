@@ -81,7 +81,26 @@ class DDParser:
 
         if regex is None:
             self.regex = self.make_regex(style=style)
-        self.style = style
+
+        styles = {"jan1989": 0,
+                  "jan1992": 0,
+                  "jan1994": 2,
+                  "apr1994": 2,
+                  "jun1995": 2,
+                  "sep1995": 2,
+                  "jan1998": 1,
+                  "jan2003": 2,
+                  "may2004": 2,
+                  "aug2005": 2,
+                  "jan2007": 2,
+                  "jan2009": 2,
+                  "jan2010": 2,
+                  "may2012": 2,
+                  "jan2013": 2
+              }
+
+        self.store_name = infile.stem
+        self.style = styles[self.store_name]
 
         self.dataframes = []
         self.next_line = None
@@ -90,7 +109,6 @@ class DDParser:
         self.pos_len = 1
         self.pos_start = 2
         self.pos_end = 3
-        self.store_name = infile.stem
 
     def run(self):
         with open(self.infile, 'r') as f:
@@ -179,12 +197,11 @@ class DDParser:
         self.holder = [formatted]  # next line
 
     def make_regex(self, style=None):
-        if style is None:  # 89 and 92
-            return re.compile(r'(\w{1,2}[\$\-%]\w*|PADDING)\s*CHARACTER\*(\d{3})\s*\.{0,1}\s*\((\d*):(\d*)\).*')
-        elif style is 'aug2005':
-            return re.compile(r'[\x0c]{0,1}(\w+)[\s\t]*(\d{1,2})[\s\t]*(.*?)[\s\t]*\(*(\d+)\s*-\s*(\d+)\)*$')
-        elif style is 'jan1998':
-            return re.compile(r'D (\w+) \s* (\d{1,2}) \s* (\d*)')
+        default = re.compile(r'[\x0c]{0,1}(\w+)[\s\t]*(\d{1,2})[\s\t]*(.*?)[\s\t]*\(*(\d+)\s*-\s*(\d+)\)*$')
+        d = {0: re.compile(r'(\w{1,2}[\$\-%]\w*|PADDING)\s*CHARACTER\*(\d{3})\s*\.{0,1}\s*\((\d*):(\d*)\).*'),
+             1: re.compile(r'D (\w+) \s* (\d{1,2}) \s* (\d*)'),
+             2: default}
+        return d.get(style, default)
 
     def formatter(self, match):
         """
