@@ -1,0 +1,13 @@
+"""
+Specify paths, etc.
+
+TODO: document
+
+NOTE: you can't have '{' or '}' in your filepaths.
+These are reserved to substitue in other paths.
+"""
+{
+    "data_path": "data/",
+    "dd_path": "{data}/data_dictionaries/",
+    "monthly_path": "{data}/monthly/"
+}
