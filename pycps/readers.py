@@ -1,14 +1,13 @@
 """
 Read all the things.
 """
-from contextlib import contextmanager, wraps
+from contextlib import contextmanager
 from itertools import dropwhile
 import json
 
 from pycps.compat import StringIO
 
 
-# @wraps
 @contextmanager
 def _open_file_or_stringio(maybe_file):
     """
