@@ -68,9 +68,9 @@ setup(
     # simple. Or you can use find_packages.
     packages=find_packages(exclude=["contrib", "docs", "tests*"]),
     # If there are data files included in your packages, specify them here.
-    # package_data={
-    #     'pycps': ['*.json', '*.txt'],
-    # },
+    package_data={
+        'pycps': ['data.json'],
+    },
 
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
