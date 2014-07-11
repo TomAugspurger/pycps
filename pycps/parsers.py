@@ -79,9 +79,6 @@ class DDParser:
         self.infile = infile
         self.outpath = settings['dd_path']
 
-        if regex is None:
-            self.regex = self.make_regex(style=style)
-
         styles = {"jan1989": 0,
                   "jan1992": 0,
                   "jan1994": 2,
@@ -100,7 +97,8 @@ class DDParser:
               }
 
         self.store_name = infile.stem
-        self.style = styles[self.store_name]
+        self.style = styles.get(self.store_name, None)
+        self.regex = self.make_regex(style=self.style)
 
         self.dataframes = []
         self.next_line = None
@@ -196,7 +194,11 @@ class DDParser:
 
         self.holder = [formatted]  # next line
 
-    def make_regex(self, style=None):
+    @staticmethod
+    def make_regex(style=None):
+        # 0: jan1989
+        # 1: jan1998
+        # 2: aug2005/jan1994 (default)
         default = re.compile(r'[\x0c]{0,1}(\w+)[\s\t]*(\d{1,2})[\s\t]*(.*?)[\s\t]*\(*(\d+)\s*-\s*(\d+)\)*$')
         d = {0: re.compile(r'(\w{1,2}[\$\-%]\w*|PADDING)\s*CHARACTER\*(\d{3})\s*\.{0,1}\s*\((\d*):(\d*)\).*'),
              1: re.compile(r'D (\w+) \s* (\d{1,2}) \s* (\d*)'),
@@ -210,7 +212,7 @@ class DDParser:
 
         match is a regex object.
         """
-        if self.style == 'jan1998':
+        if self.style == 1:
             id_, length, start = match.groups()
             length = int(length)
             start = int(start)
@@ -218,8 +220,7 @@ class DDParser:
         else:
             try:
                 id_, length, start, end = match.groups()
-                if self.style is None:
-                   id_ = self.handle_replacers(id_)
+                id_ = self.handle_replacers(id_)
             except ValueError:
                 id_, length, description, start, end = match.groups()
             length = int(length)
@@ -251,7 +252,10 @@ class DDParser:
         store.close()
 
     def handle_replacers(self, id_):
+        """
+        Prefer ids to be valid python names.
+        """
         replacers = {'$': 'd', '%': 'p', '-': 'h'}
-        for bad_char, good_char in replacers.iteritems():
+        for bad_char, good_char in replacers.items():
             id_ = id_.replace(bad_char, good_char)
         return id_
