@@ -3,12 +3,20 @@ Read all the things.
 """
 import re
 import json
+from pathlib import Path
 from itertools import dropwhile
 from contextlib import contextmanager
 
 import pandas as pd
 
 from pycps.compat import StringIO
+
+#-----------------------------------------------------------------------------
+# Globals
+
+_data_path = Path(__file__).parent.parent / 'data.json'
+with _data_path.open() as f:
+    DD_TO_MONTH = json.load(f)['dd_to_month']
 
 
 #-----------------------------------------------------------------------------
@@ -42,7 +50,7 @@ def read_settings(filepath):
     filepath: str or StringIO
         should be JSON like file
 
-    Retruns
+    Returns
     -------
     settings: dict
 
@@ -233,3 +241,28 @@ class ContinuityError(ValueError):
 
 #-----------------------------------------------------------------------------
 # Monthly Data Files
+# log time stuff
+
+def _month_to_dd(month):
+    """
+    lookup dd for a given month.
+    """
+    # convert month to arro
+    # convert dd_to_month from data.json to {d -> [first month, last month]}
+    # see where month falls
+    pass
+
+
+def read_monthly(infile):
+    """
+    Parameters
+    ----------
+
+    infile: Path
+
+    Returns
+    -------
+    df: DataFrame
+
+    """
+    pass
