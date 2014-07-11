@@ -166,3 +166,12 @@ class TestDDParser(unittest.TestCase):
             self.parser._is_consistent(formatted)
         except StopIteration:
             pass  # worked!
+
+    def test_is_consistent_width(self):
+        formatted = [('HhMONTH', 1, 38, 39),
+                     ('foo', 3, 40, 42)]
+        self.assertRaises(p.WidthError)
+
+        formatted = [('HhMONTH', 2, 38, 39),
+                     ('foo', 3, 41, 42)]
+        self.assertRaises(p.ContinuityError)

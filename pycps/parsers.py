@@ -137,7 +137,7 @@ class DDParser:
             except StopIteration:
                 # last one should still check first criteria
                 assert old[1] == old[3] - old[2] + 1
-                pass
+                raise StopIteration
 
     def run(self):
         # make this as streamlike as possible.
@@ -152,6 +152,7 @@ class DDParser:
             # ensure consistency across lines
             try:
                 self._is_consistent(formatted)
+            except StopIteration:  # good till thru the end
                 df = pd.DataFrame(formatted,
                                   columns=['id', 'length', 'start', 'end'])
             except WidthError:
@@ -325,3 +326,7 @@ class ContinuityError(ValueError):
     """
     Two subsequent lines don't align cleanly.
     """
+    def __init__(self):
+        """
+        """
+        pass
