@@ -1,0 +1,1380 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  "http://www.w3.org/TR/html4/loose.dtd">
+<html ><head><title>Current Population Survey (CPS) Basic Monthly Data at the NBER</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<script type="text/javascript">
+        var djConfig = {
+            parseOnLoad: true,
+            isDebug: false
+        };
+</script>
+<script type="text/javascript"
+        src="/2009_redesign/dojo-1.3/dojo/dojo.js"></script>
+<link rel="stylesheet" href="/2009_redesign/dojo-1.3/dijit/themes/tundra/tundra.css">
+<link rel="stylesheet" href="/2009_redesign/2009.css" type="text/css">
+<script language="JavaScript" type="text/javascript" src="/2009_redesign/top.js"></script>
+<!--style applied-->
+
+<!-- Google Analytics -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-28569388-1', 'auto');  // Replace with your property ID.
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+</head>
+<body>
+<div id="printTopDiv">NATIONAL BUREAU OF ECONOMIC RESEARCH</div>
+<div id="topDiv"><a href="/" title="Return to Home Page">
+<img border="0" src="/img_2009/main_top.jpg" height="95" width="997" alt="NATIONAL BUREAU OF ECONOMIC RESEARCH">
+</a></div>
+    
+<div id="currentDate"></div>
+<!-- removed at Dans request 2012-10-20
+<div id="currentWeather"></div>
+-->
+<div id="homeLink">
+<a href="/" title="return to home">HOME PAGE</a></div>
+<div id="searchBoxDiv">
+<form action="/s/search" name="googleSearchForm" method=GET>
+<input type="hidden" name="client" value="test3_fe">
+<input type="hidden" name="proxystylesheet" value="test3_fe">
+<input type="hidden" name="site" value="default_collection">
+<input type="hidden" name="btnG" value="Search">
+<input type="hidden" name="entqr" value="0">
+<input type="hidden" name="ud" value="1">
+<input type="hidden" name="output" value="xml_no_dtd">
+<input type="hidden" name="oe" value="UTF-8">
+<input type="hidden" name="ie" value="UTF-8">
+<input type="text" name="q" id="mainSearchBoxId" class="yellowInput"
+       value="Search the NBER site" onClick="if (this.value == 'Search the NBER site') 
+                  {this.value =''; this.style.textAlign = 'left'}"></form></div>
+
+<div id="mainNewsDiv">
+<table border=0 cellspacing=0 cellpadding=0 id="mainTable"><tr>
+   <td id="mainContentTd" valign="top" style="padding-bottom: 10px;">
+<h1 class='title'>Current Population Survey (CPS) Basic Monthly Data at the NBER</h1>
+
+   <META  name="keywords"  lang="en-us" content="Current,Population,Survey,
+   Basic,Monthly,Files,data,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,
+   1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,
+   2001,2002,2003,2004,2005,2006,2007
+   January,February,March,April,May,June,July,August,September,October,November,December">
+<p>
+The CPS is the U.S. Government's monthly survey of unemployment and labor force
+participation.  The BLS maintains a <a href="http://www.census.gov/cps/">CPS Home Page</a>
+with a great deal of information about the survey and access to downloads of 
+<a href="http://thedataweb.rm.census.gov/ftp/cps_ftp.html#cpsbasic">recent data</a>.
+The CPS basic monthly files  contain information on labor force status but
+do not contain the full income and demographic data contained in the March supplements,
+nor do they contain usual hours or wages except for the households in the outgoing
+rotation group. 
+</p>
+<p>
+A housing unit in the CPS is interviewed for four consecutive months and
+then dropped out of the sample for the next eight months and is brought 
+back in the following four months.  So, in any given month, one-eighth
+of the housing units are interviewed for the first month.  When the 
+system has been in operation for a full year, four of the eight rotation
+groups for any month will have been in the survey for the same month, one
+year ago.  
+<a href="/data/cps_match.html">Matching information and Stata .do files</a> from
+NBER Working Paper <a href="http://papers.nber.org/papers/t0247">t0247</a>
+by B. Madrian and L. J. Lefgren are available for March-to-March Annual Demographic
+File matches but can be modified for use in matching CPS Basic Monthly Data.
+
+<a href="http://www.bls.census.gov/cps/tp/tp63.htm">Technical Paper 63</a>
+contains more information about Design and Methodology.
+</p>
+<p>
+Both ".Z" and ".zip" files can be uncompressed with <a href="http://www.winzip.com">winzip</a>.
+In addition, ".Z" files can be uncompressed using the UNIX uncompress
+command and ".zip" files can be unzipped with <a href="http://www.pkware.com">pkunzip</a>.
+
+To check your ability to uncompress these files, download the small files
+<a href="/data/compress.Z">compress.Z</a> or <a href="/data/compress.zip">compress.zip</a>.
+They give an example of how to read in .Z and .zip ASCII files into SAS for UNIX without
+decompressing the files.
+<p>
+
+<!--
+<span class="hot"><b class="hot">Netscape Navigator 3 and 4 can corrupt these compressed files;</b></span>
+Use Internet Explorer
+or refer to the note on the NBER main <a href="/data/index.html#netscape">data</a> page.
+-->
+To download files in Internet Explorer, right click on them and select "Save Target As...".
+If the pdf documents appear to be all blank pages, get the latest Acrobat
+Reader at <a href="http://www.adobe.com">www.abobe.com</a>.
+
+
+<p>
+All data files follow the naming convention 
+cpsbYYMM where YY is year and MM is month. 
+The 1976-1988 data documentation calls every group of six Characters a Word.  To convert Words
+and Characters into plain characters multiply the number of previous Words by six and add the 
+number of character positions within the designated Word.  That will give the location of the
+first character of the variable of interest.  For example, State is in 
+Word 3, Characters 5-6.  2 previous words * 6 = 12 + 5 = 17 = the starting location
+of State.  
+</p>
+<p>
+The file layouts are the basically the same for the following periods:  1976-1988, 1989-1993, 1994-1997, and 1998-2004.  
+<a href="/data/cps_basic_progs.html">SAS, SPSS, and Stata data definition statement files</a> for 1989 on
+    are available.
+
+<A HREF="/cps-basic/merge.sas">Merge.sas</A> gives an example of how to read in multiple months and years 
+and merge them into a single datafile.
+</p>
+<p>
+From 1976-1993 variables and record lengths can vary by record type as described in the documentation.
+</p>
+<p>
+Weekly hours/earnings are not included in these files from 1976-1983.  
+From 1976-1978, these variables are available in the <a href="/data/cps_may.html">May Extracts</a>.  
+From 1979 on, these variables are available in the <a href="/data/morg.html">Merged Outgoing Rotation Groups</a>.
+</p>
+<p>
+NOTE:  Usually, the documentation from January applies to an entire year.  Execptions are 1984-1985 and 1994-1995.  The
+January 1984 documentation is used through to June 1985.  The July 1985 documentation applies to the remainder 
+of 1985.  For 1994-1995, the January 1994 documentation is used through August 1995.  The September 1995 documentation
+serves for the rest of the year.
+</p>
+<p>
+Thanks to David Card at Berkeley for providing the 1989-1993 at <A HREF="ftp://elsa.berkeley.edu/pub/cps/complete/">
+ftp://elsa.berkeley.edu/pub/cps/complete/.</A>
+</p>
+<p><a href="/cps-basic/errata.txt">Updates and changes</a>.</p>
+
+<p></p>
+NBER internal Users can access the data from a UNIX shell at /home/data/cps-basic
+or on an NBER PC via Network Neighborhood --> NBER --> home --> data --> cps_basic
+<p></p>
+<table BORDER COLS=15 WIDTH="100%" >
+<tr>
+<td rowspan="2"><b>Year</b></td>
+<td rowspan="2"><b><center>All <br />Pkzip</center></b></td>
+<td colspan="12"><b><center>Compressed</center></b></td>
+<td rowspan="2"><b>Docs</b></td>
+</tr>
+<tr>
+<!-- <td><b><center>All</center></b></td> -->
+<td><b>Jan</b></td>
+<td><b>Feb</b></td>
+<td><b>March</b></td>
+<td><b>April</b></td>
+<td><b>May</b></td>
+<td><b>June</b></td>
+<td><b>July</b></td>
+<td><b>Aug</b></td>
+<td><b>Sep</b></td>
+<td><b>Oct</b></td>
+<td><b>Nov</b></td>
+<td><b>Dec</b></td>
+<td></td>
+</tr>
+
+<tr>
+<td>1976</td>
+
+<td><a href="/cps-basic/cpsb76.zip">1976</a></td>
+<td><a href="/cps-basic/cpsb7601.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb7602.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb7603.Z">March</a></td>
+<td><a href="/cps-basic/cpsb7604.Z">April</a></td>
+<td><a href="/cps-basic/cpsb7605.Z">May</a></td>
+<td><a href="/cps-basic/cpsb7606.Z">June</a></td>
+<td><a href="/cps-basic/cpsb7607.Z">July</a></td>
+<td><a href="/cps-basic/cpsb7608.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb7609.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb7610.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb7611.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb7612.Z">Dec</a></td>
+<td rowspan="6"><a href="/cps-basic/basic78.pdf">bas78.pdf</td>
+</tr>
+
+<tr>
+<td>1977</td>
+<td><a href="/cps-basic/cpsb77.zip">1977</a></td>
+<td><a href="/cps-basic/cpsb7701.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb7702.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb7703.Z">March</a></td>
+<td><a href="/cps-basic/cpsb7704.Z">April</a></td>
+<td><a href="/cps-basic/cpsb7705.Z">May</a></td>
+<td><a href="/cps-basic/cpsb7706.Z">June</a></td>
+<td><a href="/cps-basic/cpsb7707.Z">July</a></td>
+<td><a href="/cps-basic/cpsb7708.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb7709.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb7710.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb7711.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb7712.Z">Dec</a></td>
+</tr>
+
+<tr>
+<td>1978</td>
+
+<td><a href="/cps-basic/cpsb78.zip">1978</a></td>
+<td><a href="/cps-basic/cpsb7801.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb7802.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb7803.Z">March</a></td>
+<td><a href="/cps-basic/cpsb7804.Z">April</a></td>
+<td><a href="/cps-basic/cpsb7805.Z">May</a></td>
+<td><a href="/cps-basic/cpsb7806.Z">June</a></td>
+<td><a href="/cps-basic/cpsb7807.Z">July</a></td>
+<td><a href="/cps-basic/cpsb7808.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb7809.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb7810.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb7811.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb7812.Z">Dec</a></td>
+
+</tr>
+
+<tr>
+<td>1979</td>
+<td><a href="/cps-basic/cpsb79.zip">1979</a></td>
+<td><a href="/cps-basic/cpsb7901.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb7902.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb7903.Z">March</a></td>
+<td><a href="/cps-basic/cpsb7904.Z">April</a></td>
+<td><a href="/cps-basic/cpsb7905.Z">May</a></td>
+<td><a href="/cps-basic/cpsb7906.Z">June</a></td>
+<td><a href="/cps-basic/cpsb7907.Z">July</a></td>
+<td><a href="/cps-basic/cpsb7908.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb7909.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb7910.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb7911.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb7912.Z">Dec</a></td>
+
+</tr>
+<tr>
+<td>1980</td>
+
+<td><a href="/cps-basic/cpsb80.zip">1980</a></td>
+<td><a href="/cps-basic/cpsb8001.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb8002.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb8003.Z">March</a></td>
+<td><a href="/cps-basic/cpsb8004.Z">April</a></td>
+<td><a href="/cps-basic/cpsb8005.Z">May</a></td>
+<td><a href="/cps-basic/cpsb8006.Z">June</a></td>
+<td><a href="/cps-basic/cpsb8007.Z">July</a></td>
+<td><a href="/cps-basic/cpsb8008.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb8009.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb8010.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb8011.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb8012.Z">Dec</a></td>
+</tr>
+
+<tr>
+<td>1981</td>
+<td><a href="/cps-basic/cpsb81.zip">1981</a></td>
+<td><a href="/cps-basic/cpsb8101.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb8102.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb8103.Z">March</a></td>
+<td><a href="/cps-basic/cpsb8104.Z">April</a></td>
+<td><a href="/cps-basic/cpsb8105.Z">May</a></td>
+<td><a href="/cps-basic/cpsb8106.Z">June</a></td>
+<td><a href="/cps-basic/cpsb8107.Z">July</a></td>
+<td><a href="/cps-basic/cpsb8108.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb8109.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb8110.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb8111.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb8112.Z">Dec</a></td>
+</tr>
+
+<tr>
+<td>1982</td>
+
+<td><a href="/cps-basic/cpsb82.zip">1982</a></td>
+<td><a href="/cps-basic/cpsb8201.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb8202.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb8203.Z">March</a></td>
+<td><a href="/cps-basic/cpsb8204.Z">April</a></td>
+<td><a href="/cps-basic/cpsb8205.Z">May</a></td>
+<td><a href="/cps-basic/cpsb8206.Z">June</a></td>
+<td><a href="/cps-basic/cpsb8207.Z">July</a></td>
+<td><a href="/cps-basic/cpsb8208.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb8209.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb8210.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb8211.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb8212.Z">Dec</a></td>
+<td><a href="/cps-basic/bas82.pdf">bas82.pdf</a></td>
+
+</tr>
+
+<tr>
+<td>1983</td>
+<td><a href="/cps-basic/cpsb83.zip">1983</a></td>
+<td><a href="/cps-basic/cpsb8301.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb8302.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb8303.Z">March</a></td>
+<td><a href="/cps-basic/cpsb8304.Z">April</a></td>
+<td><a href="/cps-basic/cpsb8305.Z">May</a></td>
+<td><a href="/cps-basic/cpsb8306.Z">June</a></td>
+<td><a href="/cps-basic/cpsb8307.Z">July</a></td>
+<td><a href="/cps-basic/cpsb8308.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb8309.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb8310.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb8311.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb8312.Z">Dec</a></td>
+<td><a href="/cps-basic/cpsb83.pdf">cpsb83.pdf</a></td>
+
+</tr>
+<tr>
+<td>1984</td>
+
+<td><a href="/cps-basic/cpsb84.zip">1984</a></td>
+<td><a href="/cps-basic/cpsb8401.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb8402.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb8403.Z">March</a></td>
+<td><a href="/cps-basic/cpsb8404.Z">April</a></td>
+<td><a href="/cps-basic/cpsb8405.Z">May</a></td>
+<td><a href="/cps-basic/cpsb8406.Z">June</a></td>
+<td><a href="/cps-basic/cpsb8407.Z">July</a></td>
+<td><a href="/cps-basic/cpsb8408.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb8409.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb8410.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb8411.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb8412.Z">Dec</a></td>
+<td><a href="/cps-basic/bas84.pdf">bas84.pdf</a> **</td>
+</tr>
+
+<tr>
+<td>1985</td>
+<td><a href="/cps-basic/cpsb85.zip">1985</a></td>
+<td><a href="/cps-basic/cpsb8501.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb8502.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb8503.Z">March</a></td>
+<td><a href="/cps-basic/cpsb8504.Z">April</a></td>
+<td><a href="/cps-basic/cpsb8505.Z">May</a></td>
+<td><a href="/cps-basic/cpsb8506.Z">June</a></td>
+<td><a href="/cps-basic/cpsb8507.Z">July</a></td>
+<td><a href="/cps-basic/cpsb8508.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb8509.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb8510.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb8511.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb8512.Z">Dec</a></td>
+<td><a href="/cps-basic/bas85.pdf">bas85.pdf</a> **</td>
+</tr>
+
+<tr>
+<td>1986</td>
+
+<td><a href="/cps-basic/cpsb86.zip">1986</a></td>
+<td><a href="/cps-basic/cpsb8601.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb8602.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb8603.Z">March</a></td>
+<td><a href="/cps-basic/cpsb8604.Z">April</a></td>
+<td><a href="/cps-basic/cpsb8605.Z">May</a></td>
+<td><a href="/cps-basic/cpsb8606.Z">June</a></td>
+<td><a href="/cps-basic/cpsb8607.Z">July</a></td>
+<td><a href="/cps-basic/cpsb8608.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb8609.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb8610.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb8611.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb8612.Z">Dec</a></td>
+<td ROWSPAN= "3"><a href="/cps-basic/bas86.pdf">bas86.pdf</a></td>
+
+</tr>
+
+<tr>
+<td>1987</td>
+<td><a href="/cps-basic/cpsb87.zip">1987</a></td>
+<td><a href="/cps-basic/cpsb8701.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb8702.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb8703.Z">March</a></td>
+<td><a href="/cps-basic/cpsb8704.Z">April</a></td>
+<td><a href="/cps-basic/cpsb8705.Z">May</a></td>
+<td><a href="/cps-basic/cpsb8706.Z">June</a></td>
+<td><a href="/cps-basic/cpsb8707.Z">July</a></td>
+<td><a href="/cps-basic/cpsb8708.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb8709.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb8710.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb8711.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb8712.Z">Dec</a></td>
+</tr>
+<tr>
+<td>1988</td>
+
+<td><a href="/cps-basic/cpsb88.zip">1988</a></td>
+<td><a href="/cps-basic/cpsb8801.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb8802.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb8803.Z">March</a></td>
+<td><a href="/cps-basic/cpsb8804.Z">April</a></td>
+<td><a href="/cps-basic/cpsb8805.Z">May</a></td>
+<td><a href="/cps-basic/cpsb8806.Z">June</a></td>
+<td><a href="/cps-basic/cpsb8807.Z">July</a></td>
+<td><a href="/cps-basic/cpsb8808.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb8809.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb8810.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb8811.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb8812.Z">Dec</a></td>
+</tr>
+
+<TR>
+<TD COLSPAN="15"><CENTER><B>
+<A HREF="/data/cps_basic_progs.html">SAS, SPSS, and Stata</A> programs
+are available for the raw datafiles for 1989 on. 
+</B></CENTER>
+</TD>
+</TR>
+<tr>
+<td>1989</td>
+<td><a href="/cps-basic/cpsb89.zip">1989</a></td>
+<td><a href="/cps-basic/cpsb8901.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb8902.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb8903.Z">March</a></td>
+<td><a href="/cps-basic/cpsb8904.Z">April</a></td>
+<td><a href="/cps-basic/cpsb8905.Z">May</a></td>
+<td><a href="/cps-basic/cpsb8906.Z">June</a></td>
+<td><a href="/cps-basic/cpsb8907.Z">July</a></td>
+<td><a href="/cps-basic/cpsb8908.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb8909.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb8910.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb8911.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb8912.Z">Dec</a></td>
+<td ROWSPAN="3"><a href="/cps-basic/cpsjan89.pdf">cpsjan89.pdf</a><br />
+<a href="/cps-basic/cps89.ddf">cps89.ddf</a></td>
+</tr>
+
+<tr>
+<td>1990</td>
+
+<td><a href="/cps-basic/cpsb90.zip">1990</a></td>
+<td><a href="/cps-basic/cpsb9001.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb9002.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb9003.Z">March</a></td>
+<td><a href="/cps-basic/cpsb9004.Z">April</a></td>
+<td><a href="/cps-basic/cpsb9005.Z">May</a></td>
+<td><a href="/cps-basic/cpsb9006.Z">June</a></td>
+<td><a href="/cps-basic/cpsb9007.Z">July</a></td>
+<td><a href="/cps-basic/cpsb9008.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb9009.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb9010.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb9011.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb9012.Z">Dec</a></td>
+
+</tr>
+
+<tr>
+<td>1991</td>
+<td><a href="/cps-basic/cpsb91.zip">1991</a></td>
+<td><a href="/cps-basic/cpsb9101.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb9102.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb9103.Z">March</a></td>
+<td><a href="/cps-basic/cpsb9104.Z">April</a></td>
+<td><a href="/cps-basic/cpsb9105.Z">May</a></td>
+<td><a href="/cps-basic/cpsb9106.Z">June</a></td>
+<td><a href="/cps-basic/cpsb9107.Z">July</a></td>
+<td><a href="/cps-basic/cpsb9108.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb9109.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb9110.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb9111.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb9112.Z">Dec</a></td>
+
+</tr>
+<tr>
+<td>1992</td>
+
+<td><a href="/cps-basic/cpsb92.zip">1992</a></td>
+<td><a href="/cps-basic/cpsb9201.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb9202.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb9203.Z">March</a></td>
+<td><a href="/cps-basic/cpsb9204.Z">April</a></td>
+<td><a href="/cps-basic/cpsb9205.Z">May</a></td>
+<td><a href="/cps-basic/cpsb9206.Z">June</a></td>
+<td><a href="/cps-basic/cpsb9207.Z">July</a></td>
+<td><a href="/cps-basic/cpsb9208.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb9209.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb9210.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb9211.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb9212.Z">Dec</a></td>
+<td ROWSPAN="2"><a href="/cps-basic/cps92.pdf">cps92.pdf</a><br />
+<a href="/cps-basic/cps92.ddf">cps92.ddf</a></td>
+</tr>
+
+<tr>
+<td>1993</td>
+<td><a href="/cps-basic/cpsb93.zip">1993</a></td>
+<td><a href="/cps-basic/cpsb9301.Z">Jan</a></td>
+<td><a href="/cps-basic/cpsb9302.Z">Feb</a></td>
+<td><a href="/cps-basic/cpsb9303.Z">March</a></td>
+<td><a href="/cps-basic/cpsb9304.Z">April</a></td>
+<td><a href="/cps-basic/cpsb9305.Z">May</a></td>
+<td><a href="/cps-basic/cpsb9306.Z">June</a></td>
+<td><a href="/cps-basic/cpsb9307.Z">July</a></td>
+<td><a href="/cps-basic/cpsb9308.Z">Aug</a></td>
+<td><a href="/cps-basic/cpsb9309.Z">Sep</a></td>
+<td><a href="/cps-basic/cpsb9310.Z">Oct</a></td>
+<td><a href="/cps-basic/cpsb9311.Z">Nov</a></td>
+<td><a href="/cps-basic/cpsb9312.Z">Dec</a></td>
+</tr>
+<TR>
+<TD COLSPAN="14">
+<B>
+You can <A HREF="http://thedataweb.rm.census.gov/ftp/cps_ftp.html">Download these files faster</A> ( 1994 - on ) from the 
+Data Ferret FTP Page
+</TD>
+</TR>
+
+<tr>
+<td>1994</td>
+
+<td>--</td>
+<td><a href="/cps-basic/jan94pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb94pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar94pub.zip">March</a></td>
+<td><a href="/cps-basic/apr94pub.zip">April</a></td>
+<td><a href="/cps-basic/may94pub.zip">May</a></td>
+<td><a href="/cps-basic/jun94pub.zip">June</a></td>
+<td><a href="/cps-basic/jul94pub.zip">July</a></td>
+<td><a href="/cps-basic/aug94pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep94pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct94pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov94pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec94pub.zip">Dec</a></td>
+<td ROWSPAN="1"><a href="/cps-basic/jan94cps.pdf">jan94cps.pdf</a>**</td>
+
+</tr>
+
+<tr>
+<td>1995</td>
+<td>--</td>
+<td><a href="/cps-basic/jan95pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb95pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar95pub.zip">March</a></td>
+<td><a href="/cps-basic/apr95pub.zip">April</a></td>
+<td><a href="/cps-basic/may95pub.zip">May</a></td>
+<td><a href="/cps-basic/jun95pub.zip">June</a></td>
+<td><a href="/cps-basic/jul95pub.zip">July</a></td>
+<td><a href="/cps-basic/aug95pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep95pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct95pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov95pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec95pub.zip">Dec</a></td>
+<td ROWSPAN="3"><a href="/cps-basic/sep95cps.pdf">sep95cps.pdf</a>**<BR />
+<a href="/cps-basic/cpsbsep95.ddf">cpsbsep95.ddf</A></td>
+</tr>
+<tr>
+<td>1996</td>
+
+<td>--</td>
+<td><a href="/cps-basic/jan96pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb96pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar96pub.zip">March</a></td>
+<td><a href="/cps-basic/apr96pub.zip">April</a></td>
+<td><a href="/cps-basic/may96pub.zip">May</a></td>
+<td><a href="/cps-basic/jun96pub.zip">June</a></td>
+<td><a href="/cps-basic/jul96pub.zip">July</a></td>
+<td><a href="/cps-basic/aug96pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep96pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct96pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov96pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec96pub.zip">Dec</a></td>
+</tr>
+
+<tr>
+<td>1997</td>
+<td>--</td>
+<td><a href="/cps-basic/jan97pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb97pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar97pub.zip">March</a></td>
+<td><a href="/cps-basic/apr97pub.zip">April</a></td>
+<td><a href="/cps-basic/may97pub.zip">May</a></td>
+<td><a href="/cps-basic/jun97pub.zip">June</a></td>
+<td><a href="/cps-basic/jul97pub.zip">July</a></td>
+<td><a href="/cps-basic/aug97pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep97pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct97pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov97pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec97pub.zip">Dec</a></td>
+</tr>
+
+<tr>
+<td>1998</td>
+<td>--</td>
+<td><a href="/cps-basic/jan98pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb98pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar98pub.zip">March</a></td>
+<td><a href="/cps-basic/apr98pub.zip">April</a></td>
+<td><a href="/cps-basic/may98pub.zip">May</a></td>
+<td><a href="/cps-basic/jun98pub.zip">June</a></td>
+<td><a href="/cps-basic/jul98pub.zip">July</a></td>
+<td><a href="/cps-basic/aug98pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep98pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct98pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov98pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec98pub.zip">Dec</a></td>
+<td ROWSPAN="6"><a href="/cps-basic/cpsjan98.pdf">cpsjan98.pdf</a><br />
+<a href="/cps-basic/jan98dd.asc">jan98dd.asc</a>
+<BR /> &nbsp; <BR />
+<a href="/cps-basic/1999/hetenure_readme.txt">he.txt</A> <BR />
+<a href="/cps-basic/1999/hetenure99.zip">he99</A> <BR />
+<a href="/cps-basic/2000/hetenure00.zip">he00</A> <BR />
+<a href="/cps-basic/2001/hetenure01.zip">he01</A> <BR />
+<a href="/cps-basic/2002/hetenure02.zip">he02</A> <BR />
+</td>
+</tr>
+<tr>
+<td>1999</td>
+<td>--</td>
+<td><a href="/cps-basic/jan99pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb99pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar99pub.zip">March</a></td>
+<td><a href="/cps-basic/apr99pub.zip">April</a></td>
+<td><a href="/cps-basic/may99pub.zip">May</a></td>
+<td><a href="/cps-basic/jun99pub.zip">June</a></td>
+<td><a href="/cps-basic/jul99pub.zip">July</a></td>
+<td><a href="/cps-basic/aug99pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep99pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct99pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov99pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec99pub.zip">Dec</a></td>
+
+</tr>
+<TR>
+<TD COLSPAN="14"><CENTER><B>
+For 2000-Census based weights, 2002 NAICS-based industry codes,
+2000 SOC-based occupation codes, and revised class of worker and union variables
+for 2000-2002 CPS Basic Monthly Data files, please visit 
+<A HREF="/data/cps_extract.html">CPS Extracts</A>.
+</CENTER>
+</TD>
+</TR>
+<TR>
+<td>2000</td>
+<td>--</td>
+<td><a href="/cps-basic/jan00pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb00pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar00pub.zip">Mar</a></td>
+<td><a href="/cps-basic/apr00pub.zip">Apr</a></td>
+<td><a href="/cps-basic/may00pub.zip">May</a></td>
+<td><a href="/cps-basic/jun00pub.zip">Jun</a></td>
+<td><a href="/cps-basic/jul00pub.zip">Jul</a></td>
+<td><a href="/cps-basic/aug00pub.zip">Aug</td>
+<td><a href="/cps-basic/sep00pub.zip">Sep</td>
+<td><a href="/cps-basic/oct00pub.zip">Oct</td>
+<td><a href="/cps-basic/nov00pub.zip">Nov</td>
+<td><a href="/cps-basic/dec00pub.zip">Dec</td>
+</TR>
+<TR>
+<td>2001</td>
+<td>--</td>
+<td><a href="/cps-basic/jan01pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb01pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar01pub.zip">Mar</a></td>
+<td><a href="/cps-basic/apr01pub.zip">Apr</a></td>
+<td><a href="/cps-basic/may01pub.zip">May</a></td>
+<td><a href="/cps-basic/jun01pub.zip">Jun</a></td>
+<td><a href="/cps-basic/jul01pub.zip">Jul</a></td>
+<td><a href="/cps-basic/aug01pub.zip">Aug</td>
+<td><a href="/cps-basic/sep01pub.zip">Sep</td>
+<td><a href="/cps-basic/oct01pub.zip">Oct</td>
+<td><a href="/cps-basic/nov01pub.zip">Nov</td>
+<td><a href="/cps-basic/dec01pub.zip">Dec</td>
+</TR>
+<tr>
+<td>2002</td>
+<td>--</td>
+<td><a href="/cps-basic/jan02pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb02pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar02pub.zip">March</a></td>
+<td><a href="/cps-basic/apr02pub.zip">April</a></td>
+<td><a href="/cps-basic/may02pub.zip">May</a></td>
+<td><a href="/cps-basic/jun02pub.zip">June</a></td>
+<td><a href="/cps-basic/jul02pub.zip">July</a></td>
+<td><a href="/cps-basic/aug02pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep02pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct02pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov02pub.zip">Nov</A></td>
+<td><a href="/cps-basic/dec02pub.zip">Dec</A></td>
+</tr>
+<TR>
+<TD COLSPAN="15"><CENTER><B>
+Several major changes affected the 2003 CPS.&nbsp;&nbsp;  For more information about
+the changes, please visit 
+<A HREF="/data/cps_extract.html">CPS Extracts</A>.
+</CENTER>
+</TR>
+<tr>
+<td>2003</td>
+<td>--</td>
+<td><a href="/cps-basic/jan03pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb03pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar03pub.zip">Mar</a></td>
+<td><a href="/cps-basic/apr03pub.zip">April</a></td>
+<td><a href="/cps-basic/may03pub.zip">May</a></td>
+<td><a href="/cps-basic/jun03pub.zip">June</a></td>
+<td><a href="/cps-basic/jul03pub.zip">July</a></td>
+<td><a href="/cps-basic/aug03pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep03pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct03pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov03pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec03pub.zip">Dec</a></td>
+<td rowspan="1"><a href="/cps-basic/cpsbjan03.ddf">jan03</a><BR />
+<a href="/cps-basic/1999/hetenure_readme.txt">he.txt</A> 
+<a href="/cps-basic/2003/hetenure03.zip">he03</A> <BR />
+</td>
+</tr>
+<tr>
+<td>2004</td>
+<td>--</td>
+<td><a href="/cps-basic/jan04pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb04pub.zip">Feb</A></td>
+<td><a href="/cps-basic/mar04pub.zip">March</td>
+<td><a href="/cps-basic/apr04pub.zip">April</a></td>
+<td><a href="/cps-basic/may04pub.zip">May</a></td>
+<td><a href="/cps-basic/jun04pub.zip">June</a></td>
+<td><a href="/cps-basic/jul04pub.zip">July</a></td>
+<td><a href="/cps-basic/aug04pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep04pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct04pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov04pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec04pub.zip">Dec</a></td>
+<td rowspan="2"><a href="/cps-basic/cpsbmay04.ddf">may04</a>&nbsp;&nbsp;
+<a href="/cps-basic/cpsbmay04_geographic_attachment.txt">geo</A>
+<a href="/cps-basic/1999/hetenure_readme.txt">he.txt</A><BR /> 
+<a href="/cps-basic/2004/hetenure04.zip">he04</A> <BR />
+<a href="/cps-basic/2005/hetenure05.zip">he05</A> <BR />
+</TD>
+</tr>
+<tr>
+<td>2005</td>
+<td>--</td>
+<td><a href="/cps-basic/jan05pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb05pub.zip">Feb</A></td>
+<td><a href="/cps-basic/mar05pub.zip">March</td>
+<td><a href="/cps-basic/apr05pub.zip">April</a></td>
+<td><a href="/cps-basic/may05pub.zip">May</a></td>
+<td><a href="/cps-basic/jun05pub.zip">June</a></td>
+<td><a href="/cps-basic/jul05pub.zip">July</a></td>
+<td><a href="/cps-basic/aug05pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep05pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct05pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov05pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec05pub.zip">Dec</a></td>
+</tr>
+<TR>
+<td>2006</td>
+<td>--</td>
+<td><a href="/cps-basic/jan06pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb06pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar06pub.zip">Mar</a></td>
+<td><a href="/cps-basic/apr06pub.zip">Apr</a></td>
+<td><a href="/cps-basic/may06pub.zip">May</a></td>
+<td><a href="/cps-basic/jun06pub.zip">Jun</a></td>
+<td><a href="/cps-basic/jul06pub.zip">Jul</a></td>
+<td><a href="/cps-basic/aug06pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep06pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct06pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov06pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec06pub.zip">Dec</a></td>
+<td rowspan="1"><a href="/cps-basic/cpsbaug05.ddf">aug05</a></TD>
+</TR>
+<TR>
+<td>2007</td>
+<td>--</td>
+<td><a href="/cps-basic/jan07pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb07pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar07pub.zip">Mar</a></td>
+<td><a href="/cps-basic/apr07pub.zip">Apr</a></td>
+<td><a href="/cps-basic/may07pub.zip">May</a></td>
+<td><a href="/cps-basic/jun07pub.zip">Jun</a></td>
+<td><a href="/cps-basic/jul07pub.zip">Jul</a></td>
+<td><a href="/cps-basic/aug07pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep07pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct07pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov07pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec07pub.zip">Dec</a></td>
+<td rowspan="1"><a href="/cps-basic/cpsbjan07.ddf">jan07</a>&nbsp;&nbsp;</td>
+</TR>
+<TR>
+<td>Dec 2007</td>
+<td colspan="12"><b><center>December 2007 revised weights</center></b></td>
+<td><a href="/cps-basic/cpsrwdec07.zip">rwdec07.zip</td>
+<td><a href="/cps-basic/cpsrwdec07.ddf">rwdec07</a>&nbsp;&nbsp;</td>
+</tr>
+<TR>
+<td>2008</td>
+<td>--</td>
+<td><a href="/cps-basic/jan08pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb08pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar08pub.zip">Mar</a></td>
+<td><a href="/cps-basic/apr08pub.zip">Apr</a></td>
+<td><a href="/cps-basic/may08pub.zip">May</a></td>
+<td><a href="/cps-basic/jun08pub.zip">Jun</a></td>
+<td><a href="/cps-basic/jul08pub.zip">Jul</a></td>
+<td><a href="/cps-basic/aug08pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep08pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct08pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov08pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec08pub.zip">Dec</a></td>
+<td rowspan="1"><a href="/cps-basic/cpsbjan07.ddf">jan07</a>&nbsp;&nbsp;</td>
+</TR>
+<TR>
+<td>2009</td>
+<td>--</td>
+<td><a href="/cps-basic/jan09pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb09pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar09pub.zip">Mar</a></td>
+<td><a href="/cps-basic/apr09pub.zip">Apr</a></td>
+<td><a href="/cps-basic/may09pub.zip">May</a></td>
+<td><a href="/cps-basic/jun09pub.zip">Jun</a></td>
+<td><a href="/cps-basic/jul09pub.zip">Jul</a></td>
+<td><a href="/cps-basic/aug09pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep09pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct09pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov09pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec09pub.zip">Dec</a></td>
+<td rowspan="1"><a href="/cps-basic/cpsbjan09.ddf">jan09</a>&nbsp;&nbsp;</td>
+</TR>
+<TR>
+<td>2010</td>
+<td>--</td>
+<td><a href="/cps-basic/jan10pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb10pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar10pub.zip">Mar</a></td>
+<td><a href="/cps-basic/apr10pub.zip">Apr</a></td>
+<td><a href="/cps-basic/may10pub.zip">May</a></td>
+<td><a href="/cps-basic/jun10pub.zip">Jun</a></td>
+<td><a href="/cps-basic/jul10pub.zip">Jul</a></td>
+<td><a href="/cps-basic/aug10pub.zip">Aug</td>
+<td><a href="/cps-basic/sep10pub.zip">Sep</td>
+<td><a href="/cps-basic/oct10pub.zip">Oct</td>
+<td><a href="/cps-basic/nov10pub.zip">Nov</td>
+<td><a href="/cps-basic/dec10pub.zip">Dec</td>
+<td rowspan="2"><a href="/cps-basic/cpsbjan10.ddf">jan10</a>&nbsp;&nbsp;</td>
+</TR>
+<TR>
+<td>2011</td>
+<td>--</td>
+<td><a href="/cps-basic/jan11pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb11pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar11pub.zip">Mar</a></td>
+<td><a href="/cps-basic/apr11pub.zip">Apr</a></td>
+<td><a href="/cps-basic/may11pub.zip">May</a></td>
+<td><a href="/cps-basic/jun11pub.zip">Jun</a></td>
+<td><a href="/cps-basic/jul11pub.zip">Jul</a></td>
+<td><a href="/cps-basic/aug11pub.zip">Aug</td>
+<td><a href="/cps-basic/sep11pub.zip">Sep</td>
+<td><a href="/cps-basic/oct11pub.zip">Oct</td>
+<td><a href="/cps-basic/nov11pub.zip">Nov</td>
+<td><a href="/cps-basic/dec11pub.zip">Dec</td>
+</TR>
+<TR>
+<td>2012</td>
+<td>--</td>
+<td><a href="/cps-basic/jan12pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb12pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar12pub.zip">Mar</a></td>
+<td><a href="/cps-basic/apr12pub.zip">Apr</a></td>
+<td><a href="/cps-basic/may12pub.zip">May</a></td>
+<td><a href="/cps-basic/jun12pub.zip">Jun</a></td>
+<td><a href="/cps-basic/jul12pub.zip">Jul</a></td>
+<td><a href="/cps-basic/aug12pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep12pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct12pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov12pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec12pub.zip">Dec</a></td>
+<td rowspan="1"><a href="/cps-basic/cpsbmay12.ddf">may12</a>&nbsp;&nbsp;</td>
+</tr>
+<TR>
+<td>2013</td>
+<td>--</td>
+<td><a href="/cps-basic/jan13pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb13pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar13pub.zip">Mar</a></td>
+<td><a href="/cps-basic/apr13pub.zip">Apr</a></td>
+<td><a href="/cps-basic/may13pub.zip">May</a></td>
+<td><a href="/cps-basic/jun13pub.zip">Jun</a></td>
+<td><a href="/cps-basic/jul13pub.zip">Jul</a></td>
+<td><a href="/cps-basic/aug13pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep13pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct13pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov13pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec13pub.zip">Dec</a></td>
+<td rowspan="1"><a href="/cps-basic/January_2013_Record_Layout.txt">jan13</a>&nbsp;&nbsp;</td>
+</tr>
+<TR>
+<td>2014</td>
+<td>--</td>
+<td><a href="/cps-basic/jan14pub.zip">Jan</a></td>
+<td><a href="/cps-basic/feb14pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar14pub.zip">Mar</a></td>
+<td><a href="/cps-basic/apr14pub.zip">Apr</a></td>
+<td><a href="/cps-basic/may14pub.zip">May</a></td>
+<td>Jun</td>
+<td>Jul</td>
+<td>Aug</td>
+<td>Sep</td>
+<td>Oct</td>
+<td>Nov</td>
+<td>Dec</td>
+<td rowspan="1"><a href="/cps-basic/January_2014_Record_Layout.doc">jan14</a>&nbsp;&nbsp;</td>
+</tr>
+<!--
+<TR>
+<td>2015</td>
+<td>--</td>
+<td>Mar</td>
+<td>Apr</td>
+<td>May</td>
+<td><a href="/cps-basic/jun14pub.zip">Jun</a></td>
+<td><a href="/cps-basic/jul14pub.zip">Jul</a></td>
+<td><a href="/cps-basic/aug14pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep14pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct14pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov14pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec14pub.zip">Dec</a></td>
+<td><a href="/cps-basic/jan15pub.zip">Jan</a></td>
+<td>Feb</td>
+<td>Mar</td>
+<td>Apr</td>
+<td>May</td>
+<td>Jun</td>
+<td>Jul</td>
+<td>Aug</td>
+<td>Sep</td>
+<td>Oct</td>
+<td>Nov</td>
+<td>Dec</td>
+<td><a href="/cps-basic/feb15pub.zip">Feb</a></td>
+<td><a href="/cps-basic/mar15pub.zip">Mar</a></td>
+<td><a href="/cps-basic/apr15pub.zip">Apr</a></td>
+<td><a href="/cps-basic/may15pub.zip">May</a></td>
+<td><a href="/cps-basic/jun15pub.zip">Jun</a></td>
+<td><a href="/cps-basic/jul15pub.zip">Jul</a></td>
+<td><a href="/cps-basic/aug15pub.zip">Aug</a></td>
+<td><a href="/cps-basic/sep15pub.zip">Sep</a></td>
+<td><a href="/cps-basic/oct15pub.zip">Oct</a></td>
+<td><a href="/cps-basic/nov15pub.zip">Nov</a></td>
+<td><a href="/cps-basic/dec15pub.zip">Dec</a></td>
+<td rowspan="1"><a href="/cps-basic/January_2015_Record_Layout.doc>jan15</a>&nbsp;&nbsp;</td>
+</tr>
+-->
+<TR>
+<TD COLSPAN="15">
+<B>
+You can <A HREF="http://thedataweb.rm.census.gov/ftp/cps_ftp.html#cpsbasic">Download these files faster</A> ( 1994 - on ) from the 
+Data Ferret FTP Page
+</TD>
+</TR>
+</table>
+
+<p>
+**  Usually, the documentation from January applies to an entire year.  Execptions are 1984-1985 and 1994-1995.  The
+January 1984 documentation is used through to June 1985.  The July 1985 documentation applies to the remainder 
+of 1985.  For 1994-1995, the January 1994 documentation is used through August 1995.  The September 1995 documentation
+serves for the rest of the year.
+</p>
+<p>
+</p>
+
+<br />
+<center>
+<p>To report problems or if you have comments or suggestions, e-mail <i><a href="mailto:jroth@nber.org">jroth@nber.org</a></i></center>
+
+</p>
+<p></p>
+<table width="100%"> <tr><td>Last Update:  June 23, 2014</td>
+<td align="right">Created by Jean Roth April 10, 2000</td></tr> </table>
+
+
+</td>
+<td style="height: 250px; min-height: 250px">&nbsp;</td>
+</tr></table>
+
+<!-- this comment added by Alex 2012-05-15 12:43 -->
+
+<div id="leftNav">
+<img src="http://img.nber.org/img_2009/nav1_pubs.gif" alt="Publications" 
+    onMouseOver="this.src='http://img.nber.org/img_2009/nav1_pubs_active.gif'" 
+    onMouseOut="this.src='http://img.nber.org/img_2009/nav1_pubs.gif'" onClick="showNav(1,0)"><br>
+
+<img src="http://img.nber.org/img_2009/nav2_activities.gif" alt="Activities" 
+    onMouseOver="this.src='http://img.nber.org/img_2009/nav2_activities_active.gif'" 
+    onMouseOut="this.src='http://img.nber.org/img_2009/nav2_activities.gif'" 
+    onClick="showNav(2,0)"><br>
+
+<img src="http://img.nber.org/img_2009/nav3_meetings.gif" alt="Meetings" 
+    onMouseOver="this.src='http://img.nber.org/img_2009/nav3_meetings_active.gif'" 
+    onMouseOut="this.src='http://img.nber.org/img_2009/nav3_meetings.gif'" 
+    onClick="showNav(3,0)"><br>
+
+<img src="http://img.nber.org/img_2009/nav4_data.gif" alt="Data" 
+    onMouseOver="this.src='http://img.nber.org/img_2009/nav4_data_active.gif'" 
+    onMouseOut="this.src='http://img.nber.org/img_2009/nav4_data.gif'" 
+    onClick="showNav(4,0)"><br>
+
+<img src="http://img.nber.org/img_2009/nav5_people.gif" alt="People" 
+    onMouseOver="this.src='http://img.nber.org/img_2009/nav5_people_active.gif'" 
+    onMouseOut="this.src='http://img.nber.org/img_2009/nav5_people.gif'" 
+    onClick="showNav(5,0)"><br>
+
+<img src="http://img.nber.org/img_2009/nav6_about.gif" alt="About" 
+    onMouseOver="this.src='http://img.nber.org/img_2009/nav6_about_active.gif'"
+    onMouseOut="this.src='http://img.nber.org/img_2009/nav6_about.gif'" 
+    onClick="showNav(6,0)"><br>
+
+
+
+
+<img src="http://img.nber.org/img_2009/nav_bottom.gif" alt=""><br>
+<div style="display: none"><img src="http://img.nber.org/img_2009/nav1_pubs_active.gif"
+height="1" width="1.5" alt=""><img src="http://img.nber.org/img_2009/nav2_activities_active.gif"
+height="1" width="1" alt=""><img src="http://img.nber.org/img_2009/nav3_meetings_active.gif"
+height="1" width="1" alt=""><img src="http://img.nber.org/img_2009/nav4_data_active.gif"
+height="1" width="1" alt=""><img src="http://img.nber.org/img_2009/nav5_people_active.gif"
+height="1" width="1" alt=""><img src="http://img.nber.org/img_2009/nav6_about_active.gif"
+
+
+
+
+height="1" width="1" alt="">
+
+
+<img src="http://img.nber.org/img_2009/nav7_support.gif" alt="Support" 
+    onMouseOver="this.src='http://img.nber.org/img_2009/nav7_support_active.gif'" 
+    onMouseOut="this.src='http://img.nber.org/img_2009/nav7_support.gif'" 
+    onClick="showNav(7,0)"><br>
+
+<!--height="1" width="1" alt=""><img src="http://img.nber.org/img_2009/nav7_support_active.gif"-->
+
+
+</div>
+</div>
+<div id="middleSeparator"><img src="http://img.nber.org/img_2009/middle_sep.jpg" alt=""></div>
+<div id="bottomSectionBackground">
+<div id="bottomSection">
+  <div id="bottomSectionContent"></div>
+<div align="center" id="nberContactInfo">
+National Bureau of Economic Research, 1050 Massachusetts Ave.,
+Cambridge, MA 02138;  <a href="callto:+16178683900">617-868-3900</a>; email: info@nber.org<BR><BR> <a href="/contact/">Contact Us</a>
+</div>
+</div> <!-- bottomSection -->
+</div> <!-- bottomSectionBackground -->
+
+<div id="navDiv1_outer" class="navDivOuter"></div>
+<div id="navDiv1_inner" class="navDivInner">
+<h2 class="withinNav">Working Papers & Publications</h2>
+
+<form action="/s/search" name="wpSearchForm" method="GET">
+<div style="background-image:url('http://img.nber.org/img_2009/wp_washed.gif'); background-repeat:no-repeat; background-position: center right;">
+<h2>&nbsp;<a href="/papers.html">Working Papers</a> &nbsp; 
+  <a href="/papers.html" style="font-size: 6pt; color: #134656">(MORE SEARCH OPTIONS)</a></h2>
+<div id="wpSearchCaption" style="display:
+                                 none">&nbsp; <span style="font-size:
+                                                           6pt;">
+  AUTHOR OR TITLE SEARCH OF WORKING PAPERS</span></div>
+<input type="hidden" name="restrict_papers" value="yes">
+<input type="hidden" name="whichsearch" value="db">
+<input type="hidden" name="client" value="test3_fe">
+<input type="hidden" name="proxystylesheet" value="test3_fe">
+<input type="hidden" name="site" value="default_collection">
+<input type="hidden" name="entqr" value="0">
+<input type="hidden" name="ud" value="1">
+<input type="hidden" name="output" value="xml_no_dtd">
+<input type="hidden" name="oe" value="UTF-8">
+<input type="hidden" name="ie" value="UTF-8">
+<input type="hidden" name="sort" value="date%3AD%3AL%3Ad1">
+<input type="text" name="q" id="wpSearchBoxId" size=40 style="text-align: left" class="yellowInput"
+       value="Search Author or Title of Working Papers" 
+       onClick="if (this.value == 'Search Author or Title of Working Papers') 
+                  {this.value =''; dojo.byId('wpSearchCaption').style.display = 'block'}"><br>
+&nbsp; <a href="/new.html">This Week's Working Papers</a><BR>
+&nbsp; <a href="/help/wp/free.html">Check to see if you are eligible for Free Downloads</a><br>
+&nbsp; <a href="/subscribe.html#papers">Become a subscriber</a><BR>
+</div>
+</form>
+&nbsp;<br>
+<!-- <a href="/wpsubmit/eligibilitytosubmit.html">Submit to WP Series</a><BR><BR>-->
+
+<form action="/s/search" name="booksSearchForm" method="GET">
+<div style="padding-left: 140px; background-image:url('http://img.nber.org/img_2009/books_washed.gif'); background-repeat:no-repeat">
+<h2>&nbsp;Books</h2>
+<div id="booksSearchCaption" style="display: none">&nbsp; <span style="font-size: 6pt;">SEARCH NBER BOOKS</span></div>
+<input type="hidden" name="restrict_books" value="yes">
+<input type="hidden" name="client" value="test3_fe">
+<input type="hidden" name="proxystylesheet" value="test3_fe">
+<input type="hidden" name="site" value="default_collection">
+<input type="hidden" name="entqr" value="0">
+<input type="hidden" name="ud" value="1">
+<input type="hidden" name="output" value="xml_no_dtd">
+<input type="hidden" name="oe" value="UTF-8">
+<input type="hidden" name="ie" value="UTF-8">
+<input type="hidden" name="sort" value="date%3AD%3AL%3Ad1">
+<input type="text" name="q" id="bookSearchBoxId" size=40 style="text-align: left" class="yellowInput"
+       value="Search NBER Books" onClick="if (this.value == 'Search NBER Books') 
+                  {this.value =''; dojo.byId('booksSearchCaption').style.display = 'block'}"><br>
+&nbsp; <a href="/books.html">Recent Books</a><br>
+&nbsp; <a href="/booksbyyear/">Earlier Books (by decade)</a><br>
+&nbsp; <a href="/booksbyseries/">Browse books by Series</a><BR>
+&nbsp; <a href="/books_in_progress/">Chapters from Books In Process</a><br>
+
+<!--<a href="">New Chapters</a><br>-->
+</div>
+</form>
+&nbsp;<br>
+
+<h2>Free Publications</h2>
+<a href="/aginghealth/">Bulletin on Aging and Health</a><br>
+<a href="/digest/">Digest</a> &mdash; Non-technical summaries of 4-8 working papers per month<br>
+<a href="/reporter/">Reporter</a> &mdash; News about the Bureau and its activities.<br><br><br>
+
+<h2><a href="/researchdisclosurepolicy.html">NBER Research Disclosure Policy</a></h2>
+
+
+<div class="bottomRight" onClick="hideNavs(0)">Close</div>
+</div>
+
+<!--<div id="navDiv2_inner" class="navDivInner" style="height: 560px">-->
+<div id="navDiv2_outer" class="navDivOuter" style="height: 610px"></div>
+
+<!--<div id="navDiv2_inner" class="navDivInner" style="height: 440px">-->
+<!--<div id="navDiv2_inner" class="navDivInner" style="height: 500px">-->
+<div id="navDiv2_inner" class="navDivInner" style="height: 560px">
+
+<h2 class="withinNav">Activities</h2>
+<div style="padding-bottom: 10px"><center>NBER activities are organized into
+  <a href="/programs/"><B>Programs</B></a> and <a href="/workinggroups/">Working Groups.</center></a>  <!--Most NBER research is published in <a href="/papers/">Working Papers</a>.
+
+<span class="smallcaps" style="color: #666666">( bold = NBER Program )</span>-->
+</div>
+<table style="width: 100%"><tr><td style="padding-left: 10px; padding-right: 10px; width:
+                    45%; min-width:40%">
+<div class="singleHang"><b><A HREF="/programs/ag/">Aging</A></b></div> 
+<div class="singleHang"><b><A HREF="/programs/ap/ap.html">Asset Pricing</A></b></div> 
+<div class="singleHang"><A HREF="/workinggroups/be/be.html">Behavioral Economics</a></div>
+<div class="singleHang"><b><A HREF="/programs/ch/ch.html">Children</A></b></div> 
+<div class="singleHang"><A HREF="/workinggroups/ce/ce.html">Chinese Economy</a></div>
+<div class="singleHang"><A HREF="/workinggroups/cs/cs.html">Cohort Studies</a></div>
+<div class="singleHang"><b><A HREF="/programs/cf/cf.html">Corporate Finance</A></b></div> 
+<div class="singleHang"><A HREF="/workinggroups/cri/cri.html">Economics of Crime</a></div>
+<div class="singleHang"><b><A HREF="/programs/dev/dev.html"> Development Economics </a></b></div> 
+<div class="singleHang"><b><A HREF="/programs/dae/dae.html"> Development of  the American Economy </a></b></div>
+<div class="singleHang"><b><A HREF="/programs/efg/efg.html">Economic Fluctuations and Growth</a></b></div> 
+<div class="singleHang"><b><A HREF="/programs/ed/ed.html">Education</a></b></div> 
+<div class="singleHang"><A HREF="/workinggroups/ent/ent.html">Entrepreneurship</a></div>
+<div class="singleHang"><b><A HREF="/programs/eee/eee.html">Environment and Energy</a></b></div> 
+<div class="singleHang"><A HREF="/workinggroups/fr/fr.html">Financial Risks</A></div>
+<div class="singleHang"><b><A HREF="/programs/hc/hc.html">Health Care</a></b></div> 
+<div class="singleHang"><b><A HREF="/programs/he/he.html">Health Economics</a></b></div>
+<div class="singleHang"><A HREF="/workinggroups/hf/hf.html">Household Finance</a></div>
+</td><td style="padding-left: 10px; width: 50%; min-width: 40%">
+<div class="singleHang"><b><A HREF="/programs/io/io.html">Industrial Organization</a></b></div> 
+<div class="singleHang"><A HREF="/workinggroups/ipe/ipe.html">Innovation Policy</a></div> 
+<div class="singleHang"><A HREF="/workinggroups/ins/ins.html">Insurance</a></div>
+<div class="singleHang"><b><A HREF="/programs/ifm/ifm.html">International Finance & Macroeconomics</a></b></div> 
+<div class="singleHang"><b><A HREF="/programs/iti/iti.html">International Trade and Investment</a></b></div> 
+<div class="singleHang"><b><A HREF="/programs/ls/ls.html">Labor</a></b></div> 
+<div class="singleHang"><b><A HREF="/programs/le/le.html">Law & Economics</a></b></div> 
+<div class="singleHang"><A HREF="/workinggroups/md/md.html">Market Design</a></div>
+<div class="singleHang"><A HREF="/workinggroups/mm/mm.html">Market Microstructure</a></div>
+<div class="singleHang"><b><A HREF="/programs/me/me.html">Monetary Economics</A></b></div> 
+<div class="singleHang"><A HREF="/workinggroups/ens/ens.html">National Security</a></div>
+<div class="singleHang"><A HREF="/workinggroups/oe/oe.html">Organizational Economics</a></div>
+<div class="singleHang"><A HREF="/workinggroups/per/per.html">Personnel Economics</A></div>
+<div class="singleHang"><b><A HREF="/programs/pol/pol.html">Political Economy</A></b></div> 
+<div class="singleHang"><b><A HREF="/programs/pr/pr.html">Productivity, Innovation, and Entrepreneurship</A></b></div> 
+<div class="singleHang"><b><A HREF="/programs/pe/pe.html">Public
+      Economics</A></b></div>
+<div class="singleHang"><A HREF="/workinggroups/ue/ue.html">Urban Economics</A></div>
+</td></tr></table>
+<div style="padding-left: 10px;"><h3 style="margin-bottom: 0px">Special Projects:</h3>
+<div class="singleHang"><A HREF="/AfricanSuccesses"><I> African Successes Project</i></A></div>
+<div class="singleHang"><A HREF="/programs/ag/cahr/cahrhome.html"><i>Center for Aging & Health Research <span class="smallcaps">(CAHR)</span></i></A></div> 
+<div class="singleHang"><A HREF="/CEME/ceme.html"><I>Conference on Econometrics
+      & Mathematical Economics <span class="smallcaps">(CEME)</span></i></a></div>
+<div class="singleHang"><a href="/CRIW/"><I>Conference on Research in
+      Income & Wealth <span class="smallcaps">(CRIW)</span></i></a></div>
+<div class="singleHang"><A HREF="/aging/drc/"><I>Disability Research Center<span class="smallcaps"> (DRC)</span></i></A></div> 
+<div class="singleHang"><A HREF="/programs/ag/rrc/rrchome.html"><I>Retirement Research Center <span class="smallcaps">(RRC)</span></i></A></div> 
+<div class="singleHang"><A HREF="/~sewp/"><I>Science & Engineering Workforce <span class="smallcaps">(SEWP)</span></i></a></div>
+</div>
+
+<div class="bottomRight" onClick="hideNavs(0)">Close</div>
+</div>
+
+
+
+
+<div id="navDiv3_outer" class="navDivOuter" style="height: 400px"></div>
+<div id="navDiv3_inner" class="navDivInner" style="height: 340px">
+<h2 class="withinNav">Meetings</h2>
+<center class="withinNav"><font size=".5">(by invitation only)</font></center>
+
+
+<h2>Recent Meetings</h2>
+&nbsp;
+<table>
+
+<tr><td class="padR10">    June 27-28</td><td>
+<A HREF="/confer/2014/ISOM14/summary.html">
+International Seminar on Macroeconomics</a></td></tr>
+
+<tr><td class="padR10"> June 25-28</td><td>
+<A HREF="/confer/2014/China14/summary.html">
+NBER Conference in China</a></td></tr>
+
+<tr><td class="padR10">   June 20-21</td><td>
+<A HREF="/confer/2014/EASE14/summary.html">
+Unconventional Monetary Policy</a></td></tr>
+
+
+<tr><td class="padR10">  June 16-18</td><td>
+<A HREF="/confer/2014/TAPES14/summary.html">
+Personal Income Taxation and Household Behavior</a></td></tr>
+
+
+
+</table>
+<div align="right" style="padding-top: 12px; color: #5386A6;">
+(<a href="/meeting_summaries.html">...More summaries of NBER Meetings...</a>)</div>
+<!--<h2 style="margin-bottom: 0px; margin-top: 12px">-->
+
+<h2>Other Meeting Links</h2>
+
+<a href="/summer-institute/">NBER Summer Institutes</a><BR>
+<a href="/video_archives.html">NBER Videos</a><BR>
+
+<a href="/macroannualconference/MacroAnnualConference.html"> NBER's Macro Annual</a><BR><br>
+<a href="/callforpapers/callpapers.html">Calls for Papers</a>
+
+
+<div class="bottomRight" onClick="hideNavs(0)">Close</div>
+</div>
+
+
+
+
+<div id="navDiv4_outer" class="navDivOuter" style="height: 260px"></div>
+<div id="navDiv4_inner" class="navDivInner" style="height: 200px">
+<h2 class="withinNav">Data</h2>
+
+<div style="background-image:url('http://img.nber.org/img_2009/data_washed.gif'); background-repeat:no-repeat; background-position: top right;">
+<div class="singleHang"><A HREF="/brdc/">Boston Census Research Data Center <span class="smallcaps">(BRDC)</span></a></div>
+<a href="/data/">Public Use Data Archive</a>&nbsp;<br><BR>
+<!--<a href="/data/">&nbsp;Data Created by NBER Researchers </a>&nbsp;<br><BR>-->
+
+<h2>Frequently Requested:</h2>
+<a href="/cycles/main.html">Business Cycle Memos, FAQ, Members</a><br>
+<a href="/cycles/cyclesmain.html">Business Cycle Dates</a><br>
+<a href="/cps/">Current Population Survey</a><br>
+<a href="/erp/2014_economic_report_of_the_president.pdf"> Economic Report of the President</a><BR>
+<a href="/releases">New Economic Releases</a><br>
+<a href="/data/#demographic">Vital Statistics</a><BR>
+</div>
+
+
+
+		
+<!--<img src="http://img.nber.org/images/pencil_arrow.png"><A HREF="prefs/releases">Register here to receive free
+e-mail notification of new economic releases</A>-->
+<div class="bottomRight" onClick="hideNavs(0)">Close</div>
+</div>
+
+
+
+
+<div id="navDiv5_outer" class="navDivOuter" style="height: 400px"></div>
+<div id="navDiv5_inner" class="navDivInner" style="height: 340px">
+<h2 class="withinNav">People</h2>
+<table><tr><td><!--<img src="http://img.nber.org/img_2009/poterba_pic.jpg" alt="" align="left">-->
+</td><td><h2><a href="/poterba.html">James Poterba</a>, president</h2><BR>
+James Poterba is President of the National Bureau of Economic Research.
+He is also the Mitsui Professor of Economics at M.I.T. 
+</td></tr></table>
+<table width="100%"><tr><td>
+<h2>NBER Researchers</h2>
+<a href="/programs/program_members.html">Researchers by NBER Program</a><br>
+<!-- <a href="">Researchers with Recent Working Papers</a><br> -->
+<a href="/vitae.html">Complete NBER Research Family List</a><br>
+</td><td>
+<form action="/s/search" name="peopleSearchForm" method=GET>
+<div id="peopleSearchCaption" style="display: none">&nbsp; <span style="font-size: 6pt;">SEARCH NBER RESEARCHERS</span></div>
+<input type="hidden" name="whichsearch" value="dbfam">
+<input type="hidden" name="client" value="default_frontend">
+<input type="hidden" name="proxystylesheet" value="test3_fe">
+<input type="hidden" name="site" value="default_collection">
+<input type="hidden" name="entqr" value="0">
+<input type="hidden" name="ud" value="1">
+<input type="hidden" name="output" value="xml_no_dtd">
+<input type="hidden" name="oe" value="UTF-8">
+<input type="hidden" name="ie" value="UTF-8">
+<input type="text" name="q" id="peopleSearchBoxId" size=20 style="text-align: left" class="yellowInput"
+       value="Search NBER researchers" onClick="if (this.value == 'Search NBER researchers') 
+                  {this.value =''; dojo.byId('peopleSearchCaption').style.display = 'block'}"></form>
+
+<!-- <input class="yellowInput" type="text" value="Search NBER researchers"> -->
+</td></tr></table>
+<table><tr><td width="80"><img src="http://img.nber.org/img_2009/people_sil.gif"
+                               alt="image of people"></td><td>
+<h2>Other People Links</h2>
+<a href="/staff.html">Staff</a><br>
+<a href="/board.html">Board of Directors</a><br>
+</td></tr></table>
+<div class="bottomRight" onClick="hideNavs(0)">Close</div>
+</div>
+
+<!-- height outer was 377px, inner was was 317px, increased by Alex 2011-06-27 -->
+
+<div id="navDiv6_outer" class="navDivOuter" style="height: 395px"></div>
+<div id="navDiv6_inner" class="navDivInner" 
+
+style="height: 335px;
+       background-image: url('/images/lobby_new.jpg');
+       background-repeat: no-repeat;
+       background-position: 0px 40px;
+">
+<h2 class="withinNav">About</h2>
+<div style="padding-left: 220px; position: relative; top: -10px">
+<p><a href="/info.html">About Us</A><BR>
+<a href="/contact/">Contact Information</a><br>
+<a href="/nberhistory/">Historical Archives</a></p>
+<p><a href="/programs/">Research Programs</A><BR>
+<a href="/workinggroups/">Working Groups</A><BR>
+<a href="/researchdisclosurepolicy.html">Research Disclosure Policy</A><BR>
+<a href="/jobs/">Employment and Fellowships</a><br>
+<!-- <a href="/fellowships/">Fellowships</a><br> -->
+<a href="/siteguide.html">Sitemap</a><br>
+<a href="/links/">Links to other Resources</a><br>
+<a href="/s/search/">Search</a></p>
+<p>Map/Directions:<br>
+<a
+href="http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=NBER&amp;sll=42.373764,-71.105211&amp;sspn=0.00531,0.013175&amp;ie=UTF8&amp;ll=42.374937,-71.111112&amp;spn=0.010621,0.02635&amp;z=15"
+title="Directions to NBER" target="_new">1050 Massachusetts Ave., Cambridge, MA 02138</a></p>
+<p>ph: <a href="callto:+16178683900" title="dial the NBER">617-868-3900</a><br>
+email: <a href="mailto:info@nber.org" title="email the NBER">info@nber.org</a></p>
+
+<div class="bottomRight" onClick="hideNavs(0)">Close</div>
+</div>
+
+
+
+
+
+<div id="navDiv7_outer" class="navDivOuter" style="height: 260px"></div>
+<div id="navDiv7_inner" class="navDivInner" style="height: 200px">
+<h2 class="withinNav">Support</h2>
+
+<h2></h2>
+The research activities of the NBER are funded by grants from federal research agencies, by private foundations, and by generous donations from our corporate associates and from private individuals.  The NBER is a non-profit, 501(c)(3) organization.  For information on supporting the NBER, please contact:<br><br>
+
+Mr. Denis Healy, Director of Development<br>
+NBER<br>
+1050 Massachusetts Avenue<br>
+Cambridge, MA 02138-5398<br>
+<p>ph: <a href="callto:+16178683900" title="dial the NBER">617-868-3900</a><br>
+email: <a href="mailto:dhealy@nber.org" title="Denis Healy">dhealy@nber.org</a></p>
+<br><br>
+<div class="bottomRight" onClick="hideNavs(0)">Close</div>
+
+</div>
+
+</div> <!-- closes mainNewsDiv -->
+
+
+</body>
+</html>

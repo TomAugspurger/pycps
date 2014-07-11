@@ -8,7 +8,9 @@ from http://www.nber.org/data/cps_basic.html
 
 TODO: March Supplements
 """
-from lxml.html import parse
+import re
+import datetime
+from lxml import html
 from functools import partial
 
 from pycps.parsers import read_settings
@@ -20,15 +22,38 @@ def all_monthly_data():
     root = html.parse(site).getroot()
     partial_matcher = partial(_matcher, regex=regex)
 
-    for link in ifilter(partial_matcher, root.iterlinks()):
+    for link in filter(partial_matcher, root.iterlinks()):
         _, _, _fname, _ = link
-        fname = _fname.split('/')[-1]
+        fname = rename_cps_monthly(_fname.split('/')[-1])
         existing = _exists(os.path.join(out_dir, fname))
         if not existing:
             downloader(fname, out_dir)
             print('Added {}'.format(fname))
 
     renamer(out_dir)
+
+
+def rename_cps_monthly(cpsname):
+    """
+    hardcoded. cpsb9102.Z   -> cpsm1991-02.Z
+               jan98pub.zip -> cpsm1998-01.zip
+
+    Parameters
+    ----------
+    cpsname: str
+
+    Results
+    -------
+    myname: str
+        formatted like cpsmYYYY-MM
+    """
+    fname, ext = cpsname.split('.')
+    if ext == 'Z':
+        dt = datetime.datetime.strptime(fname, 'cpsb%y%m')
+    else:
+        dt = datetime.datetime.strptime(fname, '%b%ypub.zip')
+    return dt.strftime('cpsm%Y-%m') + ext
+
 
 
 def monthly_data(month, **kwargs):
@@ -44,7 +69,7 @@ def march_supplement():
     pass
 
 
-#-
+#-----------------------------------------------------------------------------
 
 def _matcher(link, regex):
     try:
