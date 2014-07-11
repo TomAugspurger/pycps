@@ -8,9 +8,8 @@ from http://www.nber.org/data/cps_basic.html
 
 TODO: March Supplements
 """
+from pycps.readers import read_settings
 
 
-def read_settings(filepath):
-    pass
-
-settings = read_settings('./settings.json')
+if __name__ == '__main__':
+    settings = read_settings('./settings.json')
