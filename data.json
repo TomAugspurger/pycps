@@ -70,8 +70,6 @@
     "jan1994": ["expand_year"],
     "apr1994": ["expand_year"],
     "jun1995": ["expand_year"],
-    "sep1995": ["expand_year"],
+    "sep1995": ["expand_year"]
     }
-
-
 }
