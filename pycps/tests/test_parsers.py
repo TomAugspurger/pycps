@@ -19,8 +19,8 @@ These are reserved to substitue in other paths.
 """
 {
     "data_path": "data/",
-    "dd_path": "{data}/data_dictionaries/",
-    "monthly_path": "{data}/monthly/"
+    "dd_path": "{data_path}/data_dictionaries/",
+    "monthly_path": "{data_path}/monthly/"
 }''')
 
     def test_skip_module_docstring(self):
@@ -30,6 +30,11 @@ These are reserved to substitue in other paths.
     def test_read_setting(self):
         result = p.read_settings(self.settings_file)['data_path']
         expected = 'data/'
+        self.assertEqual(result, expected)
+
+    def test_substitue(self):
+        result = p.read_settings(self.settings_file)['dd_path']
+        expected = 'data/data_dictionaries/'
         self.assertEqual(result, expected)
 
 #     def test_open_file_or_stringio(self):

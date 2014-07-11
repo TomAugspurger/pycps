@@ -4,6 +4,7 @@ Read all the things.
 from contextlib import contextmanager
 from itertools import dropwhile
 import json
+import re
 
 from pycps.compat import StringIO
 
@@ -46,7 +47,16 @@ def read_settings(filepath):
         f = ''.join(list(f))  # TODO: could be lazier
         # TODO: skiplines starting with comment char
         f = json.loads(f)
+        f = {k: _sub_path(v, f) for k, v in f.items()}  # TODO: py2
     return f
+
+def _sub_path(v, f):
+    pat = r'\{(\w*)\}'
+    m = re.match(pat, v)
+    if m:
+        to_sub = m.groups()[0]
+        v = re.sub(pat, f[to_sub].rstrip('/'), v)
+    return v
 
 
 class DDParser:
