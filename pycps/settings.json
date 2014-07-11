@@ -7,7 +7,9 @@ NOTE: you can't have '{' or '}' in your filepaths.
 These are reserved to substitue in other paths.
 """
 {
-    "data_path": "data_path/",
+    "data_path": "data/",
     "dd_path": "{data_path}/data_dictionaries/",
-    "monthly_path": "{data_path}/monthly/"
+    "dd_store": "{dd_path}/dds.hdf",
+    "monthly_path": "{data_path}/monthly/",
+    "monthly_store": "{monthly_path}/monthly.hdf"
 }
