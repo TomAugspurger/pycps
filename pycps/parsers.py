@@ -1,13 +1,18 @@
 """
 Read all the things.
 """
-from contextlib import contextmanager
-from itertools import dropwhile
-import json
 import re
+import json
+from itertools import dropwhile
+from contextlib import contextmanager
+
+import pandas as pd
 
 from pycps.compat import StringIO
 
+
+#-----------------------------------------------------------------------------
+# Settings
 
 @contextmanager
 def _open_file_or_stringio(maybe_file):
@@ -59,6 +64,7 @@ def _sub_path(v, f):
     return v
 
 #-----------------------------------------------------------------------------
+# Data Dictionaries
 
 class DDParser:
     """
@@ -80,21 +86,11 @@ class DDParser:
         self.infile = infile
         self.outpath = settings['dd_path']
 
-        styles = {"jan1989": 0,
-                  "jan1992": 0,
-                  "jan1994": 2,
-                  "apr1994": 2,
-                  "jun1995": 2,
-                  "sep1995": 2,
-                  "jan1998": 1,
-                  "jan2003": 2,
-                  "may2004": 2,
-                  "aug2005": 2,
-                  "jan2007": 2,
-                  "jan2009": 2,
-                  "jan2010": 2,
-                  "may2012": 2,
-                  "jan2013": 2
+        styles = {"jan1989": 0, "jan1992": 0, "jan1994": 2,
+                  "apr1994": 2, "jun1995": 2, "sep1995": 2,
+                  "jan1998": 1, "jan2003": 2, "may2004": 2,
+                  "aug2005": 2, "jan2007": 2, "jan2009": 2,
+                  "jan2010": 2, "may2012": 2, "jan2013": 2
               }
 
         self.store_name = infile.stem
@@ -102,14 +98,6 @@ class DDParser:
 
         self.style = styles.get(self.store_name, max(styles.values()))
         self.regex = self.make_regex(style=self.style)
-
-        self.dataframes = []
-        self.next_line = None
-        self.holder = []
-        self.pos_id = 0
-        self.pos_len = 1
-        self.pos_start = 2
-        self.pos_end = 3
 
     @staticmethod
     def _is_consistent(formatted):
@@ -152,6 +140,7 @@ class DDParser:
             # ensure consistency across lines
             try:
                 self._is_consistent(formatted)
+                import ipdb; ipdb.set_trace()
             except StopIteration:  # good till thru the end
                 df = pd.DataFrame(formatted,
                                   columns=['id', 'length', 'start', 'end'])
@@ -162,82 +151,7 @@ class DDParser:
                 raise ValueError
                 # recover
 
-            # Finally
-            # to_be_df = self.holder
-            # df = pd.DataFrame(to_be_df, columns=['id', 'length', 'start',
-            #                                      'end'])
-            # # Some years need to grab the very last one
-            # # If there's only one, it's been picked up.
-            # if len(self.dataframes) > 0:
-            #     df = pd.concat([self.common, df])
-            # self.dataframes.append(df)
             return df
-
-    def analyze(self, line, f):
-        maybe_groups = self.regex.match(line) #
-
-        if maybe_groups:
-            formatted = self.formatter(maybe_groups) #
-            # Return to main for loop under run
-            if len(self.holder) == 0:
-                self.holder.append(formatted)
-            # Fake break
-            elif formatted[self.pos_start] > self.holder[-1][self.pos_end] + 1:
-                bad = ('/Volumes/HDD/Users/tom/DataStorage/CPS/dds/cpsbmay04.ddf',
-                       '/Volumes/HDD/Users/tom/DataStorage/CPS/dds/cpsbaug05.ddf')
-                if formatted == ('FILLER', 2, 411, 412) and self.infile in bad:
-                    # cpsbmay04 dd is wrong. Should be 410-411 not 411-412
-                    formatted = (formatted[0], formatted[1], 410, 411)
-                    self.holder.append(formatted)
-                    print("Fixed {}".format(line))
-                else:
-                    self.handle_padding(formatted, f)
-            # Real break
-            elif formatted[self.pos_start] < self.holder[-1][self.pos_end]:
-                self.handle_real_break(formatted)
-            else:
-                self.holder.append(formatted)
-
-
-    def handle_padding(self, formatted, f):
-        """
-        CPS left out some padding characters.
-
-        Unpure.  Need to know next line to determine pad len.
-        """
-        # Can't use f.readline() cause final line would be infinite loop.
-
-        # dr = it.dropwhile(lambda x: not self.regex.match(x), f)
-        # next_line = next(dr)
-        # maybe_groups = self.regex.match(next_line)
-
-        # next_formatted = self.formatter(maybe_groups)
-        last_formatted = self.holder[-1]
-        pad_len = formatted[self.pos_start] - last_formatted[self.pos_end] - 1
-        pad_str = last_formatted[self.pos_end] + 1
-        pad_end = pad_len + pad_str - 1
-        pad = ('PADDING', pad_len, pad_str, pad_end)
-
-        self.holder.append(pad)
-        self.holder.append(formatted)  # goto next line
-
-    def handle_real_break(self, formatted):
-        """
-        CPS reuses some codes and then starts over.
-        """
-        to_be_df = self.holder
-        df = pd.DataFrame(to_be_df, columns=['id', 'length', 'start',
-                                             'end'])
-
-        if len(self.dataframes) == 0:
-            self.dataframes.append(df)
-            common_index_pt = df[df['start'] == formatted[self.pos_end]].index[0] - 1
-            self.common = df.ix[:common_index_pt]
-        else:
-            df = pd.concat([self.common, df], ignore_index=True)
-            self.dataframes.append(df)
-
-        self.holder = [formatted]  # next line
 
     @staticmethod
     def make_regex(style=None):
@@ -278,19 +192,6 @@ class DDParser:
             end = int(end)
         return (id_, length, start, end)
 
-    def len_checker(self):
-        # Will fail cause CPS screwed up w/ padding.
-        for df in self.dataframes:
-            assert (df.end - df.start == df.length - 1).all()
-
-    def con_checker(self):
-        for df in self.dataframes:
-            if not (df.end.shift() - df.start + 1 == 0)[1:].all():
-                badlines = df[~(df.end.shift() - df.start + 1 == 0)][1:].index
-                for line in badlines:
-                    print(df.ix[line - 1:line + 1])
-                raise ValueError('Continuity is Broken Around Here')
-
     def writer(self):
         """
         Once you have all the dataframes, write them to that outfile,
@@ -311,8 +212,6 @@ class DDParser:
         return id_
 
 
-#-----------------------------------------------------------------------------
-#-----------------------------------------------------------------------------
 class WidthError(ValueError):
     """
     The stated width does not equal the computed width
@@ -322,6 +221,7 @@ class WidthError(ValueError):
         """
         pass
 
+
 class ContinuityError(ValueError):
     """
     Two subsequent lines don't align cleanly.
@@ -330,3 +230,6 @@ class ContinuityError(ValueError):
         """
         """
         pass
+
+#-----------------------------------------------------------------------------
+# Monthly Data Files
