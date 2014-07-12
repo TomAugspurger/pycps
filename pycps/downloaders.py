@@ -133,13 +133,3 @@ def _matcher(link, regex):
             return file_
     except ValueError:
         pass
-
-def _exists(path_name):
-    no_ext = path_name.split('.')[0]
-    if exists(path_name) or exists(no_ext + '.gz') or exists(no_ext + '.gz'):
-        return True
-
-
-
-if __name__ == '__main__':
-    settings = read_settings('./settings.json')
