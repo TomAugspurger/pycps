@@ -49,3 +49,8 @@ class TestDownloaders(unittest.TestCase):
         files = iter(['cpsm1994-01.zip', 'cpsm1994-03.zip'])
         with self.assertRaises(ValueError):
             list(d.filter_monthly_files(files, months=months))
+
+    def test_filter_monthly_files_None(self):
+        files = ['cpsm1994-01.zip', 'cpsm1994-03.zip']
+        result = list(d.filter_monthly_files(iter(files)))
+        self.assertEqual(files, list(result))
