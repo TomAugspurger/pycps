@@ -25,7 +25,7 @@ def all_monthly_files(site='http://www.nber.org/data/cps_basic.html'):
     Find all matching monthly data files and data dictionaries
     from the NBER's CPS site.
     """
-    regex = re.compile(r'cpsb\d{4}.Z|\w{3}\d{2}pub.zip|\.[ddf,asc]$')
+    regex = re.compile(r'cpsb\d{4}.Z|\w{3}\d{2}pub.zip|[\w\d]*\.(ddf|asc)')
     root = html.parse(site).getroot()
     partial_matcher = partial(_matcher, regex=regex)
 
@@ -46,13 +46,24 @@ def rename_cps_monthly(cpsname):
     Results
     -------
     myname: str
-        formatted like cpsmYYYY-MM
+        formatted like cpsmYYYY-MM.ext
     """
     fname, ext = cpsname.split('.')
-    if ext == 'Z':
+
+    if ext == 'Z':  # could be DRYer
         dt = datetime.datetime.strptime(fname, 'cpsb%y%m')
-    else:
+    elif ext == 'zip':
         dt = datetime.datetime.strptime(fname, '%b%ypub')
+    elif ext == 'ddf':
+        # not sure about 'cpsrwdec07.ddf',
+        if fname.startswith('cpsb'):
+            dt = datetime.datetime.strptime(fname, 'cpsb%b%y')
+        elif fname.startswith('cps'):
+            dt = datetime.datetime.strptime(fname, 'cps%y')
+        else:
+            raise ValueError
+    else:
+        raise ValueError
     return dt.strftime('cpsm%Y-%m') + '.' + ext
 
 

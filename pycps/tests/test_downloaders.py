@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import unittest
-from itertools import dropwhile
 
 from pycps import downloaders as d
 
@@ -8,10 +7,9 @@ from pycps import downloaders as d
 class TestDownloaders(unittest.TestCase):
 
     def test_all_monthly_files(self):
-        result = d.all_monthly_files('files/nbersite.html')
-        self.assertEqual(next(result), 'cpsb7601.Z')
-        result = dropwhile(lambda x: x.endswith('.Z'), result)
-        self.assertEqual(next(result), 'jan94pub.zip')
+        result = list(d.all_monthly_files('files/trimmed_nber.html'))
+        expected = ['cpsbjan03.ddf', 'cpsb7601.Z', 'jan94pub.zip']
+        self.assertEqual(result, expected)
 
     def test_rename_monthly_Z(self):
         result = d.rename_cps_monthly('cpsb9102.Z')
@@ -21,6 +19,16 @@ class TestDownloaders(unittest.TestCase):
     def test_rename_monthly_zip(self):
         result = d.rename_cps_monthly('jan98pub.zip')
         expected = 'cpsm1998-01.zip'
+        self.assertEqual(result, expected)
+
+    def test_rename_dd_year_only(self):
+        result = d.rename_cps_monthly('cps89.ddf')
+        expected = 'cpsm1989-01.ddf'
+        self.assertEqual(result, expected)
+
+    def test_rename_dd_year_month(self):
+        result = d.rename_cps_monthly('cpsbmay12.ddf')
+        expected = 'cpsm2012-05.ddf'
         self.assertEqual(result, expected)
 
     def test_filter_monthly_files_basic(self):
