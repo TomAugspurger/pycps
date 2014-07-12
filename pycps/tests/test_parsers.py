@@ -159,19 +159,17 @@ class TestDDParser(unittest.TestCase):
     def test_is_consistent(self):
         formatted = [('HhMONTH', 2, 38, 39),
                      ('foo', 3, 40, 42)]
-        # not sure why self.assertRaises doesn't handle this
-        # self.assertRaises(self.parser._is_consistent(formatted),
-        #                   StopIteration)  # worked!
-        try:
+        with self.assertRaises(StopIteration):
             self.parser._is_consistent(formatted)
-        except StopIteration:
-            pass  # worked!
 
-    def test_is_consistent_width(self):
+    def test_is_consistent_width_raises(self):
         formatted = [('HhMONTH', 1, 38, 39),
                      ('foo', 3, 40, 42)]
-        self.assertRaises(p.WidthError)
+        with self.assertRaises(p.WidthError):
+            self.parser._is_consistent(formatted)
 
+    def test_is_consistent_continuity_raises(self):
         formatted = [('HhMONTH', 2, 38, 39),
                      ('foo', 3, 41, 42)]
-        self.assertRaises(p.ContinuityError)
+        with self.assertRaises(p.ContinuityError):
+            self.parser._is_consistent(formatted)

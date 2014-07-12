@@ -14,7 +14,7 @@ from pycps.compat import StringIO
 #-----------------------------------------------------------------------------
 # Globals
 
-_data_path = Path(__file__).parent.parent / 'data.json'
+_data_path = Path(__file__).parent / 'data.json'
 with _data_path.open() as f:
     DD_TO_MONTH = json.load(f)['dd_to_month']
 
@@ -118,21 +118,26 @@ class DDParser:
         1. width == (end - start) + 1
         2. start_1 == end_0 + 1
         """
+        def check_width(current):
+            if not current[1] == current[3] - current[2] + 1:
+                raise WidthError
+
+        def check_continuity(current, old):
+            if not current[2] == old[3] + 1:
+                raise ContinuityError
+
         g = iter(formatted)
         current = next(g)
         i = 0
 
         while True:  # till stopIteration
-            assert current[1] == current[3] - current[2] + 1
             try:
+                check_width(current)
                 old, current, i = current, next(g), i + 1
-                assert current[2] == old[3] + 1
-            except AssertionError:
-                # TODO: logging
-                print("Round {}\n0: {}\n1: {}\n".format(i, old, current))
+                check_continuity(current, old)
             except StopIteration:
                 # last one should still check first criteria
-                assert old[1] == old[3] - old[2] + 1
+                check_width(old)
                 raise StopIteration
 
     def run(self):
