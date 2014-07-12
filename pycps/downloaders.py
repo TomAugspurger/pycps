@@ -56,7 +56,7 @@ def rename_cps_monthly(cpsname):
     return dt.strftime('cpsm%Y-%m') + '.' + ext
 
 
-def filter_monthly_files(files, months=None, kind='both'):
+def filter_monthly_files(files, months=None):
     """
     Filter the generator from all_monthly_files down to
     what you want, probably from the settings file.
@@ -89,6 +89,9 @@ def filter_monthly_files(files, months=None, kind='both'):
     files = list(files)  # have to thunk
     file_dates = [arrow.get(x.split('.')[0], format='cpsm%Y-%m')
                   for x in files]
+
+    if months is None:
+        months = [['1936-01', arrow.now().strftime('%Y-%m')]]
 
     is_nested = [is_list_like(x) for x in months]
     a = lambda x: arrow.get(x)
