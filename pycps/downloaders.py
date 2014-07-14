@@ -14,6 +14,7 @@ from itertools import chain
 from functools import partial
 
 import arrow
+import requests
 from lxml import html
 from pandas.core.common import is_list_like
 
@@ -127,12 +128,30 @@ def monthly_data(month,
     root = html.parse(site).getroot()
 
 
-def data_dictionary():
-    pass
+def download_month(month, datapath):
+    """
+    Fetch and write a single month's data
+    from http://www.nber.org/cps-basic/.
 
+    Parameters
+    ----------
+    month: str
+    datapath: Path
 
-def march_supplement():
-    pass
+    Returns
+    -------
+    None: IO ()
+
+    """
+    base = "http://www.nber.org/cps-basic/"
+    myname = rename_cps_monthly(month)
+
+    r = requests.get(base + month, stream=True)
+    outpath = datapath / myname
+    with outpath.open('wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            f.write(chunk)
+            f.flush()
 
 
 #-----------------------------------------------------------------------------
