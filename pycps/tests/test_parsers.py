@@ -3,6 +3,9 @@ import unittest
 from pathlib import Path
 from contextlib import contextmanager
 
+import pandas as pd
+import pandas.util.testing as tm
+
 import pycps.parsers as p
 from pycps.compat import StringIO
 
@@ -173,3 +176,18 @@ class TestDDParser(unittest.TestCase):
                      ('foo', 3, 41, 42)]
         with self.assertRaises(p.ContinuityError):
             self.parser._is_consistent(formatted)
+
+    def test_regularize_ids(self):
+        dd = pd.DataFrame({'end': {0: 15, 1: 17, 2: 21, 3: 23, 4: 26},
+                           'start': {0: 1, 1: 16, 2: 18, 3: 22, 4: 24},
+                           'length': {0: 15, 1: 2, 2: 4, 3: 2, 4: 3},
+                           'id': {0: 'HRHHID', 1: 'HRMONTH',
+                                  2: 'HRYEAR4', 3: 'HURESPLI', 4: 'HUFINAL'}})
+        reg = {'HRHHID': 'foo'}
+        ex = pd.DataFrame({'end': {0: 15, 1: 17, 2: 21, 3: 23, 4: 26},
+                           'start': {0: 1, 1: 16, 2: 18, 3: 22, 4: 24},
+                           'length': {0: 15, 1: 2, 2: 4, 3: 2, 4: 3},
+                           'id': {0: 'foo', 1: 'HRMONTH',
+                                  2: 'HRYEAR4', 3: 'HURESPLI', 4: 'HUFINAL'}})
+        result = self.parser.regularize_ids(dd, reg)
+        tm.assert_frame_equal(result, ex)
