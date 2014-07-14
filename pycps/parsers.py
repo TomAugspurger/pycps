@@ -86,6 +86,16 @@ class DDParser:
     infile: pathlib.Path
     settings: dict
 
+    Attributes
+    ----------
+
+    infile: Path
+        ddf from CPS
+    outpath: str
+        path to HDFStore for output
+    store_name:
+        key to use inside HDFStore
+
     Notes
     -----
 
@@ -104,8 +114,8 @@ class DDParser:
               }
 
         self.store_name = infile.stem
-        # default to most recent
 
+        # default to most recent
         self.style = styles.get(self.store_name, max(styles.values()))
         self.regex = self.make_regex(style=self.style)
 
@@ -165,8 +175,8 @@ class DDParser:
             except ContinuityError:
                 raise ValueError
                 # recover
-
-            return df
+        self.df = df
+        return df
 
     @staticmethod
     def regularize_ids(df, replacer):
@@ -221,7 +231,7 @@ class DDParser:
             end = int(end)
         return (id_, length, start, end)
 
-    def writer(self, storepath):
+    def write(self, storepath):
         """
         Once you have all the dataframes, write them to that outfile,
         an HDFStore.
@@ -235,10 +245,8 @@ class DDParser:
         None: IO
 
         """
-        store = pd.HDFStore(self.outpath)
-        df = self.dataframes[0]  # Only should happen in the old ones.
-        store.append(self.store_name, df, append=False)
-        store.close()
+        df = self.df  # Only should happen in the old ones.
+        df.to_hdf(self.outpath, format='f')
 
     @staticmethod
     def handle_replacers(id_):
