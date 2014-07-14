@@ -167,6 +167,20 @@ class DDParser:
             return df
 
     @staticmethod
+    def regularize_ids(df, replacer):
+        """
+        Regularize the ids as early as possible.
+
+        Parameters
+        ----------
+        df: DataFrame returned from DDParser.run
+        replace: dict
+            {cps_id -> regularized_id}
+            probably defined in data.json
+        """
+        return df.replace({'id': replacer})
+
+    @staticmethod
     def make_regex(style=None):
         """
         Regex factory to match. Each dd has a style (just an id for that regex).
@@ -258,12 +272,13 @@ def _month_to_dd(month):
     pass
 
 
-def read_monthly(infile):
+def read_monthly(infile, dd):
     """
     Parameters
     ----------
 
     infile: Path
+    dd: DataFrame
 
     Returns
     -------
