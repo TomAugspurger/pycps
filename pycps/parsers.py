@@ -162,19 +162,18 @@ class DDParser:
             # regularize format; intentional thunk
             formatted = [self.formatter(x) for x in lines]
 
-            # ensure consistency across lines
-            try:
-                self._is_consistent(formatted)
-                import ipdb; ipdb.set_trace()
-            except StopIteration:  # good till thru the end
-                df = pd.DataFrame(formatted,
-                                  columns=['id', 'length', 'start', 'end'])
-            except WidthError:
-                raise ValueError
-                # recover
-            except ContinuityError:
-                raise ValueError
-                # recover
+        # ensure consistency across lines
+        try:
+            self._is_consistent(formatted)
+        except StopIteration:  # good till thru the end
+            df = pd.DataFrame(formatted,
+                              columns=['id', 'length', 'start', 'end'])
+        except WidthError:
+            raise ValueError
+            # recover
+        except ContinuityError:
+            raise ValueError
+            # recover
         self.df = df
         return df
 
