@@ -62,3 +62,13 @@ class TestDownloaders(unittest.TestCase):
         files = ['cpsm1994-01.zip', 'cpsm1994-03.zip']
         result = list(d.filter_monthly_files(iter(files)))
         self.assertEqual(files, list(result))
+
+    def test_rename_cps_monthly_valueerror_ext(self):
+        files = 'cps89.foo'
+        with self.assertRaises(ValueError):
+            d.rename_cps_monthly(files)
+
+    def test_rename_cps_monthly_valueerror_ddf(self):
+        files = 'foobarbaz.ddf'
+        with self.assertRaises(ValueError):
+            d.rename_cps_monthly(files)
