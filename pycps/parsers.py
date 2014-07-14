@@ -237,7 +237,7 @@ class DDParser:
 
         Parameters
         ----------
-        storepath: str or Path
+        storepath: str
 
         Returns
         -------
@@ -300,11 +300,11 @@ def _month_to_dd(month):
                    "may2012": ["2012-05","2012-12"],
                    "jan2013": ["2013-01","2013-03"]}
 
-
     def mk_range(v):
         return arrow.Arrow.range(start=arrow.get(v[0]),
                                  end=arrow.get(v[1]),
                                  frame='month')
+
     rngs = {k: mk_range(v) for k, v in dd_to_month.items()}
 
     def isin(value, key):
@@ -320,7 +320,7 @@ def read_monthly(infile, dd):
     Parameters
     ----------
 
-    infile: Path
+    infile: str
     dd: DataFrame
 
     Returns
@@ -328,4 +328,24 @@ def read_monthly(infile, dd):
     df: DataFrame
 
     """
-    pass
+    n = 10
+    widths = dd.length.tolist()
+    df = pd.read_fwf(infile, widths=widths, names=dd.id.values, nrows=n)
+    # TODO: Fix stripping of 0s
+    return df
+
+
+def write_monthly(df, storepath):
+    """
+    Add a monthly datafile to the store.
+
+    Parameters
+    ----------
+    storepath: str
+
+    Returns
+    -------
+    None: IO
+
+    """
+    df.to_hdf(storepath, format='f')

@@ -216,5 +216,38 @@ class TestDDParser(unittest.TestCase):
         dds = sorted(dds, key=lambda x: datetime.datetime.strptime(x, '%b%Y'))
         for month, dd in zip(months, dds):
             result = p._month_to_dd(month)
-            # import ipdb; ipdb.set_trace()
             self.assertEqual(result, dd)
+
+class testHDFStore(unittest.TestCase):
+
+    def setUp(self):
+        self.hdfpath = '_hdfstore_.h5'
+        self.hdf = pd.HDFStore(self.hdfpath)
+        self.dd =  pd.DataFrame([['HRHHID',15, 1, 15],
+                                 ['HRMONTH', 2, 16, 17],
+                                 ['HRYEAR4', 4, 18, 21]],
+                                columns=['id', 'length', 'start', 'end'])
+        self.infile = StringIO("""000000000000000111999
+000000000000001121999
+000000000000002012000
+000000000000003022000
+""")
+
+    def tearDown(self):
+        self.hdf.close()
+        os.unlink(self.hdfpath)
+
+    def test_read_monthly(self):
+        result = p.read_monthly(self.infile, self.dd)
+        # expected = pd.DataFrame([['000000000000000', 11, 1999],
+        #                          ['000000000000001', 12, 1999],
+        #                          ['000000000000002', 1, 2000],
+        #                          ['000000000000003', 2, 2000]],
+        #                         columns=['HRHHID', 'HRMONTH', 'HRYEAR4'])
+        expected = pd.DataFrame([[0, 11, 1999],
+                                 [1, 12, 1999],
+                                 [2, 1, 2000],
+                                 [3, 2, 2000]],
+                                columns=['HRHHID', 'HRMONTH', 'HRYEAR4'])
+
+        tm.assert_frame_equal(result, expected)
