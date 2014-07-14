@@ -1,5 +1,6 @@
 import os
 import unittest
+import datetime
 from pathlib import Path
 from contextlib import contextmanager
 
@@ -191,3 +192,29 @@ class TestDDParser(unittest.TestCase):
                                   2: 'HRYEAR4', 3: 'HURESPLI', 4: 'HUFINAL'}})
         result = self.parser.regularize_ids(dd, reg)
         tm.assert_frame_equal(result, ex)
+
+    def test_month_to_dd(self):
+        months = ['1989-01', '1989-03', '1989-2',
+                  '1992-01', '1992-02', '1993-12',
+                  '1994-01', '1994-02', '1994-03',
+                  '1994-04', '1994-05', '1995-05',
+                  '1995-06', '1995-07', '1995-08',
+                  '1995-09', '1996-01', '1997-12',
+                  '1998-01', '2000-01', '2002-12',
+                  '2003-01', '2004-02', '2004-04',
+                  '2004-05', '2004-06', '2005-07',
+                  '2005-08', '2005-11', '2006-12',
+                  '2007-01', '2008-09', '2008-12',
+                  '2009-01', '2009-06', '2009-12',
+                  '2010-01', '2010-11', '2012-02',
+                  '2012-05', '2012-07', '2012-12',
+                  '2013-01', '2013-02', '2013-03'
+                ]
+        dds = ["jan1989", "jan1992", "jan1994", "apr1994", "jun1995",
+               "sep1995", "jan1998", "jan2003", "may2004", "aug2005",
+               "jan2007", "jan2009", "jan2010", "may2012", "jan2013"] * 3
+        dds = sorted(dds, key=lambda x: datetime.datetime.strptime(x, '%b%Y'))
+        for month, dd in zip(months, dds):
+            result = p._month_to_dd(month)
+            # import ipdb; ipdb.set_trace()
+            self.assertEqual(result, dd)

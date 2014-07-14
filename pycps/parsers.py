@@ -6,7 +6,9 @@ import json
 from pathlib import Path
 from itertools import dropwhile
 from contextlib import contextmanager
+from functools import partial
 
+import arrow
 import pandas as pd
 
 from pycps.compat import StringIO
@@ -219,17 +221,27 @@ class DDParser:
             end = int(end)
         return (id_, length, start, end)
 
-    def writer(self):
+    def writer(self, storepath):
         """
         Once you have all the dataframes, write them to that outfile,
         an HDFStore.
+
+        Parameters
+        ----------
+        storepath: str or Path
+
+        Returns
+        -------
+        None: IO
+
         """
         store = pd.HDFStore(self.outpath)
         df = self.dataframes[0]  # Only should happen in the old ones.
         store.append(self.store_name, df, append=False)
         store.close()
 
-    def handle_replacers(self, id_):
+    @staticmethod
+    def handle_replacers(id_):
         """
         Prefer ids to be valid python names.
         """
@@ -260,16 +272,40 @@ class ContinuityError(ValueError):
 
 #-----------------------------------------------------------------------------
 # Monthly Data Files
-# log time stuff
 
 def _month_to_dd(month):
     """
     lookup dd for a given month.
     """
-    # convert month to arro
-    # convert dd_to_month from data.json to {d -> [first month, last month]}
-    # see where month falls
-    pass
+    dd_to_month = {"jan1989": ["1989-01","1991-12"],
+                   "jan1992": ["1992-01","1993-12"],
+                   "jan1994": ["1994-01","1994-03"],
+                   "apr1994": ["1994-04","1995-05"],
+                   "jun1995": ["1995-06","1995-08"],
+                   "sep1995": ["1995-09","1997-12"],
+                   "jan1998": ["1998-01","2002-12"],
+                   "jan2003": ["2003-01","2004-04"],
+                   "may2004": ["2004-05","2005-07"],
+                   "aug2005": ["2005-08","2006-12"],
+                   "jan2007": ["2007-01","2008-12"],
+                   "jan2009": ["2009-01","2009-12"],
+                   "jan2010": ["2010-01","2012-04"],
+                   "may2012": ["2012-05","2012-12"],
+                   "jan2013": ["2013-01","2013-03"]}
+
+
+    def mk_range(v):
+        return arrow.Arrow.range(start=arrow.get(v[0]),
+                                 end=arrow.get(v[1]),
+                                 frame='month')
+    rngs = {k: mk_range(v) for k, v in dd_to_month.items()}
+
+    def isin(value, key):
+        return value in rngs[key]
+
+    f = partial(isin, arrow.get(month))
+    dd = filter(f, dd_to_month)
+    return list(dd)[0]
 
 
 def read_monthly(infile, dd):
