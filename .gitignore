@@ -2,7 +2,12 @@
 build
 dist
 *.egg-info
+pycps/tests/.coverage
+pycps/tests/cover/
 
 # python stuff
 *.pyc
 __pycache__
+
+# Data DLs
+pycps/data/
