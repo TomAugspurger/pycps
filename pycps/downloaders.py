@@ -10,6 +10,7 @@ TODO: March Supplements
 """
 import re
 import datetime
+from pathlib import Path
 from itertools import chain
 from functools import partial
 
@@ -66,10 +67,15 @@ def rename_cps_monthly(cpsname):
         dt = datetime.datetime.strptime(fname, 'cpsb%y%m')
     elif ext == 'zip':
         dt = datetime.datetime.strptime(fname, '%b%ypub')
+    elif ext == 'asc':
+        dt = datetime.datetime.strptime(fname, '%b%ydd')
     elif ext == 'ddf':
-        # not sure about 'cpsrwdec07.ddf',
         if fname.startswith('cpsb'):
             dt = datetime.datetime.strptime(fname, 'cpsb%b%y')
+        elif fname == 'cpsrwdec07':
+            # TODO: special case this one?
+            print('skipping cpsrwdec07')
+            return None
         elif fname.startswith('cps'):
             dt = datetime.datetime.strptime(fname, 'cps%y')
         else:
@@ -110,8 +116,9 @@ def filter_monthly_files(files, months=None):
                                     ['1995-01', '1995-06']])
     """
     files = list(files)  # have to thunk
+    renamed = (rename_cps_monthly(x) for x in files)
     file_dates = [arrow.get(x.split('.')[0], format='cpsm%Y-%m')
-                  for x in files]
+                  for x in renamed]
 
     if months is None:
         months = [['1936-01', arrow.now().strftime('%Y-%m')]]
@@ -150,6 +157,15 @@ def download_month(month, datapath):
     """
     base = "http://www.nber.org/cps-basic/"
     myname = rename_cps_monthly(month)
+
+    if myname is None:
+        return None
+
+    if not isinstance(datapath, Path):
+        datapath = Path(datapath)
+
+    if not datapath.exists():
+        datapath.mkdir(parents=True)
 
     r = requests.get(base + month, stream=True)
     outpath = datapath / myname
