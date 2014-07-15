@@ -63,6 +63,10 @@ def rename_cps_monthly(cpsname):
     """
     fname, ext = cpsname.split('.')
 
+    # if already formatted then skip to end
+    if re.match(r'cpsm\d{4}-\d{2}', cpsname):
+        return cpsname
+
     if ext == 'Z':  # could be DRYer
         dt = datetime.datetime.strptime(fname, 'cpsb%y%m')
     elif ext == 'zip':
