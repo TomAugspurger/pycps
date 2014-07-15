@@ -18,8 +18,6 @@ import requests
 from lxml import html
 from pandas.core.common import is_list_like
 
-from pycps.parsers import read_settings
-
 
 def all_monthly_files(site='http://www.nber.org/data/cps_basic.html',
                       kind='data'):
@@ -46,6 +44,7 @@ def all_monthly_files(site='http://www.nber.org/data/cps_basic.html',
     for _, _, fname_, _ in filter(partial_matcher, root.iterlinks()):
         fname = fname_.split('/')[-1]
         yield fname
+
 
 def rename_cps_monthly(cpsname):
     """
@@ -132,12 +131,6 @@ def filter_monthly_files(files, months=None):
     matched = filter(lambda x: x[1] in months, zip(files, file_dates))
     for f, date in matched:
         yield f
-
-
-def monthly_data(month,
-                 site='http://www.nber.org/data/cps_basic.html',
-                 **kwargs):
-    root = html.parse(site).getroot()
 
 
 def download_month(month, datapath):
