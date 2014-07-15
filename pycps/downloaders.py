@@ -21,19 +21,31 @@ from pandas.core.common import is_list_like
 from pycps.parsers import read_settings
 
 
-def all_monthly_files(site='http://www.nber.org/data/cps_basic.html'):
+def all_monthly_files(site='http://www.nber.org/data/cps_basic.html',
+                      kind='data'):
     """
     Find all matching monthly data files and data dictionaries
     from the NBER's CPS site.
+
+    Parameters
+    ----------
+    site: str
+    kind: {'data', 'dictionary'}
+        whether to get the actual data file or the data-dictionary
     """
-    regex = re.compile(r'cpsb\d{4}.Z|\w{3}\d{2}pub.zip|[\w\d]*\.(ddf|asc)')
+    if kind == 'data':
+        regex = re.compile(r'cpsb\d{4}.Z|\w{3}\d{2}pub.zip')
+    elif kind == 'dictionary':
+        regex = re.compile(r'[\w\d]*\.(ddf|asc)')
+    else:
+        raise ValueError("Kind must be one of `{'data', 'dictionary'}`. "
+                         "Got {} instead.".format(kind))
     root = html.parse(site).getroot()
     partial_matcher = partial(_matcher, regex=regex)
 
     for _, _, fname_, _ in filter(partial_matcher, root.iterlinks()):
         fname = fname_.split('/')[-1]
         yield fname
-
 
 def rename_cps_monthly(cpsname):
     """
