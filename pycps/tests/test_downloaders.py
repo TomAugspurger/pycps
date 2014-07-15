@@ -8,7 +8,13 @@ class TestDownloaders(unittest.TestCase):
 
     def test_all_monthly_files(self):
         result = list(d.all_monthly_files('files/trimmed_nber.html'))
-        expected = ['cpsbjan03.ddf', 'cpsb7601.Z', 'jan94pub.zip']
+        expected = ['cpsb7601.Z', 'jan94pub.zip']
+        self.assertEqual(result, expected)
+
+    def test_all_monthly_dd(self):
+        result = list(d.all_monthly_files('files/trimmed_nber.html',
+                                          kind='dictionary'))
+        expected = ['cpsbjan03.ddf']
         self.assertEqual(result, expected)
 
     def test_rename_monthly_Z(self):
