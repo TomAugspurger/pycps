@@ -11,5 +11,7 @@ These are reserved to substitue in other paths.
     "dd_path": "{data_path}/data_dictionaries/",
     "dd_store": "{dd_path}/dds.hdf",
     "monthly_path": "{data_path}/monthly/",
-    "monthly_store": "{monthly_path}/monthly.hdf"
+    "monthly_store": "{monthly_path}/monthly.hdf",
+    "date_start": "1994-01",
+    "date_end": "2014-05"
 }
