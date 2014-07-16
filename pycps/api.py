@@ -16,14 +16,17 @@ import pandas as pd
 import pycps.downloaders as dl
 import pycps.parsers as par
 
+# TODO argparse CLI
 
 _HERE_ = Path(__file__).parent
 #-----------------------------------------------------------------------------
 # Downloading
 #-----------------------------------------------------------------------------
 
-def download():
+def download(overwrite_cached=False):
     settings = par.read_settings(str(_HERE_ / 'settings.json'))
+    cached_dd = [x.name for x in Path(settings['dd_path']).iterdir()]
+    cached_month = [x.name for x in Path(settings['data_path']).iterdir()]
 
     # DL all dds; only some months
     # TODO: caching
@@ -31,6 +34,12 @@ def download():
     data = dl.all_monthly_files()
     data = dl.filter_monthly_files(data, months=[[settings['date_start'],
                                                   settings['date_end']]])
+    if not overwrite_cached():
+        def is_new(x, cache=None):
+            return dl.rename_cps_monthly(x) not in cache
+
+        dds = filter(partial(is_new, cache=cached_dd), dds)
+        data = filter(partial(is_new, cache=cached_month), data)
 
     for month in dds:
         dl.download_month(month, Path(settings['dd_path']))
@@ -64,3 +73,7 @@ def parse():
         dd = pd.read_hdf(settings['dd_path'], key=par._month_to_dd(str(month)))
         df = par.read_monthly(str(month), dd)
         par.write_monthly(df, settings['data_path'])
+
+#-----------------------------------------------------------------------------
+# Merge
+#-----------------------------------------------------------------------------
