@@ -37,7 +37,7 @@ def all_monthly_files(site='http://www.nber.org/data/cps_basic.html',
     elif kind == 'dictionary':
         regex = re.compile(r'[\w\d]*\.(ddf|asc)')
     else:
-        raise ValueError("Kind must be one of `{'data', 'dictionary'}`. "
+        raise ValueError("Kind must be one of `data`, or `dictionary`. "
                          "Got {} instead.".format(kind))
     root = html.parse(site).getroot()
     partial_matcher = partial(_matcher, regex=regex)
