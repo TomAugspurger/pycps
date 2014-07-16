@@ -28,6 +28,21 @@ These are reserved to substitue in other paths.
     "monthly_path": "{data_path}/monthly/"
 }''')
 
+    def test_maybe_open_str(self):
+        with p._open_file_or_stringio('files/maybe_open.txt') as f:
+            result = f.readline()
+
+        expected = "foobarbaz\n"
+        self.assertEqual(result, expected)
+
+    def test_maybe_open_sio(self):
+        f = StringIO("foobarbaz\n")
+        with p._open_file_or_stringio(f) as g:
+            result = g.readline()
+
+        expected = "foobarbaz\n"
+        self.assertEqual(result, expected)
+
     def test_skip_module_docstring(self):
         f = p._skip_module_docstring(self.settings_file)
         self.assertEqual(next(f), "{\n")
