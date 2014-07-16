@@ -17,6 +17,10 @@ class TestDownloaders(unittest.TestCase):
         expected = ['cpsbjan03.ddf']
         self.assertEqual(result, expected)
 
+    def test_all_monthly_other(self):
+        with self.assertRaises(ValueError):
+            list(d.all_monthly_files(kind='foo'))  # need to thunk
+
     def test_rename_monthly_Z(self):
         result = d.rename_cps_monthly('cpsb9102.Z')
         expected = 'cpsm1991-02.Z'
@@ -35,6 +39,11 @@ class TestDownloaders(unittest.TestCase):
     def test_rename_dd_year_month(self):
         result = d.rename_cps_monthly('cpsbmay12.ddf')
         expected = 'cpsm2012-05.ddf'
+        self.assertEqual(result, expected)
+
+    def test_rename_dd_asc(self):
+        result = d.rename_cps_monthly('jan98dd.asc')
+        expected = 'cpsm1998-01.asc'
         self.assertEqual(result, expected)
 
     def test_filter_monthly_files_basic(self):
@@ -78,3 +87,16 @@ class TestDownloaders(unittest.TestCase):
         files = 'foobarbaz.ddf'
         with self.assertRaises(ValueError):
             d.rename_cps_monthly(files)
+
+    def test_dl_month_strpath(self):
+        # TODO: mock
+        self.skipTest("TODO: mock")
+        result = d.download_month('cpsb7601.Z', 'files/')
+
+    def test_dl_month_pathpath(self):
+        self.skipTest("TODO: mock")
+        result = d.download_month('cpsb7601.Z', Path('files/'))
+
+    def test_dl_month_noparents(self):
+        self.skipTest("TODO: mock")
+        result = d.download_month('cpsb7601.Z', Path('files/foo/bar/baz/'))
