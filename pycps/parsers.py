@@ -106,11 +106,12 @@ class DDParser:
         self.infile = infile
         self.outpath = settings['dd_path']
 
-        styles = {"jan1989": 0, "jan1992": 0, "jan1994": 2,
-                  "apr1994": 2, "jun1995": 2, "sep1995": 2,
-                  "jan1998": 1, "jan2003": 2, "may2004": 2,
-                  "aug2005": 2, "jan2007": 2, "jan2009": 2,
-                  "jan2010": 2, "may2012": 2, "jan2013": 2
+        # TODO: whither 94-01, 94-04?, 95-06, 13-01?
+        styles = {"cpsm1989-01": 0, "cpsm1992-01": 0, "cpsm1994-01": 2,
+                  "cpsm1994-04": 2, "cpsm1995-06": 2, "cpsm1995-09": 2,
+                  "cpsm1998-01": 1, "cpsm2003-01": 2, "cpsm2004-05": 2,
+                  "cpsm2005-08": 2, "cpsm2007-01": 2, "cpsm2009-01": 2,
+                  "cpsm2010-01": 2, "cpsm2012-05": 2, "cpsm2013-01": 2
               }
 
         self.store_name = infile.stem
@@ -130,13 +131,27 @@ class DDParser:
         1. width == (end - start) + 1
         2. start_1 == end_0 + 1
         """
-        def check_width(current):
-            if not current[1] == current[3] - current[2] + 1:
-                raise WidthError
+        def check_width(current, lineno):
+            expected = current[1]
+            actual = current[3] - current[2] + 1
+            # TODO: refactor this bit (good time for monad)
+            if not expected == actual:
+                msg = ("Stated width does not match the computed width.\n"
+                       "current: {}\n"
+                       "    Stated:   {}\n"
+                       "    Computed: {}\n\n"
+                       "Line # {}".format(current, expected, actual, lineno))
+                raise WidthError(msg)
 
-        def check_continuity(current, old):
-            if not current[2] == old[3] + 1:
-                raise ContinuityError
+        def check_continuity(current, old, lineno):
+            expected = current[2]
+            actual = old[3] + 1
+            if not expected == actual:
+                msg = ("Stated start position does not match the computed position.\n"
+                       "Stated:   {}\n"
+                       "Computed: {}\n"
+                       "Line # {}".format(expected, actual, lineno))
+                raise ContinuityError(msg)
 
         g = iter(formatted)
         current = next(g)
@@ -144,12 +159,12 @@ class DDParser:
 
         while True:  # till stopIteration
             try:
-                check_width(current)
+                check_width(current, i)
                 old, current, i = current, next(g), i + 1
-                check_continuity(current, old)
+                check_continuity(current, old, i)
             except StopIteration:
                 # last one should still check first criteria
-                check_width(old)
+                check_width(old, i)
                 raise StopIteration
 
     def run(self):
@@ -258,24 +273,34 @@ class DDParser:
         return id_
 
 
+    def special(self):
+        """
+        Every function here should have the following parameters:
+
+            - store_name :: str
+            - lineno :: int
+            - fields :: [str or Int]  # TODO: namedtuples for strs
+            - values :: [int]
+
+        For example, to change to
+
+        what about changes that spill on?
+        inserts?
+        """
+        def cpsm198901():
+            pass
+
 class WidthError(ValueError):
     """
     The stated width does not equal the computed width
     """
-    def __init__(self):
-        """
-        """
-        pass
-
+    pass
 
 class ContinuityError(ValueError):
     """
     Two subsequent lines don't align cleanly.
     """
-    def __init__(self):
-        """
-        """
-        pass
+    pass
 
 #-----------------------------------------------------------------------------
 # Monthly Data Files
@@ -284,21 +309,21 @@ def _month_to_dd(month):
     """
     lookup dd for a given month.
     """
-    dd_to_month = {"jan1989": ["1989-01","1991-12"],
-                   "jan1992": ["1992-01","1993-12"],
-                   "jan1994": ["1994-01","1994-03"],
-                   "apr1994": ["1994-04","1995-05"],
-                   "jun1995": ["1995-06","1995-08"],
-                   "sep1995": ["1995-09","1997-12"],
-                   "jan1998": ["1998-01","2002-12"],
-                   "jan2003": ["2003-01","2004-04"],
-                   "may2004": ["2004-05","2005-07"],
-                   "aug2005": ["2005-08","2006-12"],
-                   "jan2007": ["2007-01","2008-12"],
-                   "jan2009": ["2009-01","2009-12"],
-                   "jan2010": ["2010-01","2012-04"],
-                   "may2012": ["2012-05","2012-12"],
-                   "jan2013": ["2013-01","2013-03"]}
+    dd_to_month = {"cpsm1989-01": ["1989-01","1991-12"],
+                   "cpsm1992-01": ["1992-01","1993-12"],
+                   "cpsm1994-01": ["1994-01","1994-03"],
+                   "cpsm1994-04": ["1994-04","1995-05"],
+                   "cpsm1995-06": ["1995-06","1995-08"],
+                   "cpsm1995-11": ["1995-09","1997-12"],
+                   "cpsm1998-01": ["1998-01","2002-12"],
+                   "cpsm2003-01": ["2003-01","2004-04"],
+                   "cpsm2004-05": ["2004-05","2005-07"],
+                   "cpsm2005-08": ["2005-08","2006-12"],
+                   "cpsm2007-01": ["2007-01","2008-12"],
+                   "cpsm2009-01": ["2009-01","2009-12"],
+                   "cpsm2010-01": ["2010-01","2012-04"],
+                   "cpsm2012-05": ["2012-05","2012-12"],
+                   "cpsm2013-01": ["2013-01","2013-03"]}
 
     def mk_range(v):
         return arrow.Arrow.range(start=arrow.get(v[0]),

@@ -209,7 +209,7 @@ class TestDDParser(unittest.TestCase):
         tm.assert_frame_equal(result, ex)
 
     def test_month_to_dd(self):
-        months = ['1989-01', '1989-03', '1989-2',
+        months = ['1989-01', '1989-03', '1989-12',
                   '1992-01', '1992-02', '1993-12',
                   '1994-01', '1994-02', '1994-03',
                   '1994-04', '1994-05', '1995-05',
@@ -225,10 +225,11 @@ class TestDDParser(unittest.TestCase):
                   '2012-05', '2012-07', '2012-12',
                   '2013-01', '2013-02', '2013-03'
                 ]
-        dds = ["jan1989", "jan1992", "jan1994", "apr1994", "jun1995",
-               "sep1995", "jan1998", "jan2003", "may2004", "aug2005",
-               "jan2007", "jan2009", "jan2010", "may2012", "jan2013"] * 3
-        dds = sorted(dds, key=lambda x: datetime.datetime.strptime(x, '%b%Y'))
+        dds = ["cpsm1989-01", "cpsm1992-01", "cpsm1994-01", "cpsm1994-04",
+               "cpsm1995-06", "cpsm1995-11", "cpsm1998-01", "cpsm2003-01",
+               "cpsm2004-05", "cpsm2005-08", "cpsm2007-01", "cpsm2009-01",
+               "cpsm2010-01", "cpsm2012-05", "cpsm2013-01"] * 3
+        dds = sorted(dds)
         for month, dd in zip(months, dds):
             result = p._month_to_dd(month)
             self.assertEqual(result, dd)
