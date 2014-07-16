@@ -89,6 +89,13 @@ def rename_cps_monthly(cpsname):
     return dt.strftime('cpsm%Y-%m') + '.' + ext
 
 
+def filter_dds(files, months=None):
+    #TODO: REFACTOR, generalize, test
+    f = lambda x: arrow.get(x.split('.')[0][-7:])  # expecting 1989-01.ddf
+    rng = [arrow.get(f(months[0])), arrow.get(f(months[1]))]
+    return filter(lambda x: rng[0] <= f(x) <= rng[1], files)
+
+
 def filter_monthly_files(files, months=None):
     """
     Filter the generator from all_monthly_files down to

@@ -28,9 +28,13 @@ def download(overwrite_cached=False):
     cached_dd = [x.name for x in Path(settings['dd_path']).iterdir()]
     cached_month = [x.name for x in Path(settings['data_path']).iterdir()]
 
-    # DL all dds; only some months
-    # TODO: caching
-    dds = dl.all_monthly_files(kind='dictionary')
+    # TODO: only needed dds
+    dd_range = [par._month_to_dd(settings['date_start']),
+                par._month_to_dd(settings['date_end'])]
+    dds = dl.all_monthly_files(kind='dictionary', months=dd_range)
+    dds = dl.filter_dds(dds, months=[par._month_to_dd(settings['date_start']),
+                                     par._month_to_dd(settings['date_end'])])
+
     data = dl.all_monthly_files()
     data = dl.filter_monthly_files(data, months=[[settings['date_start'],
                                                   settings['date_end']]])

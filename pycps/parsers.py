@@ -114,6 +114,7 @@ class DDParser:
                   "cpsm2010-01": 2, "cpsm2012-05": 2, "cpsm2013-01": 2
               }
 
+        self.store_path = settings['dd_store']
         self.store_name = infile.stem
 
         # default to most recent
@@ -245,7 +246,7 @@ class DDParser:
             end = int(end)
         return (id_, length, start, end)
 
-    def write(self, storepath):
+    def write(self):
         """
         Once you have all the dataframes, write them to that outfile,
         an HDFStore.
@@ -260,7 +261,7 @@ class DDParser:
 
         """
         df = self.df  # Only should happen in the old ones.
-        df.to_hdf(self.outpath, format='f')
+        df.to_hdf(self.store_path, key=self.store_name, format='f')
 
     @staticmethod
     def handle_replacers(id_):

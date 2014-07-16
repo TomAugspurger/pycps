@@ -25,6 +25,7 @@ These are reserved to substitue in other paths.
 {
     "data_path": "data/",
     "dd_path": "{data_path}/data_dictionaries/",
+    "dd_store": "{dd_path}/dds.hdf",
     "monthly_path": "{data_path}/monthly/"
 }''')
 
@@ -82,7 +83,8 @@ class TestDDParser(unittest.TestCase):
     def setUp(self):
         self.testfile = Path('files/jan2007.ddf')  # TODO: filepath
         settings = {'outpath': 'dds/',
-                    'dd_path': 'tmp/'}
+                    'dd_path': 'tmp/',
+                    'dd_store': 'baz.h5'}
         self.parser = p.DDParser(self.testfile, settings)
 
     def test_formatter(self):
@@ -226,7 +228,7 @@ class TestDDParser(unittest.TestCase):
                   '2013-01', '2013-02', '2013-03'
                 ]
         dds = ["cpsm1989-01", "cpsm1992-01", "cpsm1994-01", "cpsm1994-04",
-               "cpsm1995-06", "cpsm1995-11", "cpsm1998-01", "cpsm2003-01",
+               "cpsm1995-06", "cpsm1995-09", "cpsm1998-01", "cpsm2003-01",
                "cpsm2004-05", "cpsm2005-08", "cpsm2007-01", "cpsm2009-01",
                "cpsm2010-01", "cpsm2012-05", "cpsm2013-01"] * 3
         dds = sorted(dds)
