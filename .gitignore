@@ -11,3 +11,7 @@ __pycache__
 
 # Data DLs
 pycps/data/
+data/
+
+# Mac stuff
+.DS_Store
