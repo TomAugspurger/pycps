@@ -11,6 +11,7 @@ Define your preferences in settings.json in this folder.
 """
 from pathlib import Path
 from functools import partial
+from operator import itemgetter
 
 import pandas as pd
 
@@ -33,28 +34,29 @@ def download(overwrite_cached=False):
     dd_range = [par._month_to_dd(settings['date_start']),
                 par._month_to_dd(settings['date_end'])]
     dds = dl.all_monthly_files(kind='dictionary')
+    dds = filter(itemgetter(1), dds)  # make sure not None cpsdec!
     dds = dl.filter_dds(dds, months=[par._month_to_dd(settings['date_start']),
                                      par._month_to_dd(settings['date_end'])])
 
     data = dl.all_monthly_files()
     data = dl.filter_monthly_files(data, months=[[settings['date_start'],
                                                   settings['date_end']]])
-    if not overwrite_cached():
+    if not overwrite_cached:
         def is_new(x, cache=None):
-            return dl.rename_cps_monthly(x) not in cache
+            return dl.rename_cps_monthly(x[1]) not in cache
 
         dds = filter(partial(is_new, cache=cached_dd), dds)
         data = filter(partial(is_new, cache=cached_month), data)
 
-    for month in dds:
+    for month, renamed in dds:
         dl.download_month(month, Path(settings['dd_path']))
         # TODO: logging
-        print(month)
+        print(renamed)
 
-    for month in data:
+    for month, renamed in data:
         dl.download_month(month, Path(settings['data_path']))
         # TODO: logging
-        print(month)
+        print(renamed)
 
 #-----------------------------------------------------------------------------
 # Parsing
