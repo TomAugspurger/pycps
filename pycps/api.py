@@ -72,6 +72,7 @@ def parse():
     for dd in dds:
         parser = par.DDParser(dd, settings)
         parser.run()
+        parser.regularize_ids(settings['col_rename_by_dd'][dd.stem])  # broken ATM
         parser.write()
         # TODO: logging
         print("Added ", dd)
