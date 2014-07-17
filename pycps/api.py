@@ -26,10 +26,8 @@ _HERE_ = Path(__file__).parent
 
 def download(overwrite_cached=False):
     settings = par.read_settings(str(_HERE_ / 'settings.json'))
-    cached_dd = [x.name for x in Path(settings['dd_path']).iterdir()
-                 if x.suffix in ('.ddf', '.asc')]
-    cached_month = [x.name for x in Path(settings['data_path']).iterdir()
-                    if x.suffix in ('.Z', '.zip')]
+    cached_dd = dl.check_cached(settings['dd_path'], kind='dictionary')
+    cached_month = dl.check_cached(settings['data_path'], kind='data')
 
     # TODO: only needed dds
     dd_range = [par._month_to_dd(settings['date_start']),

@@ -195,3 +195,30 @@ def _matcher(link, regex):
             return file_
     except ValueError:
         pass
+
+
+def check_cached(directory, kind='data'):
+    """
+    Check for existing files on disk in 'directory'.
+
+    Parameters
+    ----------
+    directory: str or Path
+    kind: {'data', 'dictionary'}
+
+    Returns
+    -------
+    cached: [str]
+
+    """
+    if kind == 'data':
+        suffixes = ('.Z', '.zip')
+    elif kind == 'dictionary':
+        suffixes = ('.ddf', '.asc')
+    else:
+        raise ValueError("kind must be 'data' or 'dictionary'.")
+    if not isinstance(directory, Path):
+        directory = Path(directory)
+    cached = [x.name for x in directory.iterdir()
+              if x.suffix in suffixes]
+    return cached
