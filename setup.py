@@ -69,7 +69,7 @@ setup(
     packages=find_packages(exclude=["contrib", "docs", "tests*"]),
     # If there are data files included in your packages, specify them here.
     package_data={
-        'pycps': ['data.json'],
+        'pycps': ['data.json', 'settings.json'],
     },
 
     # To provide executable scripts, use entry points in preference to the
