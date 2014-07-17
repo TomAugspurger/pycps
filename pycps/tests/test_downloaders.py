@@ -48,24 +48,25 @@ class TestDownloaders(unittest.TestCase):
         self.assertEqual(result, expected)
 
     def test_filter_monthly_files_basic(self):
-        files = iter(['cpsm1994-01.zip', 'cpsm1994-03.zip',
-                      'cpsm1994-04.zip', 'cpsm1994-05.zip'])
+        files = [('jan94.zip', 'cpsm1994-01.zip'),
+                 ('mar94.zip', 'cpsm1994-03.zip'),
+                 ('apr94.zip', 'cpsm1994-04.zip'),
+                 ('may94.zip', 'cpsm1994-05.zip')]
         months = ['1994-01', '1994-03', '1994-04']
         result = list(d.filter_monthly_files(files, months=months))
-        expected = ['cpsm1994-01.zip', 'cpsm1994-03.zip',
-                    'cpsm1994-04.zip']
+        expected = files[0:3]
         self.assertEqual(result, expected)
 
     def test_filter_monthly_files_nested(self):
-        files = iter(['cpsm1994-01.zip', 'cpsm1994-03.zip',
-                      'cpsm1994-04.zip', 'cpsm1994-05.zip',
-                      'cpsm1994-11.zip', 'cpsm1994-12.zip',
-                      'cpsm1995-01.zip'])
+        files = [('jan94.zip', 'cpsm1994-01.zip'),
+                 ('mar94.zip', 'cpsm1994-03.zip'),
+                 ('apr94.zip', 'cpsm1994-04.zip'),
+                 ('nov94.zip', 'cpsm1994-11.zip'),
+                 ('dec94.zip', 'cpsm1994-12.zip'),
+                 ('jan95.zip', 'cpsm1995-01.zip')]
         months = [['1994-01', '1994-04'], ['1994-11', '1995-01']]
         result = list(d.filter_monthly_files(files, months=months))
-        expected = ['cpsm1994-01.zip', 'cpsm1994-03.zip',
-                    'cpsm1994-04.zip', 'cpsm1994-11.zip',
-                    'cpsm1994-12.zip', 'cpsm1995-01.zip']
+        expected = files
         self.assertEqual(result, expected)
 
     def test_filter_monthly_files_mix(self):
@@ -75,9 +76,11 @@ class TestDownloaders(unittest.TestCase):
             list(d.filter_monthly_files(files, months=months))
 
     def test_filter_monthly_files_None(self):
-        files = ['cpsm1994-01.zip', 'cpsm1994-03.zip']
+        files = [('jan94.zip', 'cpsm1994-01.zip'),
+                 ('mar94.zip', 'cpsm1994-03.zip')]
         result = list(d.filter_monthly_files(iter(files)))
-        self.assertEqual(files, list(result))
+        expected = files
+        self.assertEqual(expected, list(result))
 
     def test_rename_cps_monthly_valueerror_ext(self):
         files = 'cps89.foo'

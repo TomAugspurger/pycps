@@ -13,6 +13,7 @@ import datetime
 from pathlib import Path
 from itertools import chain
 from functools import partial
+from operator import itemgetter
 
 import arrow
 import requests
@@ -89,10 +90,40 @@ def rename_cps_monthly(cpsname):
     return dt.strftime('cpsm%Y-%m') + '.' + ext
 
 
+def filter_monthly(files, months=None, kind='data'):
+    """
+    Filter files according to whether dates fall in months.
+
+    Parameters
+    ----------
+    files: (cpsname, rename_cps_monthly)
+    months: list of, or list of list of, str or Arrow
+        Months to yield.
+        If list of list of str or Arrow, the lists will
+        be expanded to ranges and and values falling in
+        a range will be yielded (inclusive).
+        Should be 'YYYY-MM'.
+    kind: {'data', 'dictionary'}
+
+    Returns
+    -------
+    filtered: (cpsname, rename_cps_monthly)
+
+    """
+    if kind == 'dictionary':
+        filtered = filter_dds(files, months=months)
+    elif kind == 'data':
+        filtered = filter_months(files, months=months)
+    else:
+        raise ValueError("kind must be 'data' or 'dictionary'.")
+    return filtered
+
+
 def filter_dds(files, months=None):
     #TODO: REFACTOR, generalize, test
-    f = lambda x: arrow.get(x.split('.')[0][-7:])  # expecting 1989-01.ddf
-    rng = [arrow.get(f(months[0])), arrow.get(f(months[1]))]
+    rng = [arrow.get(x[-7:]) for x in months]
+
+    f = lambda x: arrow.get(x[1].split('.')[0][-7:])  # expecting 1989-01.ddf
     return filter(lambda x: rng[0] <= f(x) <= rng[1], files)
 
 
@@ -103,8 +134,8 @@ def filter_monthly_files(files, months=None):
 
     Parameters
     ----------
-    filenames: str
-        in rename_cps_monthly style
+    filenames: (str, str)
+        in (cpsname, rename_cps_monthly) style
     months: list of, or list of list of, str or Arrow
         Months to yield.
         If list of list of str or Arrow, the lists will
@@ -121,15 +152,10 @@ def filter_monthly_files(files, months=None):
     Examples
     --------
 
-    >>>filter_monthly_files(months=['1997-01', '1998-01', '1999-01'])
-
-    >>>filter_monthly_files(months=[['1994-01', '1994-06'],
-                                    ['1995-01', '1995-06']])
     """
     files = list(files)  # have to thunk
-    renamed = (rename_cps_monthly(x) for x in files)
     file_dates = [arrow.get(x.split('.')[0], format='cpsm%Y-%m')
-                  for x in renamed]
+                  for _, x in files]
 
     if months is None:
         months = [['1936-01', arrow.now().strftime('%Y-%m')]]
@@ -146,9 +172,9 @@ def filter_monthly_files(files, months=None):
     else:
         months = [a(x) for x in months]
 
-    matched = filter(lambda x: x[1] in months, zip(files, file_dates))
-    for f, date in matched:
-        yield f
+    filtered = filter(lambda x: x[1] in months, zip(files, file_dates))
+    filtered = map(itemgetter(0), filtered)
+    return filtered
 
 
 def download_month(month, datapath):
