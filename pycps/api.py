@@ -10,6 +10,7 @@ Functions to step through
 Define your preferences in settings.json in this folder.
 """
 from pathlib import Path
+from functools import partial
 
 import pandas as pd
 
@@ -25,13 +26,15 @@ _HERE_ = Path(__file__).parent
 
 def download(overwrite_cached=False):
     settings = par.read_settings(str(_HERE_ / 'settings.json'))
-    cached_dd = [x.name for x in Path(settings['dd_path']).iterdir()]
-    cached_month = [x.name for x in Path(settings['data_path']).iterdir()]
+    cached_dd = [x.name for x in Path(settings['dd_path']).iterdir()
+                 if x.suffix in ('.ddf', '.asc')]
+    cached_month = [x.name for x in Path(settings['data_path']).iterdir()
+                    if x.suffix in ('.Z', '.zip')]
 
     # TODO: only needed dds
     dd_range = [par._month_to_dd(settings['date_start']),
                 par._month_to_dd(settings['date_end'])]
-    dds = dl.all_monthly_files(kind='dictionary', months=dd_range)
+    dds = dl.all_monthly_files(kind='dictionary')
     dds = dl.filter_dds(dds, months=[par._month_to_dd(settings['date_start']),
                                      par._month_to_dd(settings['date_end'])])
 
