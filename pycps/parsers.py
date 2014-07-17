@@ -246,7 +246,7 @@ class DDParser:
             end = int(end)
         return (id_, length, start, end)
 
-    def write(self):
+    def write(self, df):
         """
         Once you have all the dataframes, write them to that outfile,
         an HDFStore.
@@ -260,7 +260,6 @@ class DDParser:
         None: IO
 
         """
-        df = self.df  # Only should happen in the old ones.
         df.to_hdf(self.store_path, key=self.store_name, format='f')
 
     @staticmethod
