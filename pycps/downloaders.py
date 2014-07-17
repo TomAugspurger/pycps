@@ -44,7 +44,7 @@ def all_monthly_files(site='http://www.nber.org/data/cps_basic.html',
 
     for _, _, fname_, _ in filter(partial_matcher, root.iterlinks()):
         fname = fname_.split('/')[-1]
-        yield fname
+        yield fname, rename_cps_monthly(fname)
 
 
 def rename_cps_monthly(cpsname):
