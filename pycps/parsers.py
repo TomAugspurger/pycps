@@ -4,9 +4,10 @@ Read all the things.
 import re
 import json
 from pathlib import Path
-from itertools import dropwhile
-from contextlib import contextmanager
 from functools import partial
+from itertools import dropwhile
+from collections import OrderedDict
+from contextlib import contextmanager
 
 import arrow
 import pandas as pd
@@ -62,11 +63,27 @@ def read_settings(filepath):
         f = ''.join(list(f))  # TODO: could be lazier
         # TODO: skiplines starting with comment char
         f = json.loads(f)
-        f = {k: _sub_path(v, f) for k, v in f.items()}  # TODO: py2
-    return f
+
+    # need to sort so that we can substitue down the line
+    paths = sorted(f.items(), key=lambda x: x[1].count('/'))
+    paths = OrderedDict(paths)
+
+    count_brackets = lambda x: sum([y.count('{') for y in x.values()])
+
+    # nested loop needed so that a sub in foo/{b}
+    # will show up in foo/{b}/{c}
+    while count_brackets(paths) > 0:
+        current = count_brackets(paths)
+        for k, v in paths.items():
+            paths[k] = _sub_path(v, paths)
+        new = count_brackets(paths)
+        if current == new:
+            raise ValueError
+
+    return paths
 
 def _sub_path(v, f):
-    pat = r'\{(\w*)\}'
+    pat = r'\{(.*)\}'
     m = re.match(pat, v)
     if m:
         to_sub = m.groups()[0]
