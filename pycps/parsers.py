@@ -65,10 +65,13 @@ def read_settings(filepath):
         f = json.loads(f)
 
     # need to sort so that we can substitue down the line
-    paths = sorted(f.items(), key=lambda x: x[1].count('/'))
+    paths = sorted(filter(lambda x: isinstance(x[1], str), f.items()),
+                   key=lambda x: x.count('/'))
     paths = OrderedDict(paths)
 
-    count_brackets = lambda x: sum([y.count('{') for y in x.values()])
+    def count_brackets(x):
+        return sum([y.count('{') for y in x.values()
+                    if hasattr(y, 'count')])
 
     # nested loop needed so that a sub in foo/{b}
     # will show up in foo/{b}/{c}
@@ -80,7 +83,8 @@ def read_settings(filepath):
         if current == new:
             raise ValueError
 
-    return paths
+    f.update(paths)
+    return f
 
 def _sub_path(v, f):
     pat = r'\{(.*)\}'
