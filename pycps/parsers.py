@@ -1,8 +1,10 @@
 """
 Read all the things.
 """
+import os
 import re
 import json
+import zipfile
 from pathlib import Path
 from functools import partial
 from itertools import dropwhile
@@ -157,7 +159,6 @@ class DDParser:
                                      columns=['id', 'length', 'start', 'end'])
 
         # ensure consistency across lines
-        # formatted = self.regularize_ids(formatted, self.ids_dict)
         df = self.make_consistent(formatted)
         assert self.is_consistent(df)
         return df
@@ -356,6 +357,14 @@ def _month_to_dd(month):
     return list(dd)[0]
 
 
+@contextmanager
+def ensure_cleanup_zip(archive, filename, parent_dir):
+    path = os.path.join(parent_dir, filename)
+    archive.extract(filename, path=parent_dir)
+    yield
+    os.remove(path)
+
+
 def read_monthly(infile, dd):
     """
     Parameters
@@ -369,9 +378,20 @@ def read_monthly(infile, dd):
     df: DataFrame
 
     """
-    n = 10
     widths = dd.length.tolist()
-    df = pd.read_fwf(infile, widths=widths, names=dd.id.values, nrows=n)
+
+    if infile.endswith('.zip'):
+        archive = zipfile.ZipFile(infile)
+        filename = archive.namelist()[0]
+        parent_dir = str(Path(infile).parent)
+        colspec = dd[['start', 'end']].values.tolist()
+
+        with ensure_cleanup_zip(archive, filename, parent_dir):
+            df = pd.read_fwf(os.path.join(parent_dir, filename),
+                             colspecs=colspec, names=dd.id.values)
+
+    else:
+        df = pd.read_fwf(infile, widths=widths, names=dd.id.values)
     # TODO: Fix stripping of 0s
     return df
 
