@@ -396,17 +396,18 @@ def read_monthly(infile, dd):
     return df
 
 
-def write_monthly(df, storepath):
+def write_monthly(df, storepath, key):
     """
     Add a monthly datafile to the store.
 
     Parameters
     ----------
     storepath: str
+    key: name in store
 
     Returns
     -------
     None: IO
 
     """
-    df.to_hdf(storepath, format='f')
+    df.to_hdf(storepath, key=key, format='f')
