@@ -85,13 +85,12 @@ def parse():
                 continue
             else:
                 raise e
-        df = parser.regularize_ids(df, data['col_rename_by_dd'][dd.stem])  # broken ATM
         parser.write(df)
         # TODO: logging
         print("Added ", dd)
 
     for month in months:
-        dd = pd.read_hdf(settings['dd_path'], key=par._month_to_dd(str(month)))
+        dd = pd.read_hdf(settings['dd_store'], key=par._month_to_dd(str(month)))
         df = par.read_monthly(str(month), dd)
         par.write_monthly(df, settings['data_path'])
 
