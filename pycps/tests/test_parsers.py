@@ -178,22 +178,29 @@ class TestDDParser(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_is_consistent(self):
-        formatted = [('HhMONTH', 2, 38, 39),
-                     ('foo', 3, 40, 42)]
-        with self.assertRaises(StopIteration):
-            self.parser._is_consistent(formatted)
+        formatted = pd.DataFrame([('HhMONTH', 2, 1, 2),
+                                  ('foo', 3, 3, 5)],
+                                 columns=['id', 'length', 'start', 'end'])
+        self.assertTrue(self.parser.is_consistent(formatted))
 
-    def test_is_consistent_width_raises(self):
-        formatted = [('HhMONTH', 1, 38, 39),
-                     ('foo', 3, 40, 42)]
-        with self.assertRaises(p.WidthError):
-            self.parser._is_consistent(formatted)
+    def test_inconsistent_width(self):
+        formatted = pd.DataFrame([('HhMONTH', 2, 1, 2),
+                                  ('foo', 3, 3, 10)],
+                                 columns=['id', 'length', 'start', 'end'])
+        self.assertFalse(self.parser.is_consistent(formatted))
 
     def test_is_consistent_continuity_raises(self):
-        formatted = [('HhMONTH', 2, 38, 39),
-                     ('foo', 3, 41, 42)]
-        with self.assertRaises(p.ContinuityError):
-            self.parser._is_consistent(formatted)
+        formatted = pd.DataFrame([('HhMONTH', 2, 1, 2),
+                                  ('foo', 3, 4, 6)],
+                                 columns=['id', 'length', 'start', 'end'])
+        self.assertFalse(self.parser.is_consistent(formatted))
+
+    def test_regex_04_08_katrina(self):
+        line = 'HURHHSCRN*   2     Is there anyone living or staying here who had to         (886-887)'
+        expected = ('HURHHSCRN', 2, 886, 887)
+        regex = self.parser.make_regex(style=2)
+        result = self.parser.formatter(regex.match(line))
+        self.assertEqual(result, expected)
 
     def test_regularize_ids(self):
         dd = pd.DataFrame({'end': {0: 15, 1: 17, 2: 21, 3: 23, 4: 26},
@@ -220,7 +227,8 @@ class TestDDParser(unittest.TestCase):
                   '1998-01', '2000-01', '2002-12',
                   '2003-01', '2004-02', '2004-04',
                   '2004-05', '2004-06', '2005-07',
-                  '2005-08', '2005-11', '2006-12',
+                  '2005-08', '2005-09', '2005-10',
+                  '2005-11', '2006-01', '2006-12',
                   '2007-01', '2008-09', '2008-12',
                   '2009-01', '2009-06', '2009-12',
                   '2010-01', '2010-11', '2012-02',
@@ -229,8 +237,8 @@ class TestDDParser(unittest.TestCase):
                 ]
         dds = ["cpsm1989-01", "cpsm1992-01", "cpsm1994-01", "cpsm1994-04",
                "cpsm1995-06", "cpsm1995-09", "cpsm1998-01", "cpsm2003-01",
-               "cpsm2004-05", "cpsm2005-08", "cpsm2007-01", "cpsm2009-01",
-               "cpsm2010-01", "cpsm2012-05", "cpsm2013-01"] * 3
+               "cpsm2004-05", "cpsm2005-08", "cpsm2005-11", "cpsm2007-01",
+               "cpsm2009-01", "cpsm2010-01", "cpsm2012-05", "cpsm2013-01"] * 3
         dds = sorted(dds)
         for month, dd in zip(months, dds):
             result = p._month_to_dd(month)

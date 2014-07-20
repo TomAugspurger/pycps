@@ -9,6 +9,7 @@ Functions to step through
 
 Define your preferences in settings.json in this folder.
 """
+import json
 from pathlib import Path
 from functools import partial
 from operator import itemgetter
@@ -69,11 +70,23 @@ def parse():
     data_path = Path(settings['data_path'])
     months = [x for x in data_path.iterdir() if x.suffix in ('.Z', '.zip')]
 
+    settings['raise_warnings'] = False
+
+    with (_HERE_ / 'data.json').open() as f:
+        data = json.load(f)
+
     for dd in dds:
         parser = par.DDParser(dd, settings)
-        parser.run()
-        parser.regularize_ids(settings['col_rename_by_dd'][dd.stem])  # broken ATM
-        parser.write()
+        try:
+            df = parser.run()
+        except Exception as e:
+            if not settings['raise_warnings']:
+                print('skipping {}'.format(parser.store_name))
+                continue
+            else:
+                raise e
+        df = parser.regularize_ids(df, data['col_rename_by_dd'][dd.stem])  # broken ATM
+        parser.write(df)
         # TODO: logging
         print("Added ", dd)
 
