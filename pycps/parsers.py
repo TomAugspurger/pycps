@@ -157,7 +157,7 @@ class DDParser:
                                      columns=['id', 'length', 'start', 'end'])
 
         # ensure consistency across lines
-        formatted = self.regularize_ids(formatted, self.ids_dict)
+        # formatted = self.regularize_ids(formatted, self.ids_dict)
         df = self.make_consistent(formatted)
         assert self.is_consistent(df)
         return df
@@ -262,6 +262,14 @@ class DDParser:
         """
         redo
         """
+        def m2004_08_filler_411(formatted):
+            """
+            See below
+            """
+            fixed = formatted.copy()
+            fixed.loc[185] = ('FILLER', 2, 410, 411)
+            return fixed
+
         def m2005_08_filler_411(formatted):
             """
             Mistake in Data Dictionary:
