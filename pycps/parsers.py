@@ -141,9 +141,29 @@ class DDParser:
         # default to most recent
         self.style = styles.get(self.store_name, max(styles.values()))
         self.regex = self.make_regex(style=self.style)
+        self.settings = settings
+        self.ids_dict = {}  # TODO
+
+    def run(self):
+        # make this as streamlike as possible.
+        # TODO: break out formatting
+        with self.infile.open() as f:
+            # get all header lines
+            lines = (self.regex.match(line) for line in f)
+            lines = filter(None, lines)
+
+            # regularize format; intentional thunk
+            formatted = pd.DataFrame([self.formatter(x) for x in lines],
+                                     columns=['id', 'length', 'start', 'end'])
+
+        # ensure consistency across lines
+        formatted = self.regularize_ids(formatted, self.ids_dict)
+        df = self.make_consistent(formatted)
+        assert self.is_consistent(df)
+        return df
 
     @staticmethod
-    def _is_consistent(formatted):
+    def is_consistent(formatted):
         """
         Given a list of tuples, make sure the column numbering is
         internally consistent.
@@ -153,66 +173,10 @@ class DDParser:
         1. width == (end - start) + 1
         2. start_1 == end_0 + 1
         """
-        def check_width(current, lineno):
-            expected = current[1]
-            actual = current[3] - current[2] + 1
-            # TODO: refactor this bit (good time for monad)
-            if not expected == actual:
-                msg = ("Stated width does not match the computed width.\n"
-                       "current: {}\n"
-                       "    Stated:   {}\n"
-                       "    Computed: {}\n\n"
-                       "Line # {}".format(current, expected, actual, lineno))
-                raise WidthError(msg)
+        check_width = lambda df: df['length'] == df['end'] - df['start'] + 1
+        check_steps = lambda df: df.start - df.end.shift(1).fillna(0) - 1 == 0
 
-        def check_continuity(current, old, lineno):
-            expected = current[2]
-            actual = old[3] + 1
-            if not expected == actual:
-                msg = ("Stated start position does not match the computed position.\n"
-                       "Stated:   {}\n"
-                       "Computed: {}\n"
-                       "Line # {}".format(expected, actual, lineno))
-                raise ContinuityError(msg)
-
-        g = iter(formatted)
-        current = next(g)
-        i = 0
-
-        while True:  # till stopIteration
-            try:
-                check_width(current, i)
-                old, current, i = current, next(g), i + 1
-                check_continuity(current, old, i)
-            except StopIteration:
-                # last one should still check first criteria
-                check_width(old, i)
-                raise StopIteration
-
-    def run(self):
-        # make this as streamlike as possible.
-        with self.infile.open() as f:
-            # get all header lines
-            lines = (self.regex.match(line) for line in f)
-            lines = filter(None, lines)
-
-            # regularize format; intentional thunk
-            formatted = [self.formatter(x) for x in lines]
-
-        # ensure consistency across lines
-        try:
-            self._is_consistent(formatted)
-        except StopIteration:  # good till thru the end
-            df = pd.DataFrame(formatted,
-                              columns=['id', 'length', 'start', 'end'])
-        except WidthError:
-            raise ValueError
-            # recover
-        except ContinuityError:
-            raise ValueError
-            # recover
-        self.df = df
-        return df
+        return check_width(formatted).all() and check_steps(formatted).all()
 
     @staticmethod
     def regularize_ids(df, replacer):
@@ -237,7 +201,7 @@ class DDParser:
         """
         # As new styles are added the current default should be moved into the dict.
         # TODO: this smells terrible
-        default = re.compile(r'[\x0c]{0,1}(\w+)[\s\t]*(\d{1,2})[\s\t]*(.*?)[\s\t]*\(*(\d+)\s*-\s*(\d+)\)*\s*$')
+        default = re.compile(r'[\x0c]{0,1}(\w+)\*?[\s\t]*(\d{1,2})[\s\t]*(.*?)[\s\t]*\(*(\d+)\s*-\s*(\d+)\)*\s*$')
         d = {0: re.compile(r'(\w{1,2}[\$\-%]\w*|PADDING)\s*CHARACTER\*(\d{3})\s*\.{0,1}\s*\((\d*):(\d*)\).*'),
              1: re.compile(r'D (\w+) \s* (\d{1,2}) \s* (\d*)'),
              2: default}
@@ -294,34 +258,56 @@ class DDParser:
         return id_
 
 
-    def special(self):
+    def make_consistent(self, formatted):
         """
-        Every function here should have the following parameters:
-
-            - store_name :: str
-            - lineno :: int
-            - fields :: [str or Int]  # TODO: namedtuples for strs
-            - values :: [int]
-
-        For example, to change to
-
-        what about changes that spill on?
-        inserts?
+        redo
         """
-        def cpsm198901():
-            pass
+        def m2005_08_filler_411(formatted):
+            """
+            Mistake in Data Dictionary:
 
-class WidthError(ValueError):
-    """
-    The stated width does not equal the computed width
-    """
-    pass
+            FILLER          2                                          (411 - 412)
 
-class ContinuityError(ValueError):
-    """
-    Two subsequent lines don't align cleanly.
-    """
-    pass
+            should be:
+
+            FILLER          2                                          (410 - 411)
+
+            Everything else looks ok.
+            """
+            fixed = formatted.copy()
+            fixed.loc[185] = ('FILLER', 2, 410, 411)
+            return fixed
+
+        def generate_cpsm200511(formatted):
+            """
+            The CPS added new questions in November 2005 (Katrina related).
+            They should have defined a new data dictionary. They didn't...
+
+            This function:
+
+                0. ignores the end at col 886 and makes formatted throug the end of the file
+                1. writes out that *new* formatted as cpsm2005-11 to HDF?
+                2. Truncates the current `formatted` at col 886 (correct for 2005-08 thru 2005-10)
+                3. return to the original control flow.
+
+            Good luck trying to test this.
+            """
+            # generate and write cpsm2005-11
+            new = formatted.drop(376).reset_index()
+            assert self.is_consistent(new)
+
+            # write this out.
+            new.to_hdf(self.store_path, key='cpsm2005-11', format='f')
+
+            # fix original (for aug. thru oct. 2005)
+            return formatted.loc[:376]
+
+        dispatch = {'cpsm2005-08': [m2005_08_filler_411, generate_cpsm200511]}
+        for func in dispatch.get(self.store_name, []):
+            formatted = func(formatted)
+
+        return formatted
+
 
 #-----------------------------------------------------------------------------
 # Monthly Data Files
@@ -330,21 +316,22 @@ def _month_to_dd(month):
     """
     lookup dd for a given month.
     """
-    dd_to_month = {"cpsm1989-01": ["1989-01","1991-12"],
-                   "cpsm1992-01": ["1992-01","1993-12"],
-                   "cpsm1994-01": ["1994-01","1994-03"],
-                   "cpsm1994-04": ["1994-04","1995-05"],
-                   "cpsm1995-06": ["1995-06","1995-08"],
-                   "cpsm1995-09": ["1995-09","1997-12"],
-                   "cpsm1998-01": ["1998-01","2002-12"],
-                   "cpsm2003-01": ["2003-01","2004-04"],
-                   "cpsm2004-05": ["2004-05","2005-07"],
-                   "cpsm2005-08": ["2005-08","2006-12"],
-                   "cpsm2007-01": ["2007-01","2008-12"],
-                   "cpsm2009-01": ["2009-01","2009-12"],
-                   "cpsm2010-01": ["2010-01","2012-04"],
-                   "cpsm2012-05": ["2012-05","2012-12"],
-                   "cpsm2013-01": ["2013-01","2014-05"]}
+    dd_to_month = {"cpsm1989-01": ["1989-01", "1991-12"],
+                   "cpsm1992-01": ["1992-01", "1993-12"],
+                   "cpsm1994-01": ["1994-01", "1994-03"],
+                   "cpsm1994-04": ["1994-04", "1995-05"],
+                   "cpsm1995-06": ["1995-06", "1995-08"],
+                   "cpsm1995-09": ["1995-09", "1997-12"],
+                   "cpsm1998-01": ["1998-01", "2002-12"],
+                   "cpsm2003-01": ["2003-01", "2004-04"],
+                   "cpsm2004-05": ["2004-05", "2005-07"],
+                   "cpsm2005-08": ["2005-08", "2005-10"],
+                   "cpsm2005-11": ["2005-11", "2006-12"],
+                   "cpsm2007-01": ["2007-01", "2008-12"],
+                   "cpsm2009-01": ["2009-01", "2009-12"],
+                   "cpsm2010-01": ["2010-01", "2012-04"],
+                   "cpsm2012-05": ["2012-05", "2012-12"],
+                   "cpsm2013-01": ["2013-01", "2014-05"]}
 
     def mk_range(v):
         return arrow.Arrow.range(start=arrow.get(v[0]),
