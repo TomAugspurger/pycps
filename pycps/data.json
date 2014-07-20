@@ -72,5 +72,13 @@
     "cpsm1994-04": ["expand_year"],
     "cpsm1994-06": ["expand_year"],
     "cpsm1995-09": ["expand_year"]
-    }
+    },
+
+  "columns_by_dd": {
+    "cpsm1995-09": ["HRHHID", "HRHHID2", "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"],
+    "cpsm2003-01": ["HRHHID", "HRHHID2", "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"],
+    "cpsm2005-08": ["HRHHID", "HRHHID2", "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"],
+    "cpsm2005-11": ["HRHHID", "HRHHID2", "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"],
+    "cpsm2007-01": ["HRHHID", "HRHHID2", "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"]
+  }
 }
