@@ -93,6 +93,11 @@ class TestDownloaders(unittest.TestCase):
         with self.assertRaises(ValueError):
             d.rename_cps_monthly(files)
 
+    def test_rename_already_formatted(self):
+        dd = expected = 'cpsm1994-01.ddf'
+        result = d.rename_cps_monthly(dd)
+        self.assertEqual(result, expected)
+
     def test_dl_month_strpath(self):
         # TODO: mock
         self.skipTest("TODO: mock")
