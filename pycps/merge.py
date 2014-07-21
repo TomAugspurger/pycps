@@ -56,6 +56,9 @@ def match(left, right, match_funcs):
     Each match_func in match_funcs should be a binary
     funciton (takes 2 parameters). Each should return an Index.
 
+    Both left and right should have their indexes set to
+        HRHHID, HRHHID2, PULINENO
+
     Examples
     --------
     >>>def age(left, right):
@@ -82,9 +85,18 @@ def match_age(left, right):
     return age_idx
 
 
+def match_exact(left, right, kind):
+    cidx = left.index.intersection(right.index)
+    same = left.loc[cidx, kind] == right.loc[cidx, kind]
+    same_idx = same[same].index
+    return same_idx
+
+
 def match_sex(left, right):
-    return left['PESEX'][(left['PESEX'] == right['PESEX'])].index
+    sex_idx = match_exact(left, right, kind='PESEX')
+    return sex_idx
 
 
 def match_race(left, right):
-    return left['PTRACE'][(left['PTRACE'] == right['PTRACE'])].index
+    race_idx = match_exact(left, right, kind='PTDTRACE')
+    return race_idx
