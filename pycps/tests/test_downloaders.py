@@ -71,7 +71,8 @@ class TestDownloaders(unittest.TestCase):
 
     def test_filter_monthly_files_mix(self):
         months = [['1994-01', '1994-04'], '1995-01']
-        files = iter(['cpsm1994-01.zip', 'cpsm1994-03.zip'])
+        files = iter([('jan94.zip', 'cpsm1994-01.zip'),
+                      ('mar94.zip', 'cpsm1994-03.zip')])
         with self.assertRaises(ValueError):
             list(d.filter_monthly_files(files, months=months))
 
