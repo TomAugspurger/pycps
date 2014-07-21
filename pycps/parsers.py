@@ -12,6 +12,7 @@ from collections import OrderedDict
 from contextlib import contextmanager
 
 import arrow
+import numpy as np
 import pandas as pd
 
 from pycps.compat import StringIO
@@ -386,8 +387,8 @@ def read_monthly(infile, dd):
         archive = zipfile.ZipFile(infile)
         filename = archive.namelist()[0]
         parent_dir = str(Path(infile).parent)
-        colspec = pd.concat([df.start - 1, df.end], axis=1)
-        c
+        colspec = pd.concat([dd.start - 1, dd.end], axis=1)
+        colspec = colspec.values.tolist()
 
         with ensure_cleanup_zip(archive, filename, parent_dir):
             df = pd.read_fwf(os.path.join(parent_dir, filename),
@@ -411,3 +412,96 @@ def write_monthly(df, storepath, key):
 
     """
     df.to_hdf(storepath, key=key, format='f')
+
+
+def fixup_by_dd(df, dd_name):
+
+
+    def compute_hrhhid2(df):
+        """
+        pre may2004 need to fill out the ids by creating HRHHID2 manually:
+        (ignore the position values, this is from jan2013)
+
+        HRHHID2        5         HOUSEHOLD IDENTIFIER (part 2) 71 - 75
+
+             EDITED UNIVERSE:    ALL HHLD's IN SAMPLE
+
+             Part 1 of this number is found in columns 1-15 of the record.
+             Concatenate this item with Part 1 for matching forward in time.
+
+             The component parts of this number are as follows:
+             71-72     Numeric component of the sample number (HRSAMPLE)
+             73-74     Serial suffix-converted to numerics (HRSERSUF)
+             75        Household Number (HUHHNUM)
+
+        NOTE: not documented by sersuf of -1 seems to map to '00'
+        """
+        import string
+
+        hrsample = df['HRSAMPLE'].str.extract(r'(\d+)')
+        hrsersuf = df['HRSERSUF'].astype(str)
+        # TODO: log drops
+        huhhnum = df['HUHHNUM'].replace(-1, np.nan).dropna().astype(str)
+
+        sersuf_d = {a: str(ord(a.lower()) - 96).zfill(2) for a in hrsersuf.unique()
+                    if a in list(string.ascii_letters)}
+        sersuf_d['-1.0'] = '00'
+        sersuf_d['-1'] = '00'
+        hrsersuf = hrsersuf.map(sersuf_d)  # 10x faster than replace
+
+        # TODO: log drops
+        hrhhid2 = (hrsample + hrsersuf + huhhnum).dropna()
+        df = df.copy()
+        df['HRHHID2'] = hrhhid2.str.strip('.0').astype(np.int64)
+        return df
+
+    dispatch = {'cpsm1995-09': [compute_hrhhid2]}
+
+    for func in dispatch[dd_name]:
+        df = func(df)
+    return df
+
+# def align_lfsr(df, dd_name):
+#     """Jan1989 and Jan1999. LFSR (labor focrce status recode)
+#     had
+#        1 = WORKING
+#        2 = WITH JOB,NOT AT WORK
+#        3 = UNEMPLOYED, LOOKING FOR WORK
+#        4 = UNEMPLOYED, ON LAYOFF
+#        5 = NILF - WORKING W/O PAY < 15 HRS;
+#                   TEMP ABSENT FROM W/O PAY JOB
+#        6 = NILF - UNAVAILABLE
+#        7 = OTHER NILF
+#     newer ones have
+#        1   EMPLOYED-AT WORK
+#        2   EMPLOYED-ABSENT
+#        3   UNEMPLOYED-ON LAYOFF
+#        4   UNEMPLOYED-LOOKING
+#        5   NOT IN LABOR FORCE-RETIRED
+#        6   NOT IN LABOR FORCE-DISABLED
+#        7   NOT IN LABOR FORCE-OTHER
+#     this func does several things:
+#         1. Change 3 -> 4 and 4 -> 3 in the old ones.
+#         2. Change 5 and 6 to 7.
+#         2. Read retired from AhNLFREA == 4 and set to 5.
+#         3. Read ill/disabled from AhNLFREA == 2 and set to 6.
+#     Group 7 kind of loses meaning now.
+#     """
+#     # 1. realign 3 & 3
+#     status = df["AhLFSR"]
+#     # status = status.replace({3: 4, 4: 3})  # chcek on ordering
+
+#     status_ = status.copy()
+#     status_[status == 3] = 4
+#     status_[status == 4] = 3
+#     status = status_
+
+#     # 2. Add 5 and 6 to 7
+#     status = status.replace({5: 7, 6: 7})
+
+#     # 3. ill/disabled -> 6
+#     status[df['AhNLFREA'] == 2] = 6
+
+#     df['PEMLR'] = status
+#     df = df.drop(["AhLFSR", "AhNLFREA"], axis=1)
+#     return df
