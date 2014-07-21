@@ -7,6 +7,7 @@ from functools import reduce
 
 import arrow
 
+
 def make_months(base):
     """
     Given a first, base month, return the list
@@ -33,6 +34,7 @@ def make_months(base):
     months = [base.replace(months=d) for d in
               [0, 1, 2, 3, 12, 13, 14, 15]]
     return months
+
 
 def match(left, right, match_funcs):
     """
@@ -76,9 +78,10 @@ def match(left, right, match_funcs):
     common = reduce(and_, idxs)
     return right.loc[common]
 
+
 #-----------------------------------------------------------------------------
-# Example merge funcs
-# TODO: should these be locing on left or right?
+# Example match functions
+
 def match_age(left, right):
     age_diff = left['PRTAGE'] - right['PRTAGE']
     age_idx = age_diff[(age_diff > -1) & (age_diff < 3)].index
@@ -100,3 +103,7 @@ def match_sex(left, right):
 def match_race(left, right):
     race_idx = match_exact(left, right, kind='PTDTRACE')
     return race_idx
+
+
+#-----------------------------------------------------------------------------
+#
