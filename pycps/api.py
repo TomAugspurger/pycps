@@ -96,6 +96,11 @@ def parse():
         cols = data['columns_by_dd'][dd_name]
         dd = dd[dd.id.isin(cols)]
         df = par.read_monthly(str(month), dd)
+        df = par.fixup_by_dd(df, dd_name)
+        # do special stuff like compute HRHHID2, bin things, etc.
+        # TODO: special stuff
+
+        df = df.set_index(['HRHHID', 'HRHHID2', 'PULINENO'])
         par.write_monthly(df, settings['data_store'], month.stem)
         print("Added ", month)
 
