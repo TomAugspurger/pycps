@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import unittest
 
 from pycps import downloaders as d
@@ -110,3 +111,30 @@ class TestDownloaders(unittest.TestCase):
     def test_dl_month_noparents(self):
         self.skipTest("TODO: mock")
         result = d.download_month('cpsb7601.Z', Path('files/foo/bar/baz/'))
+
+
+class TestCached(unittest.TestCase):
+
+    def setUp(self):
+        self.tmpdir = '_testcached_'
+        os.mkdir(self.tmpdir)
+        self.tmpfiles = [os.path.join(self.tmpdir, x) for x in
+                         ['c1.ddf', 'c2.asc', 'c3.zip', 'z4.Z', 'c5.foo']]
+        for f in self.tmpfiles:
+            open(f, 'w')
+
+    def tearDown(self):
+        [os.remove(x) for x in self.tmpfiles]
+        os.rmdir(self.tmpdir)
+
+    def test_check_cached_data(self):
+        result = d.check_cached(self.tmpdir, kind='data')
+        expected = ['c3.zip', 'c4.Z']
+
+    def check_cached_ddf(self):
+        result = d.check_cached(self.tmpdir, kind='ddf')
+        expected = ['c1.ddf', 'c2.asc']
+
+    def check_cached_other(self):
+        with self.assertRaises(ValueError):
+            result = d.check_cached(self.tmpdir, kind='foo')
