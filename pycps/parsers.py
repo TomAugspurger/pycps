@@ -380,7 +380,9 @@ def read_monthly(infile, dd):
     """
     widths = dd.length.tolist()
 
-    if infile.endswith('.zip'):
+    if isinstance(infile, StringIO):
+        df = pd.read_fwf(infile, widths=widths, names=dd.id.values)
+    elif infile.endswith('.zip'):
         archive = zipfile.ZipFile(infile)
         filename = archive.namelist()[0]
         parent_dir = str(Path(infile).parent)
@@ -389,9 +391,6 @@ def read_monthly(infile, dd):
         with ensure_cleanup_zip(archive, filename, parent_dir):
             df = pd.read_fwf(os.path.join(parent_dir, filename),
                              colspecs=colspec, names=dd.id.values)
-
-    else:
-        df = pd.read_fwf(infile, widths=widths, names=dd.id.values)
     # TODO: Fix stripping of 0s
     return df
 
