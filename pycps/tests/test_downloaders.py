@@ -131,10 +131,10 @@ class TestCached(unittest.TestCase):
         result = d.check_cached(self.tmpdir, kind='data')
         expected = ['c3.zip', 'c4.Z']
 
-    def check_cached_ddf(self):
-        result = d.check_cached(self.tmpdir, kind='ddf')
+    def test_check_cached_ddf(self):
+        result = d.check_cached(self.tmpdir, kind='dictionary')
         expected = ['c1.ddf', 'c2.asc']
 
-    def check_cached_other(self):
+    def test_check_cached_other(self):
         with self.assertRaises(ValueError):
             result = d.check_cached(self.tmpdir, kind='foo')
