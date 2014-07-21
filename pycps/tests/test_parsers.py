@@ -244,6 +244,10 @@ class TestDDParser(unittest.TestCase):
             result = p._month_to_dd(month)
             self.assertEqual(result, dd)
 
+    def test_standardize_ids(self):
+        # test '63' '63B', '65B', '63A'] for hrsample
+        pass
+
 class testHDFStore(unittest.TestCase):
 
     def setUp(self):
