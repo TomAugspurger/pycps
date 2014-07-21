@@ -386,7 +386,8 @@ def read_monthly(infile, dd):
         archive = zipfile.ZipFile(infile)
         filename = archive.namelist()[0]
         parent_dir = str(Path(infile).parent)
-        colspec = dd[['start', 'end']].values.tolist()
+        colspec = pd.concat([df.start - 1, df.end], axis=1)
+        c
 
         with ensure_cleanup_zip(archive, filename, parent_dir):
             df = pd.read_fwf(os.path.join(parent_dir, filename),
