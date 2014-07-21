@@ -22,9 +22,10 @@ def find_version(*file_paths):
 #     long_description = f.read()
 
 setup(
-    name="pycps",
+    name="python-cps",
     version=find_version('pycps', '__init__.py'),
-    description="pycps Stats",
+    description="A python package for working with the"
+    "[Current Population Survey](http://www.census.gov/cps/).",
     # long_description=long_description,
 
     # The project URL.
