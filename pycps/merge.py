@@ -79,6 +79,17 @@ def match(left, right, match_funcs):
     return right.loc[common]
 
 
+def merge(dfs):
+    """
+    Adds the month in sample to the index. Concats along the 0 axis.
+
+    Parameters
+    ----------
+    dfs: list of DataFrames
+    """
+    dfs = [df.set_index('HRMIS', append=True) for df in dfs]
+    return pd.concat(dfs)
+
 #-----------------------------------------------------------------------------
 # Example match functions
 
