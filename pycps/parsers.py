@@ -146,11 +146,15 @@ class DDParser:
         self.regex = self.make_regex(style=self.style)
         self.settings = settings
         self.ids_dict = {}  # TODO
+        if self.store_name == 'cpsm2009-01':
+            self.encoding = 'latin_1'
+        else:
+            self.encoding = None
 
     def run(self):
         # make this as streamlike as possible.
         # TODO: break out formatting
-        with self.infile.open() as f:
+        with self.infile.open(encoding=self.encoding) as f:
             # get all header lines
             lines = (self.regex.match(line) for line in f)
             lines = filter(None, lines)
@@ -264,6 +268,14 @@ class DDParser:
         """
         redo
         """
+        def m2004_05_filler_411(formatted):
+            """
+            See below
+            """
+            fixed = formatted.copy()
+            fixed.loc[185] = ('FILLER', 2, 410, 411)
+            return fixed
+
         def m2004_08_filler_411(formatted):
             """
             See below
@@ -312,7 +324,16 @@ class DDParser:
             # fix original (for aug. thru oct. 2005)
             return formatted.loc[:376]
 
-        dispatch = {'cpsm2005-08': [m2005_08_filler_411, generate_cpsm200511]}
+        def m2009_01_filler_399(formatted):
+            assert formatted.loc[399].values.tolist() == ['FILLER', 45, 932, 950]
+            fixed = formatted.copy()
+            fixed.loc[399] = ('FILLER', 19, 932, 950)
+            return fixed
+
+        dispatch = {'cpsm2004-05': [m2004_05_filler_411],
+                    'cpsm2005-08': [m2005_08_filler_411, generate_cpsm200511],
+                    'cpsm2009-01': [m2009_01_filler_399]
+                   }
         for func in dispatch.get(self.store_name, []):
             formatted = func(formatted)
 
