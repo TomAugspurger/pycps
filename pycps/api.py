@@ -65,7 +65,7 @@ def download(overwrite_cached=False):
 def parse():
     settings = par.read_settings(str(_HERE_ / 'settings.json'))
     dd_path = Path(settings['dd_path'])
-    dds = [x for x in dd_path.iterdir() if x.suffix == '.ddf']
+    dds = [x for x in dd_path.iterdir() if x.suffix in ('.ddf', '.asc')]
     monthly_path = Path(settings['monthly_path'])
     months = [x for x in monthly_path.iterdir() if x.suffix in ('.Z', '.zip')]
 
