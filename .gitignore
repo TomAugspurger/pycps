@@ -15,3 +15,6 @@ data/
 
 # Mac stuff
 .DS_Store
+
+# Documentation stuff
+docs/_build/
