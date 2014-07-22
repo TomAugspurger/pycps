@@ -31,7 +31,6 @@ def download(overwrite_cached=False):
     cached_dd = dl.check_cached(settings['dd_path'], kind='dictionary')
     cached_month = dl.check_cached(settings['data_path'], kind='data')
 
-    # TODO: only needed dds
     dd_range = [par._month_to_dd(settings['date_start']),
                 par._month_to_dd(settings['date_end'])]
     dds = dl.all_monthly_files(kind='dictionary')
