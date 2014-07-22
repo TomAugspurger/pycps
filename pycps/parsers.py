@@ -146,7 +146,7 @@ class DDParser:
         self.regex = self.make_regex(style=self.style)
         self.settings = settings
         self.ids_dict = {}  # TODO
-        if self.store_name == 'cpsm2009-01':
+        if self.store_name in ('cpsm2009-01', 'cpsm2010-01', 'cpsm2012-05'):
             self.encoding = 'latin_1'
         else:
             self.encoding = None
