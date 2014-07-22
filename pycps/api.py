@@ -74,17 +74,12 @@ def parse():
     with (_HERE_ / 'data.json').open() as f:
         data = json.load(f)
 
-    for dd in dds:
+    knownfailures = ['cpsm2012-05']
+
+    for dd in filter(lambda x: x.stem not in knownfailures, dds):
         parser = par.DDParser(dd, settings)
-        try:
-            df = parser.run()
-            df = parser.regularize_ids(df, data['col_rename_by_dd'][parser.store_name])
-        except Exception as e:
-            if not settings['raise_warnings']:
-                print('skipping {}'.format(parser.store_name))
-                continue
-            else:
-                raise e
+        df = parser.run()
+        df = parser.regularize_ids(df, data['col_rename_by_dd'][parser.store_name])
         parser.write(df)
         # TODO: logging
         print("Added ", dd)
