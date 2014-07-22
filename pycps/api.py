@@ -29,7 +29,7 @@ _HERE_ = Path(__file__).parent
 def download(overwrite_cached=False):
     settings = par.read_settings(str(_HERE_ / 'settings.json'))
     cached_dd = dl.check_cached(settings['dd_path'], kind='dictionary')
-    cached_month = dl.check_cached(settings['data_path'], kind='data')
+    cached_month = dl.check_cached(settings['monthly_path'], kind='data')
 
     dd_range = [par._month_to_dd(settings['date_start']),
                 par._month_to_dd(settings['date_end'])]
@@ -54,7 +54,7 @@ def download(overwrite_cached=False):
         print(renamed)
 
     for month, renamed in data:
-        dl.download_month(month, Path(settings['data_path']))
+        dl.download_month(month, Path(settings['monthly_path']))
         # TODO: logging
         print(renamed)
 
@@ -66,8 +66,8 @@ def parse():
     settings = par.read_settings(str(_HERE_ / 'settings.json'))
     dd_path = Path(settings['dd_path'])
     dds = [x for x in dd_path.iterdir() if x.suffix == '.ddf']
-    data_path = Path(settings['data_path'])
-    months = [x for x in data_path.iterdir() if x.suffix in ('.Z', '.zip')]
+    monthly_path = Path(settings['monthly_path'])
+    months = [x for x in monthly_path.iterdir() if x.suffix in ('.Z', '.zip')]
 
     settings['raise_warnings'] = False
 
@@ -100,7 +100,7 @@ def parse():
         # TODO: special stuff
 
         df = df.set_index(['HRHHID', 'HRHHID2', 'PULINENO'])
-        par.write_monthly(df, settings['data_store'], month.stem)
+        par.write_monthly(df, settings['monthly_store'], month.stem)
         print("Added ", month)
 
 #-----------------------------------------------------------------------------
