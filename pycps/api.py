@@ -65,7 +65,7 @@ def download(overwrite_cached=False):
 def parse():
     settings = par.read_settings(str(_HERE_ / 'settings.json'))
     dd_path = Path(settings['dd_path'])
-    dds = [x for x in dd_path.iterdir() if x.suffix == '.ddf']
+    dds = [x for x in dd_path.iterdir() if x.suffix in ('.ddf', '.asc')]
     monthly_path = Path(settings['monthly_path'])
     months = [x for x in monthly_path.iterdir() if x.suffix in ('.Z', '.zip')]
 
@@ -74,17 +74,12 @@ def parse():
     with (_HERE_ / 'data.json').open() as f:
         data = json.load(f)
 
-    for dd in dds:
+    knownfailures = ['cpsm2012-05']
+
+    for dd in filter(lambda x: x.stem not in knownfailures, dds):
         parser = par.DDParser(dd, settings)
-        try:
-            df = parser.run()
-            df = parser.regularize_ids(df, data['col_rename_by_dd'][parser.store_name])
-        except Exception as e:
-            if not settings['raise_warnings']:
-                print('skipping {}'.format(parser.store_name))
-                continue
-            else:
-                raise e
+        df = parser.run()
+        df = parser.regularize_ids(df, data['col_rename_by_dd'][parser.store_name])
         parser.write(df)
         # TODO: logging
         print("Added ", dd)
