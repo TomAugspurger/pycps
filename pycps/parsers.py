@@ -268,6 +268,31 @@ class DDParser:
         """
         redo
         """
+        def m1998_01_149_unknown(formatted):
+            fixed = pd.concat([formatted.loc[:60],
+                               pd.DataFrame([['unknown', 2, 149, 150]],
+                                            columns=['id', 'length', 'start', 'end']),
+                               formatted.loc[61:]],
+                              ignore_index=True)
+            return fixed
+
+        def m1998_01_535_unknown(formatted):
+            fixed = pd.concat([formatted.loc[:240],
+                               pd.DataFrame([['unknown', 4, 536, 539]],
+                                            columns=['id', 'length', 'start', 'end']),
+                               formatted.loc[241:]],
+                              ignore_index=True)
+            return fixed
+
+        def m1998_01_556_unknown(formatted):
+            fixed = pd.concat([formatted.loc[:244],
+                               pd.DataFrame([['unknown', 4, 536, 539]],
+                                            columns=['id', 'length', 'start', 'end']),
+                               formatted.loc[245:]],
+                              ignore_index=True)
+            return fixed
+
+
         def m2004_05_filler_411(formatted):
             """
             See below
@@ -330,7 +355,8 @@ class DDParser:
             fixed.loc[399] = ('FILLER', 19, 932, 950)
             return fixed
 
-        dispatch = {'cpsm2004-05': [m2004_05_filler_411],
+        dispatch = {'cpsm1998-01': [m1998_01_535_unknown, m1998_01_149_unknown],
+                    'cpsm2004-05': [m2004_05_filler_411],
                     'cpsm2005-08': [m2005_08_filler_411, generate_cpsm200511],
                     'cpsm2009-01': [m2009_01_filler_399]
                    }
@@ -476,7 +502,12 @@ def fixup_by_dd(df, dd_name):
         df['HRHHID2'] = hrhhid2.str.strip('.0').astype(np.int64)
         return df
 
-    dispatch = {'cpsm1995-09': [compute_hrhhid2]}
+    def year2_to_year4(df):
+        df['HRYEAR4'] = '19' + df.HRYEAR4.astype(str)
+        return df
+
+    dispatch = {'cpsm1995-09': [compute_hrhhid2, year2_to_year4]
+                }
 
     for func in dispatch[dd_name]:
         df = func(df)
