@@ -18,6 +18,7 @@ import pandas as pd
 
 import pycps.downloaders as dl
 import pycps.parsers as par
+import pycps.merge as m
 
 # TODO argparse CLI
 
@@ -101,3 +102,23 @@ def parse():
 #-----------------------------------------------------------------------------
 # Merge
 #-----------------------------------------------------------------------------
+
+
+def merge():
+    # settings = par.read_settings(str(_HERE_ / 'settings.json'))
+    store = pd.HDFStore('data/monthly/monthly.hdf')  # from settings
+    months = (x.strftime('cpsm%Y-%m') for x in m.make_months('1995-09-01'))
+    months = enumerate(months, 1)
+
+    mis, month = next(months)
+    df0 = store.select(month).query('HRMIS == @mis')
+
+    match_funcs = [m.match_age, m.match_sex, m.match_race]
+    dfs = [df0]
+    for mis, month in months:
+        dfn = store.select(month).query('HRMIS == @mis')
+        dfs.append(m.match(df0, dfn, match_funcs))
+
+    df = m.merge(dfs)
+    df = df.sort_index()
+    df = m.make_wave_id(df)
