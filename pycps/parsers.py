@@ -503,7 +503,7 @@ def fixup_by_dd(df, dd_name):
         return df
 
     def year2_to_year4(df):
-        df['HRYEAR4'] = '19' + df.HRYEAR4.astype(str)
+        df['HRYEAR4'] = ('19' + df.HRYEAR4.astype(str)).astype(np.int64)
         return df
 
     dispatch = {'cpsm1995-09': [compute_hrhhid2, year2_to_year4]
