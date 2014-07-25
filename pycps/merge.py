@@ -2,10 +2,12 @@
 """
 Merge the different months by person.
 """
+import datetime
 from operator import and_  # same as &
 from functools import reduce
 
 import arrow
+import pandas as pd
 
 
 def make_months(base):
@@ -118,3 +120,18 @@ def match_race(left, right):
 
 #-----------------------------------------------------------------------------
 #
+
+def make_wave_id(df):
+    """
+    Assign a wave a unique ID (datetime64 for first month in sample). Adds
+    that id as a column in df. Allows for easy querying later.
+
+    Parameters
+    ----------
+    df: DataFrame
+        a frame containing observations for specific wave.
+    """
+    A = slice(None)
+    year, month = df.loc[(A, A, A, 1), :].iloc[0][['HRYEAR4', 'HRMONTH']]
+    df['wave_id'] = pd.Timestamp(datetime.datetime(year, month, 1))
+    return df

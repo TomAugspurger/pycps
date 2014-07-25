@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import unittest
 
 import arrow
@@ -51,4 +52,19 @@ class TestMerge(unittest.TestCase):
         result = m.match(left, right, [f, g])
         expected = pd.DataFrame({'A': [1, 5], 'B': [4, 8]},
                                 index=['b', 'c'])
+        tm.assert_frame_equal(result, expected)
+
+    def test_make_wave_id(self):
+        # unsorted, just in case
+        idx = pd.MultiIndex.from_tuples([(17156360780, 65001, -1, 4),
+                                         (45110260160, 65001, -1, 1),
+                                         (92129160240, 65001, 1, 3)])
+        df = pd.DataFrame({'HRYEAR4': [1999, 1999, 1999],
+                           'HRMONTH': [1, 1, 3]}, index=idx)
+        expected = df.copy()
+        expected['wave_id'] = pd.Timestamp(datetime.datetime(1999, 1, 1))
+        result = m.make_wave_id(df)
+        tm.assert_frame_equal(result, expected)
+
+        df = df.sort_index()
         tm.assert_frame_equal(result, expected)
