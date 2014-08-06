@@ -168,11 +168,26 @@ class DDParser:
 
         # ensure consistency across lines
         df = self.make_consistent(formatted)
-        assert self.is_consistent(df)
+        if not self.is_consistent(df):
+            widths = self.check_width(df)
+            steps = self.check_steps(df)
+
+            if not widths.all():
+                logging.debug(df[~widths])
+            if not steps.all():
+                logging.debug(df[~steps])
+            raise Exception("Not consistent")
         return df
 
     @staticmethod
-    def is_consistent(formatted):
+    def check_width(df):
+        return df['length'] == df['end'] - df['start'] + 1
+
+    @staticmethod
+    def check_steps(df):
+        return df.start - df.end.shift(1).fillna(0) - 1 == 0
+
+    def is_consistent(self, formatted):
         """
         Given a list of tuples, make sure the column numbering is
         internally consistent.
@@ -182,10 +197,8 @@ class DDParser:
         1. width == (end - start) + 1
         2. start_1 == end_0 + 1
         """
-        check_width = lambda df: df['length'] == df['end'] - df['start'] + 1
-        check_steps = lambda df: df.start - df.end.shift(1).fillna(0) - 1 == 0
-
-        return check_width(formatted).all() and check_steps(formatted).all()
+        return (self.check_width(formatted).all() and
+                self.check_steps(formatted).all())
 
     @staticmethod
     def regularize_ids(df, replacer):
@@ -274,31 +287,40 @@ class DDParser:
         redo
         """
 
-        id_cols = ['id', 'lenght', 'start', 'end']
+        id_cols = ['id', 'length', 'start', 'end']
+
+        def insert_unknown(formatted, last_good_idx, start, stop):
+            length = stop - start + 1
+            fixed = pd.concat([formatted.loc[:last_good_idx],
+                              pd.DataFrame([['unknown', length, start, stop]],
+                                           columns=id_cols),
+                              formatted.loc[last_good_idx+1:]],
+                              ignore_index=True)
+            return fixed
 
         def m1998_01_149_unknown(formatted):
-            fixed = pd.concat([formatted.loc[:60],
-                               pd.DataFrame([['unknown', 2, 149, 150]],
-                                            columns=id_cols),
-                               formatted.loc[61:]],
-                              ignore_index=True)
-            return fixed
+            return insert_unknown(formatted, last_good_idx=60,
+                                  start=149, stop=150)
 
         def m1998_01_535_unknown(formatted):
-            fixed = pd.concat([formatted.loc[:240],
-                               pd.DataFrame([['unknown', 4, 536, 539]],
-                                            columns=id_cols),
-                               formatted.loc[241:]],
-                              ignore_index=True)
-            return fixed
+            return insert_unknown(formatted, last_good_idx=239,
+                                  start=536, stop=539)
 
-        def m1998_01_556_unknown(formatted):
-            fixed = pd.concat([formatted.loc[:244],
-                               pd.DataFrame([['unknown', 4, 536, 539]],
-                                            columns=id_cols),
-                               formatted.loc[245:]],
-                              ignore_index=True)
-            return fixed
+        def m1998_01_557_unknown(formatted):
+            return insert_unknown(formatted, last_good_idx=244,
+                                  start=557, stop=558)
+
+        def m1998_01_633_unknown(formatted):
+            return insert_unknown(formatted, last_good_idx=262,
+                                  start=633, stop=638)
+
+        def m1998_01_681_unknown(formatted):
+            return insert_unknown(formatted, last_good_idx=284,
+                                  start=681, stop=682)
+
+        def m1998_01_787_unknown(formatted):
+            return insert_unknown(formatted, last_good_idx=337,
+                                  start=787, stop=790)
 
         def m2004_05_filler_411(formatted):
             """
@@ -365,8 +387,12 @@ class DDParser:
             fixed.loc[399] = ('FILLER', 19, 932, 950)
             return fixed
 
-        dispatch = {'cpsm1998-01': [m1998_01_535_unknown, m1998_01_149_unknown,
-                                    m1998_01_556_unknown],
+        dispatch = {'cpsm1998-01': [m1998_01_535_unknown,
+                                    m1998_01_149_unknown,
+                                    m1998_01_557_unknown,
+                                    m1998_01_633_unknown,
+                                    m1998_01_681_unknown,
+                                    m1998_01_787_unknown],
                     'cpsm2004-05': [m2004_05_filler_411],
                     'cpsm2005-08': [m2005_08_filler_411, generate_cpsm200511],
                     'cpsm2009-01': [m2009_01_filler_399]
