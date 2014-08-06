@@ -355,14 +355,17 @@ class DDParser:
             fixed.loc[399] = ('FILLER', 19, 932, 950)
             return fixed
 
-        dispatch = {'cpsm1998-01': [m1998_01_535_unknown, m1998_01_149_unknown],
+        dispatch = {'cpsm1998-01': [m1998_01_535_unknown, m1998_01_149_unknown,
+                                    m1998_01_556_unknown],
                     'cpsm2004-05': [m2004_05_filler_411],
                     'cpsm2005-08': [m2005_08_filler_411, generate_cpsm200511],
                     'cpsm2009-01': [m2009_01_filler_399]
                    }
         for func in dispatch.get(self.store_name, []):
             formatted = func(formatted)
-
+            logging.info("Applied {} to {}".format(
+                func.__name__, self.store_name
+                ))
         return formatted
 
 

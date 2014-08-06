@@ -23,7 +23,8 @@ import pycps.merge as m
 
 # TODO argparse CLI
 
-logging.basicConfig('filename=history.log', level=logging.DEBUG)
+logging.basicConfig(filename='history.log', level=logging.DEBUG,
+                    format='%(asctime)s %(message)s')
 
 _HERE_ = Path(__file__).parent
 
@@ -36,6 +37,7 @@ def download(overwrite_cached=False):
     """
     pass
     """
+    logging.info("Starting Downloading")
     settings = par.read_settings(str(_HERE_ / 'settings.json'))
     cached_dd = dl.check_cached(settings['dd_path'], kind='dictionary')
     cached_month = dl.check_cached(settings['monthly_path'], kind='data')
@@ -57,13 +59,11 @@ def download(overwrite_cached=False):
 
     for month, renamed in dds:
         dl.download_month(month, Path(settings['dd_path']))
-        # TODO: logging
-        print(renamed)
+        logging.info("Downloaded {}".format(renamed))
 
     for month, renamed in data:
         dl.download_month(month, Path(settings['monthly_path']))
-        # TODO: logging
-        print(renamed)
+        logging.info("Downloaded {}".format(renamed))
 
 # -----------------------------------------------------------------------------
 # Parsing
@@ -71,7 +71,7 @@ def download(overwrite_cached=False):
 
 
 def parse():
-    logging.INFO("Starting parser")
+    logging.info("Starting parser")
     settings = par.read_settings(str(_HERE_ / 'settings.json'))
     dd_path = Path(settings['dd_path'])
     dds = [x for x in dd_path.iterdir() if x.suffix in ('.ddf', '.asc')]
@@ -91,8 +91,7 @@ def parse():
         df = parser.regularize_ids(df,
                                    data['col_rename_by_dd'][parser.store_name])
         parser.write(df)
-        # TODO: logging
-        print("Added ", dd)
+        logging.info("Added {} to {}".format(dd, parser.store_path))
 
     for month in months:
         dd_name = par._month_to_dd(str(month))
@@ -105,8 +104,9 @@ def parse():
         # TODO: special stuff
 
         df = df.set_index(['HRHHID', 'HRHHID2', 'PULINENO'])
-        par.write_monthly(df, settings['monthly_store'], month.stem)
-        print("Added ", month)
+        store_path = settings['monthly_path']
+        par.write_monthly(df, store_path, month.stem)
+        logging.info("Added {} to {}".format(month, settings['monthly_store']))
 
 # -----------------------------------------------------------------------------
 # Merge
