@@ -23,17 +23,20 @@ import pycps.merge as m
 # TODO argparse CLI
 
 _HERE_ = Path(__file__).parent
-#-----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
 # Downloading
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
 
 def download(overwrite_cached=False):
+    """
+    pass
+    """
     settings = par.read_settings(str(_HERE_ / 'settings.json'))
     cached_dd = dl.check_cached(settings['dd_path'], kind='dictionary')
     cached_month = dl.check_cached(settings['monthly_path'], kind='data')
 
-    dd_range = [par._month_to_dd(settings['date_start']),
-                par._month_to_dd(settings['date_end'])]
     dds = dl.all_monthly_files(kind='dictionary')
     dds = filter(itemgetter(1), dds)  # make sure not None cpsdec!
     dds = dl.filter_dds(dds, months=[par._month_to_dd(settings['date_start']),
@@ -59,9 +62,10 @@ def download(overwrite_cached=False):
         # TODO: logging
         print(renamed)
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Parsing
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
 
 def parse():
     settings = par.read_settings(str(_HERE_ / 'settings.json'))
@@ -80,7 +84,8 @@ def parse():
     for dd in filter(lambda x: x.stem not in knownfailures, dds):
         parser = par.DDParser(dd, settings)
         df = parser.run()
-        df = parser.regularize_ids(df, data['col_rename_by_dd'][parser.store_name])
+        df = parser.regularize_ids(df,
+                                   data['col_rename_by_dd'][parser.store_name])
         parser.write(df)
         # TODO: logging
         print("Added ", dd)
@@ -99,9 +104,9 @@ def parse():
         par.write_monthly(df, settings['monthly_store'], month.stem)
         print("Added ", month)
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Merge
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 def merge():
