@@ -4,6 +4,7 @@ Read all the things.
 import os
 import re
 import json
+import logging
 import zipfile
 from pathlib import Path
 from functools import partial
@@ -40,9 +41,9 @@ def _open_file_or_stringio(maybe_file):
 
 
 def _skip_module_docstring(f):
-    next(f)  # first """
+    next(f)
     f = dropwhile(lambda x: not x.startswith('"""'), f)
-    next(f)  # second """
+    next(f)
     return f
 
 
@@ -291,7 +292,6 @@ class DDParser:
                                formatted.loc[245:]],
                               ignore_index=True)
             return fixed
-
 
         def m2004_05_filler_411(formatted):
             """

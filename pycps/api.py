@@ -10,6 +10,7 @@ Functions to step through
 Define your preferences in settings.json in this folder.
 """
 import json
+import logging
 from pathlib import Path
 from functools import partial
 from operator import itemgetter
@@ -21,6 +22,8 @@ import pycps.parsers as par
 import pycps.merge as m
 
 # TODO argparse CLI
+
+logging.basicConfig('filename=history.log', level=logging.DEBUG)
 
 _HERE_ = Path(__file__).parent
 
@@ -68,6 +71,7 @@ def download(overwrite_cached=False):
 
 
 def parse():
+    logging.INFO("Starting parser")
     settings = par.read_settings(str(_HERE_ / 'settings.json'))
     dd_path = Path(settings['dd_path'])
     dds = [x for x in dd_path.iterdir() if x.suffix in ('.ddf', '.asc')]
