@@ -26,8 +26,11 @@ _HERE_ = Path(__file__).parent
 # Downloading
 #-----------------------------------------------------------------------------
 
-def download(overwrite_cached=False):
-    settings = par.read_settings(str(_HERE_ / 'settings.json'))
+def download(overwrite_cached=False, config_file = False):
+
+    if config_file == False:
+        config_file = str(_HERE_ / 'settings.json')
+    settings = par.read_settings(config_file)
     cached_dd = dl.check_cached(settings['dd_path'], kind='dictionary')
     cached_month = dl.check_cached(settings['monthly_path'], kind='data')
 

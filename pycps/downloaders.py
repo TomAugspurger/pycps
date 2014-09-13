@@ -237,6 +237,9 @@ def check_cached(directory, kind='data'):
     cached: [str]
 
     """
+    ## @todo need to move "import os" to wherever things are imported
+    import os
+
     if kind == 'data':
         suffixes = ('.Z', '.zip')
     elif kind == 'dictionary':
@@ -244,6 +247,9 @@ def check_cached(directory, kind='data'):
     else:
         raise ValueError("kind must be 'data' or 'dictionary'.")
     if not isinstance(directory, Path):
+
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         directory = Path(directory)
     cached = [x.name for x in directory.iterdir()
               if x.suffix in suffixes]
