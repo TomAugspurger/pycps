@@ -66,6 +66,7 @@ setup(
 
     install_requires = ['arrow>=0.4.0',
                         'requests>=2.4.0',
+                        'pathlib>=1.0.1',
                         'lxml>=3.3.5',
                         'numpy>=1.8.0',
                         'pandas>=0.14.1'],
