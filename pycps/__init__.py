@@ -22,3 +22,5 @@ def setup_logging(path_=None):
         config = json.load(f)
     logging.config.dictConfig(config)
 
+setup_logging()
+
