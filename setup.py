@@ -69,8 +69,8 @@ setup(
                         'pathlib>=1.0.1',
                         'lxml>=3.3.5',
                         'numpy>=1.8.0',
-                        'tables>=3.1.1',
-                        'pandas>=0.14.1'],
+                        'pandas>=0.14.1',
+                        'numexpr>=2.4'],
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages.
     packages=find_packages(exclude=["contrib", "docs", "tests*"]),
