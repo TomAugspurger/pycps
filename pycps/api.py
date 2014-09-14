@@ -10,6 +10,7 @@ Functions to step through
 Define your preferences in settings.json in this folder.
 """
 import json
+import logging
 from pathlib import Path
 from functools import partial
 from operator import itemgetter
@@ -19,6 +20,7 @@ import pandas as pd
 import pycps.downloaders as dl
 import pycps.parsers as par
 
+logger = logging.getLogger(__name__)
 # TODO argparse CLI
 
 _HERE_ = Path(__file__).parent
@@ -31,8 +33,9 @@ def download(overwrite_cached=False):
     cached_dd = dl.check_cached(settings['dd_path'], kind='dictionary')
     cached_month = dl.check_cached(settings['monthly_path'], kind='data')
 
-    dd_range = [par._month_to_dd(settings['date_start']),
-                par._month_to_dd(settings['date_end'])]
+    # dd_range = [par._month_to_dd(settings['date_start']),
+    #             par._month_to_dd(settings['date_end'])]
+
     dds = dl.all_monthly_files(kind='dictionary')
     dds = filter(itemgetter(1), dds)  # make sure not None cpsdec!
     dds = dl.filter_dds(dds, months=[par._month_to_dd(settings['date_start']),
@@ -63,7 +66,9 @@ def download(overwrite_cached=False):
 #-----------------------------------------------------------------------------
 
 def parse():
-    settings = par.read_settings(str(_HERE_ / 'settings.json'))
+    settings_file = str(_HERE_ / 'settings.json')
+    settings = par.read_settings(settings_file)
+
     dd_path = Path(settings['dd_path'])
     dds = [x for x in dd_path.iterdir() if x.suffix in ('.ddf', '.asc')]
     monthly_path = Path(settings['monthly_path'])
@@ -71,6 +76,7 @@ def parse():
 
     settings['raise_warnings'] = False
 
+    logger.info("Reading Data file")
     with (_HERE_ / 'data.json').open() as f:
         data = json.load(f)
 
@@ -79,7 +85,8 @@ def parse():
     for dd in filter(lambda x: x.stem not in knownfailures, dds):
         parser = par.DDParser(dd, settings)
         df = parser.run()
-        df = parser.regularize_ids(df, data['col_rename_by_dd'][parser.store_name])
+        df = parser.regularize_ids(df,
+                data['col_rename_by_dd'][parser.store_name])
         parser.write(df)
         # TODO: logging
         print("Added ", dd)
