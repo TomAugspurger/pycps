@@ -18,14 +18,26 @@ There's a few related functions PyCPS provides:
 2. Standardizing variables across months
 3. Merging to create time series
 
+## Installation
+
+- From pip: `pip install pycps`
+- From source:
+
+    ```
+    git clone https://github.com/TomAugspurger/pycps
+    cd pycps
+    pip install .
+    pip install -r requirements.txt
+    ```
+
 ## Dependencies
 
-numpy
-pandas
-requests
-lxml
-arrow
-tables
+See `requirements.txt`
+
+Installing via `pip` will take care of most everything, however I've had
+some troubles automating the installation of pytables. I recommend installing
+that separately with `pip instsall tables`.
+
 
 ## Python
 
