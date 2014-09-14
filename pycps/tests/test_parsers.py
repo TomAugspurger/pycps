@@ -89,7 +89,7 @@ These are reserved to substitue in other paths.
 class TestDDParser(unittest.TestCase):
 
     def setUp(self):
-        self.testfile = Path('files/jan2007.ddf')  # TODO: filepath
+        self.testfile = Path(curdir + '/files/jan2007.ddf')
         settings = {'outpath': 'dds/',
                     'dd_path': 'tmp/',
                     'dd_store': 'baz.h5'}
@@ -251,6 +251,11 @@ class TestDDParser(unittest.TestCase):
         for month, dd in zip(months, dds):
             result = p._month_to_dd(month)
             self.assertEqual(result, dd)
+
+    def test_full_run(self):
+        result = self.parser.run()
+        expected = pd.read_csv(curdir + '/files/jan08expected.csv')
+        tm.assert_frame_equal(result, expected)
 
     def test_standardize_ids(self):
         # test '63' '63B', '65B', '63A'] for hrsample
