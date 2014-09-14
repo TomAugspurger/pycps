@@ -15,7 +15,7 @@ import arrow
 import numpy as np
 import pandas as pd
 
-from pycps.compat import StringIO
+from pycps.compat import StringIO, str_types
 
 #-----------------------------------------------------------------------------
 # Globals
@@ -68,7 +68,7 @@ def read_settings(filepath):
         f = json.loads(f)
 
     # need to sort so that we can substitue down the line
-    paths = sorted(filter(lambda x: isinstance(x[1], str), f.items()),
+    paths = sorted(filter(lambda x: isinstance(x[1], str_types), f.items()),
                    key=lambda x: x.count('/'))
     paths = OrderedDict(paths)
 

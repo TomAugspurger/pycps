@@ -10,6 +10,7 @@ if ISPY2:
     from itertools import ifilter, imap
     filter = ifilter
     map = imap
+    str_types = (basestring,)
 else:
     from io import StringIO
-
+    str_types = (str,)
