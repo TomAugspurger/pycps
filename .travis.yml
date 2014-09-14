@@ -1,0 +1,27 @@
+language: python
+    - "2.7"
+    - "3.3"
+
+env:
+
+# matrix:
+
+before_install:
+
+install:
+  pip install -r requirements.txt
+  pip install .
+
+before_script:
+  - echo "before_install"
+  - df -h
+  - date
+  - pwd
+  - uname -a
+  - python -V
+
+script:
+
+after_script:
+
+
