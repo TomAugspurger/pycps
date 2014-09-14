@@ -64,7 +64,11 @@ setup(
     # What does your project relate to?
     keywords='pycps, cps',
 
-    install_requires = ['arrow', 'pandas', 'numpy', 'requests'],
+    install_requires = ['arrow>=0.4.0',
+                        'requests>=2.4.0',
+                        'lxml>=3.3.5',
+                        'numpy>=1.8.0',
+                        'pandas>=0.14.1'],
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages.
     packages=find_packages(exclude=["contrib", "docs", "tests*"]),
