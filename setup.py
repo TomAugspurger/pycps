@@ -64,13 +64,16 @@ setup(
     # What does your project relate to?
     keywords='pycps, cps',
 
+    # Don't directly use numexpr or Cython but PyTables depends on them
+    # and I think they messed up their setup.py file.
     install_requires = ['arrow>=0.4.0',
                         'requests>=2.4.0',
                         'pathlib>=1.0.1',
                         'lxml>=3.3.5',
                         'numpy>=1.8.0',
                         'pandas>=0.14.1',
-                        'numexpr>=2.4'],
+                        'numexpr>=2.4',
+                        'Cython>=0.13'],
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages.
     packages=find_packages(exclude=["contrib", "docs", "tests*"]),
