@@ -10,6 +10,7 @@ import pandas.util.testing as tm
 import pycps.parsers as p
 from pycps.compat import StringIO
 
+curdir = os.path.dirname(__file__)
 
 class TestReaderSettings(unittest.TestCase):
 
@@ -30,7 +31,7 @@ These are reserved to substitue in other paths.
 }''')
 
     def test_maybe_open_str(self):
-        with p._open_file_or_stringio('files/maybe_open.txt') as f:
+        with p._open_file_or_stringio(curdir + '/files/maybe_open.txt') as f:
             result = f.readline()
 
         expected = "foobarbaz\n"

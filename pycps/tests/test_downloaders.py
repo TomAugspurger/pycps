@@ -4,17 +4,19 @@ import unittest
 
 from pycps import downloaders as d
 
+curdir = os.path.dirname(__file__)
+
 
 class TestDownloaders(unittest.TestCase):
 
     def test_all_monthly_files(self):
-        result = list(d.all_monthly_files('files/trimmed_nber.html'))
+        result = list(d.all_monthly_files(curdir + '/files/trimmed_nber.html'))
         expected = [('cpsb7601.Z', 'cpsm1976-01.Z'),
                     ('jan94pub.zip', 'cpsm1994-01.zip')]
         self.assertEqual(result, expected)
 
     def test_all_monthly_dd(self):
-        result = list(d.all_monthly_files('files/trimmed_nber.html',
+        result = list(d.all_monthly_files(curdir + '/files/trimmed_nber.html',
                                           kind='dictionary'))
         expected = [('cpsbjan03.ddf', 'cpsm2003-01.ddf')]
         self.assertEqual(result, expected)
