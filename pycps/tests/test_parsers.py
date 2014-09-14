@@ -12,6 +12,13 @@ from pycps.compat import StringIO
 
 curdir = os.path.dirname(__file__)
 
+def _skip_if_no_tables():
+    try:
+        import tables
+    except ImportError:
+        import nose
+        raise(nose.SkipTest("tables not installed"))
+
 class TestReaderSettings(unittest.TestCase):
 
     def setUp(self):
@@ -252,6 +259,7 @@ class TestDDParser(unittest.TestCase):
 class testHDFStore(unittest.TestCase):
 
     def setUp(self):
+        _skip_if_no_tables()
         self.hdfpath = '_hdfstore_.h5'
         self.hdf = pd.HDFStore(self.hdfpath)
         self.dd =  pd.DataFrame([['HRHHID',15, 1, 15],
