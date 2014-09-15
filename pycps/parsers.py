@@ -286,32 +286,43 @@ class DDParser:
         """
         redo
         """
-        # @log_transform(self.__class__)
-        def m1998_01_149_unknown(formatted):
-            fixed = pd.concat([formatted.loc[:60],
-                               pd.DataFrame([['unknown', 2, 149, 150]],
-                                            columns=['id', 'length', 'start', 'end']),
-                               formatted.loc[61:]],
+        def _insert_unknown(df, start, end):
+            """
+            For DRYness.
+            start : where the unknown field starts (last known end + 1)
+            end : where the unknown field ends (next known start - 1)
+            """
+            length = end - start + 1
+            good_low = df.loc[:df[df.end == (start - 1)].index[0]]
+            good_high = df.loc[df[df.start == (end + 1)].index[0]:]
+            fixed = pd.concat([good_low,
+                               pd.DataFrame([['unknown', length, start, end]],
+                                            columns=['id', 'length', 'start',
+                                                     'end']),
+                               good_high],
                               ignore_index=True)
             return fixed
+
+        # @log_transform(self.__class__)
+        def m1998_01_149_unknown(formatted):
+            return _insert_unknown(formatted, 149, 150)
 
         # @log_transform(self.__class__)
         def m1998_01_535_unknown(formatted):
-            fixed = pd.concat([formatted.loc[:239],
-                               pd.DataFrame([['unknown', 4, 536, 539]],
-                                            columns=['id', 'length', 'start', 'end']),
-                               formatted.loc[240:]],
-                              ignore_index=True)
-            return fixed
+            return _insert_unknown(formatted, 536, 539)
 
         # @log_transform(self.__class__)
         def m1998_01_556_unknown(formatted):
-            fixed = pd.concat([formatted.loc[:244],
-                               pd.DataFrame([['unknown', 3, 557, 559]],
-                                            columns=['id', 'length', 'start', 'end']),
-                               formatted.loc[245:]],
-                              ignore_index=True)
-            return fixed
+            return _insert_unknown(formatted, 557, 558)
+
+        def m1998_01_632_unknown(formatted):
+            return _insert_unknown(formatted, 633, 638)
+
+        def m1998_01_680_unknown(formatted):
+            return _insert_unknown(formatted, 681, 682)
+
+        def m1998_01_786_unknown(formatted):
+            return _insert_unknown(formatted, 787, 790)
 
         # @log_transform(self.__class__)
         def m2004_05_filler_411(formatted):
@@ -380,12 +391,15 @@ class DDParser:
             fixed.loc[399] = ('FILLER', 19, 932, 950)
             return fixed
 
-        dispatch = {'cpsm1998-01': [m1998_01_535_unknown, m1998_01_149_unknown],
+        dispatch = {'cpsm1998-01': [m1998_01_149_unknown, m1998_01_535_unknown,
+                                    m1998_01_556_unknown, m1998_01_632_unknown,
+                                    m1998_01_680_unknown, m1998_01_786_unknown],
                     'cpsm2004-05': [m2004_05_filler_411],
                     'cpsm2005-08': [m2005_08_filler_411, generate_cpsm200511],
                     'cpsm2009-01': [m2009_01_filler_399]
                    }
         for func in dispatch.get(self.store_name, []):
+            logger.info("Applying {} to {}".format(func, self.store_name))
             formatted = func(formatted)
 
         return formatted
