@@ -171,7 +171,6 @@ class DDParser:
                                      columns=['id', 'length', 'start', 'end'])
 
         # ensure consistency across lines
-        import ipdb; ipdb.set_trace()
         df = self.make_consistent(formatted)
         try:
             assert self.is_consistent(df)
@@ -289,7 +288,6 @@ class DDParser:
         """
         # @log_transform(self.__class__)
         def m1998_01_149_unknown(formatted):
-            import ipdb; ipdb.set_trace()
             fixed = pd.concat([formatted.loc[:60],
                                pd.DataFrame([['unknown', 2, 149, 150]],
                                             columns=['id', 'length', 'start', 'end']),
@@ -299,17 +297,17 @@ class DDParser:
 
         # @log_transform(self.__class__)
         def m1998_01_535_unknown(formatted):
-            fixed = pd.concat([formatted.loc[:240],
+            fixed = pd.concat([formatted.loc[:239],
                                pd.DataFrame([['unknown', 4, 536, 539]],
                                             columns=['id', 'length', 'start', 'end']),
-                               formatted.loc[241:]],
+                               formatted.loc[240:]],
                               ignore_index=True)
             return fixed
 
         # @log_transform(self.__class__)
         def m1998_01_556_unknown(formatted):
             fixed = pd.concat([formatted.loc[:244],
-                               pd.DataFrame([['unknown', 4, 536, 539]],
+                               pd.DataFrame([['unknown', 3, 557, 559]],
                                             columns=['id', 'length', 'start', 'end']),
                                formatted.loc[245:]],
                               ignore_index=True)
@@ -388,7 +386,6 @@ class DDParser:
                     'cpsm2009-01': [m2009_01_filler_399]
                    }
         for func in dispatch.get(self.store_name, []):
-            import ipdb; ipdb.set_trace()
             formatted = func(formatted)
 
         return formatted
@@ -556,11 +553,9 @@ def log_transform(obj_name):
     Log that the object `obj_name` is being transformed by the function being
     decorated.
     """
-    import ipdb; ipdb.set_trace()
     def decorate(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            import ipdb; ipdb.set_trace()
             logger.info("Transforming {} via {}".format(obj_name,
                                                         func.__name__))
             result = func(*args, **kwargs)
