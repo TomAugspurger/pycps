@@ -171,9 +171,21 @@ class DDParser:
                                      columns=['id', 'length', 'start', 'end'])
 
         # ensure consistency across lines
+        import ipdb; ipdb.set_trace()
         df = self.make_consistent(formatted)
-        assert self.is_consistent(df)
-        logger.info("Passed consistency check for {}".format(self.infile))
+        try:
+            assert self.is_consistent(df)
+            logger.info("Passed consistency check for {}".format(self.infile))
+        except AssertionError:
+            logger.error("Failed consistency check for {}".format(self.infile))
+            if not check_width(df).all():
+                logger.error("Bad widths: {}".format(df[~check_width(df)]))
+            else:
+                bad = pd.concat([df.shift()[~check_steps(df)],
+                                 df[~check_steps(df)]], axis=1,
+                                keys=['low', 'high'])
+                logger.error("Bad steps: {}".format(bad))
+            raise ValueError("Data Dictionary is not consistent")
         return df
 
     @staticmethod
@@ -187,9 +199,6 @@ class DDParser:
         1. width == (end - start) + 1
         2. start_1 == end_0 + 1
         """
-        check_width = lambda df: df['length'] == df['end'] - df['start'] + 1
-        check_steps = lambda df: df.start - df.end.shift(1).fillna(0) - 1 == 0
-
         return check_width(formatted).all() and check_steps(formatted).all()
 
     @staticmethod
@@ -278,8 +287,9 @@ class DDParser:
         """
         redo
         """
-        @log_transform(self.__class__)
+        # @log_transform(self.__class__)
         def m1998_01_149_unknown(formatted):
+            import ipdb; ipdb.set_trace()
             fixed = pd.concat([formatted.loc[:60],
                                pd.DataFrame([['unknown', 2, 149, 150]],
                                             columns=['id', 'length', 'start', 'end']),
@@ -287,7 +297,7 @@ class DDParser:
                               ignore_index=True)
             return fixed
 
-        @log_transform(self.__class__)
+        # @log_transform(self.__class__)
         def m1998_01_535_unknown(formatted):
             fixed = pd.concat([formatted.loc[:240],
                                pd.DataFrame([['unknown', 4, 536, 539]],
@@ -296,7 +306,7 @@ class DDParser:
                               ignore_index=True)
             return fixed
 
-        @log_transform(self.__class__)
+        # @log_transform(self.__class__)
         def m1998_01_556_unknown(formatted):
             fixed = pd.concat([formatted.loc[:244],
                                pd.DataFrame([['unknown', 4, 536, 539]],
@@ -305,7 +315,7 @@ class DDParser:
                               ignore_index=True)
             return fixed
 
-        @log_transform(self.__class__)
+        # @log_transform(self.__class__)
         def m2004_05_filler_411(formatted):
             """
             See below
@@ -314,7 +324,7 @@ class DDParser:
             fixed.loc[185] = ('FILLER', 2, 410, 411)
             return fixed
 
-        @log_transform(self.__class__)
+        # @log_transform(self.__class__)
         def m2004_08_filler_411(formatted):
             """
             See below
@@ -323,7 +333,7 @@ class DDParser:
             fixed.loc[185] = ('FILLER', 2, 410, 411)
             return fixed
 
-        @log_transform(self.__class__)
+        # @log_transform(self.__class__)
         def m2005_08_filler_411(formatted):
             """
             Mistake in Data Dictionary:
@@ -340,7 +350,7 @@ class DDParser:
             fixed.loc[185] = ('FILLER', 2, 410, 411)
             return fixed
 
-        @log_transform(self.__class__)
+        # @log_transform(self.__class__)
         def generate_cpsm200511(formatted):
             """
             The CPS added new questions in November 2005 (Katrina related).
@@ -365,7 +375,7 @@ class DDParser:
             # fix original (for aug. thru oct. 2005)
             return formatted.loc[:376]
 
-        @log_transform(self.__class__)
+        # @log_transform(self.__class__)
         def m2009_01_filler_399(formatted):
             assert formatted.loc[399].values.tolist() == ['FILLER', 45, 932, 950]
             fixed = formatted.copy()
@@ -378,6 +388,7 @@ class DDParser:
                     'cpsm2009-01': [m2009_01_filler_399]
                    }
         for func in dispatch.get(self.store_name, []):
+            import ipdb; ipdb.set_trace()
             formatted = func(formatted)
 
         return formatted
@@ -545,15 +556,23 @@ def log_transform(obj_name):
     Log that the object `obj_name` is being transformed by the function being
     decorated.
     """
+    import ipdb; ipdb.set_trace()
     def decorate(func):
-        @wraps
+        @wraps(func)
         def wrapper(*args, **kwargs):
+            import ipdb; ipdb.set_trace()
             logger.info("Transforming {} via {}".format(obj_name,
                                                         func.__name__))
             result = func(*args, **kwargs)
             return result
         return wrapper
     return decorate
+
+# ----------------------------------------------------------------------------
+# Consistency checks
+check_width = lambda df: df['length'] == df['end'] - df['start'] + 1
+check_steps = lambda df: df.start - df.end.shift(1).fillna(0) - 1 == 0
+# ----------------------------------------------------------------------------
 
 # def align_lfsr(df, dd_name):
 #     """Jan1989 and Jan1999. LFSR (labor focrce status recode)
