@@ -33,9 +33,6 @@ def download(overwrite_cached=False):
     cached_dd = dl.check_cached(settings['dd_path'], kind='dictionary')
     cached_month = dl.check_cached(settings['monthly_path'], kind='data')
 
-    # dd_range = [par._month_to_dd(settings['date_start']),
-    #             par._month_to_dd(settings['date_end'])]
-
     dds = dl.all_monthly_files(kind='dictionary')
     dds = filter(itemgetter(1), dds)  # make sure not None cpsdec!
     dds = dl.filter_dds(dds, months=[par._month_to_dd(settings['date_start']),
@@ -53,13 +50,11 @@ def download(overwrite_cached=False):
 
     for month, renamed in dds:
         dl.download_month(month, Path(settings['dd_path']))
-        # TODO: logging
-        print(renamed)
+        logging.info("Downloaded {}".format(renamed))
 
     for month, renamed in data:
         dl.download_month(month, Path(settings['monthly_path']))
-        # TODO: logging
-        print(renamed)
+        logging.info("Downloaded {}".format(renamed))
 
 #-----------------------------------------------------------------------------
 # Parsing
@@ -86,10 +81,9 @@ def parse():
         parser = par.DDParser(dd, settings)
         df = parser.run()
         df = parser.regularize_ids(df,
-                data['col_rename_by_dd'][parser.store_name])
+                                   data['col_rename_by_dd'][parser.store_name])
         parser.write(df)
-        # TODO: logging
-        print("Added ", dd)
+        logging.info("Added {} to {}".format(dd, parser.store_path))
 
     for month in months:
         dd_name = par._month_to_dd(str(month))
@@ -102,9 +96,30 @@ def parse():
         # TODO: special stuff
 
         df = df.set_index(['HRHHID', 'HRHHID2', 'PULINENO'])
-        par.write_monthly(df, settings['monthly_store'], month.stem)
-        print("Added ", month)
+        store_path = settings['monthly_path']
+        par.write_monthly(df, store_path, month.stem)
+        logging.info("Added {} to {}".format(month, settings['monthly_store']))
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Merge
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+
+def merge():
+    # settings = par.read_settings(str(_HERE_ / 'settings.json'))
+    store = pd.HDFStore('data/monthly/monthly.hdf')  # from settings
+    months = (x.strftime('cpsm%Y-%m') for x in m.make_months('1995-09-01'))
+    months = enumerate(months, 1)
+
+    mis, month = next(months)
+    df0 = store.select(month).query('HRMIS == @mis')
+
+    match_funcs = [m.match_age, m.match_sex, m.match_race]
+    dfs = [df0]
+    for mis, month in months:
+        dfn = store.select(month).query('HRMIS == @mis')
+        dfs.append(m.match(df0, dfn, match_funcs))
+
+    df = m.merge(dfs)
+    df = df.sort_index()
+    df = m.make_wave_id(df)
