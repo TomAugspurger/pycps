@@ -12,9 +12,12 @@ __pycache__
 # Data DLs
 pycps/data/
 data/
+history.log
 
 # Mac stuff
 .DS_Store
 
+# Documentation stuff
+docs/_build/
 # Documentation stuff
 docs/_build/

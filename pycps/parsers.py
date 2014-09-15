@@ -93,6 +93,7 @@ def read_settings(filepath):
     f.update(paths)
     return f
 
+
 def _sub_path(v, f):
     pat = r'\{(.*)\}'
     m = re.match(pat, v)
@@ -103,6 +104,7 @@ def _sub_path(v, f):
 
 #-----------------------------------------------------------------------------
 # Data Dictionaries
+
 
 class DDParser:
     """
@@ -140,7 +142,7 @@ class DDParser:
                   "cpsm1998-01": 1, "cpsm2003-01": 2, "cpsm2004-05": 2,
                   "cpsm2005-08": 2, "cpsm2007-01": 2, "cpsm2009-01": 2,
                   "cpsm2010-01": 2, "cpsm2012-05": 2, "cpsm2013-01": 2
-              }
+                  }
 
         self.store_path = settings['dd_store']
         self.store_name = infile.stem
@@ -217,14 +219,17 @@ class DDParser:
     @staticmethod
     def make_regex(style=None):
         """
-        Regex factory to match. Each dd has a style (just an id for that regex).
+        Regex factory to match. Each dd has a style (just an id for that regex)
         Some dds share styles.
         The default style is the most recent.
         """
-        # As new styles are added the current default should be moved into the dict.
+        # As new styles are added the current default should be moved into the
+        # dict.
         # TODO: this smells terrible
-        default = re.compile(r'[\x0c]{0,1}(\w+)\*?[\s\t]*(\d{1,2})[\s\t]*(.*?)[\s\t]*\(*(\d+)\s*-\s*(\d+)\)*\s*$')
-        d = {0: re.compile(r'(\w{1,2}[\$\-%]\w*|PADDING)\s*CHARACTER\*(\d{3})\s*\.{0,1}\s*\((\d*):(\d*)\).*'),
+        default = re.compile(r'[\x0c]{0,1}(\w+)\*?[\s\t]*(\d{1,2})[\s\t]*(.*?)'
+                             '[\s\t]*\(*(\d+)\s*-\s*(\d+)\)*\s*$')
+        d = {0: re.compile(r'(\w{1,2}[\$\-%]\w*|PADDING)\s*CHARACTER\*(\d{3})'
+                           '\s*\.{0,1}\s*\((\d*):(\d*)\).*'),
              1: re.compile(r'D (\w+) \s* (\d{1,2}) \s* (\d*)'),
              2: default}
         return d.get(style, default)
@@ -280,7 +285,6 @@ class DDParser:
         for bad_char, good_char in replacers.items():
             id_ = id_.replace(bad_char, good_char)
         return id_
-
 
     def make_consistent(self, formatted):
         """
@@ -347,11 +351,11 @@ class DDParser:
             """
             Mistake in Data Dictionary:
 
-            FILLER          2                                          (411 - 412)
+            FILLER          2                                      (411 - 412)
 
             should be:
 
-            FILLER          2                                          (410 - 411)
+            FILLER          2                                      (410 - 411)
 
             Everything else looks ok.
             """
@@ -367,9 +371,11 @@ class DDParser:
 
             This function:
 
-                0. ignores the end at col 886 and makes formatted throug the end of the file
+                0. ignores the end at col 886 and makes formatted throug the
+                   end of the file
                 1. writes out that *new* formatted as cpsm2005-11 to HDF?
-                2. Truncates the current `formatted` at col 886 (correct for 2005-08 thru 2005-10)
+                2. Truncates the current `formatted` at col 886 (correct fo
+                   2005-08 thru 2005-10)
                 3. return to the original control flow.
 
             Good luck trying to test this.
@@ -386,7 +392,8 @@ class DDParser:
 
         # @log_transform(self.__class__)
         def m2009_01_filler_399(formatted):
-            assert formatted.loc[399].values.tolist() == ['FILLER', 45, 932, 950]
+            assert formatted.loc[399].values.tolist() == ['FILLER', 45, 932,
+                                                          950]
             fixed = formatted.copy()
             fixed.loc[399] = ('FILLER', 19, 932, 950)
             return fixed
@@ -554,7 +561,7 @@ def fixup_by_dd(df, dd_name):
 
     @log_transform(dd_name)
     def year2_to_year4(df):
-        df['HRYEAR4'] = '19' + df.HRYEAR4.astype(str)
+        df['HRYEAR4'] = ('19' + df.HRYEAR4.astype(str)).astype(np.int64)
         return df
 
     dispatch = {'cpsm1995-09': [compute_hrhhid2, year2_to_year4]
