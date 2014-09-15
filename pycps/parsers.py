@@ -530,8 +530,10 @@ def fixup_by_dd(df, dd_name):
         hrsersuf = df['HRSERSUF'].astype(str)
 
         huhhnum = df['HUHHNUM'].replace(-1, np.nan)
-        hunan = pd.isnull(huhhnum).any().index
-        logger.info("Dropping {}".format(hunan))
+
+        to_drop = df[pd.isnull(huhhnum)]
+        if to_drop.shape[1] > 0:
+            logger.info("Dropping {}".format(to_drop.index))
         huhhnum = huhhnum.dropna().astype(str)
 
         sersuf_d = {a: str(ord(a.lower()) - 96).zfill(2) for a in hrsersuf.unique()
@@ -541,8 +543,9 @@ def fixup_by_dd(df, dd_name):
         hrsersuf = hrsersuf.map(sersuf_d)  # 10x faster than replace
 
         hrhhid2 = hrsample + hrsersuf + huhhnum
-        hrnan = pd.isnull(hrhhid2).any().index
-        logger.info("Dropping {}".format(hrnan))
+        to_drop = df[pd.isnull(hrhhid2)]
+        if to_drop.shape[1] > 0:
+            logger.info("Dropping {}".format(to_drop.index))
 
         hrhhid2 = hrhhid2.dropna()
         df = df.copy()
