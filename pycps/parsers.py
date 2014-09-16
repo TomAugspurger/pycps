@@ -385,10 +385,13 @@ class DDParser:
             """
             # generate and write cpsm2005-11
             new = formatted.drop(376).reset_index()
+            key = 'cpsm2005-11'
+            # The debt is real
+            new = self.regularize_ids(new, replacer=REPLACER_D[key])
             assert self.is_consistent(new)
 
             # write this out.
-            new.to_hdf(self.store_path, key='cpsm2005-11', format='f')
+            new.to_hdf(self.store_path, key=key, format='f')
 
             # fix original (for aug. thru oct. 2005)
             return formatted.loc[:376]
