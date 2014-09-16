@@ -65,7 +65,8 @@ def parse():
     settings = par.read_settings(settings_file)
 
     dd_path = Path(settings['dd_path'])
-    dds = [x for x in dd_path.iterdir() if x.suffix in ('.ddf', '.asc')]
+    dds = [x for x in dd_path.iterdir() if x.suffix in ('.ddf', '.asc',
+                                                        '.txt')]
     monthly_path = Path(settings['monthly_path'])
     months = [x for x in monthly_path.iterdir() if x.suffix in ('.Z', '.zip')]
 

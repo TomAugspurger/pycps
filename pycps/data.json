@@ -87,6 +87,7 @@
     "cpsm2009-01": ["HRHHID", "HRHHID2",                         "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"],
     "cpsm2010-01": ["HRHHID", "HRHHID2",                         "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"],
     "cpsm2012-05": ["HRHHID", "HRHHID2",                         "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"],
+    "cpsm2013-01": ["HRHHID", "HRHHID2", "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"],
     "cpsm2014-01": ["HRHHID", "HRHHID2", "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"]
   }
 }

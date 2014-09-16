@@ -155,6 +155,8 @@ class DDParser:
         self.ids_dict = {}  # TODO
         if self.store_name in ('cpsm2009-01', 'cpsm2010-01', 'cpsm2012-05'):
             self.encoding = 'latin_1'
+        elif self.store_name == 'cpsm2013-01':
+            self.encoding = "cp1252"
         else:
             self.encoding = None
         self.col_rename = REPLACER_D.get(self.store_name)
@@ -231,7 +233,7 @@ class DDParser:
         # dict.
         # TODO: this smells terrible
         default = re.compile(r'[\x0c]{0,1}(\w+)\*?[\s\t]*(\d{1,2})[\s\t]*(.*?)'
-                             '[\s\t]*\(*(\d+)\s*-\s*(\d+)\)*\s*$')
+                             '[\s\t]*\(*(\d+)\s*[\-–]\s*(\d+)\)*\s*$')
         d = {0: re.compile(r'(\w{1,2}[\$\-%]\w*|PADDING)\s*CHARACTER\*(\d{3})'
                            '\s*\.{0,1}\s*\((\d*):(\d*)\).*'),
              1: re.compile(r'D (\w+) \s* (\d{1,2}) \s* (\d*)'),
