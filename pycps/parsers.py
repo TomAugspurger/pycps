@@ -405,12 +405,32 @@ class DDParser:
             fixed.loc[399] = ('FILLER', 19, 932, 950)
             return fixed
 
+        def m2012_05_remove_filler_114(formatted):
+            """
+            Says
+
+            FILLER	2 Starting February 2004	114 - 115
+
+            which is wrong
+            """
+            fixed = pd.concat([formatted.loc[:42], formatted.loc[44:]],
+                              ignore_index=True)
+            return fixed
+
+        def m2012_05_insert_filler_637(formatted):
+            """
+            The filler is in the file (line 4253) but it's indented for reasons
+            """
+            return _insert_unknown(formatted, start=637, end=638)
+
         dispatch = {'cpsm1998-01': [m1998_01_149_unknown, m1998_01_535_unknown,
                                     m1998_01_556_unknown, m1998_01_632_unknown,
                                     m1998_01_680_unknown, m1998_01_786_unknown],
                     'cpsm2004-05': [m2004_05_filler_411],
                     'cpsm2005-08': [m2005_08_filler_411, generate_cpsm200511],
-                    'cpsm2009-01': [m2009_01_filler_399]
+                    'cpsm2009-01': [m2009_01_filler_399],
+                    'cpsm2012-05': [m2012_05_remove_filler_114,
+                                    m2012_05_insert_filler_637]
                    }
         for func in dispatch.get(self.store_name, []):
             logger.info("Applying {} to {}".format(func, self.store_name))

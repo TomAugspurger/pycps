@@ -75,11 +75,10 @@ def parse():
     with (_HERE_ / 'data.json').open() as f:
         data = json.load(f)
 
-    knownfailures = ['cpsm2012-05']
     id_cols = ['HRHHID', 'HRHHID2', 'PULINENO']
     dds = dds + [_HERE_ / Path('cpsm2014-01.ddf')]
 
-    for dd in filter(lambda x: x.stem not in knownfailures, dds):
+    for dd in dds:
         parser = par.DDParser(dd, settings)
         df = parser.run()
         parser.write(df)
