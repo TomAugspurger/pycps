@@ -12,4 +12,6 @@ pytz==2014.7
 requests==2.4.1
 six==1.8.0
 wsgiref==0.1.2
+tables
+wheel
 
