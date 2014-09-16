@@ -76,6 +76,7 @@ def parse():
         data = json.load(f)
 
     knownfailures = ['cpsm2012-05']
+    id_cols = ['HRHHID', 'HRHHID2', 'PULINENO']
 
     for dd in filter(lambda x: x.stem not in knownfailures, dds):
         parser = par.DDParser(dd, settings)
@@ -87,16 +88,36 @@ def parse():
 
     for month in months:
         dd_name = par._month_to_dd(str(month))
+        store_path = settings['monthly_store']
+
         dd = pd.read_hdf(settings['dd_store'], key=dd_name)
         cols = data['columns_by_dd'][dd_name]
-        dd = dd[dd.id.isin(cols)]
-        df = par.read_monthly(str(month), dd)
+        sub_dd = dd[dd.id.isin(cols)]
+
+        if len(cols) != len(sub_dd):
+            missing = set(cols) - set(sub_dd.id.values)
+            raise ValueError("IDs {} are not in the Data "
+                             "Dictionary".format(missing))
+
+        with pd.get_store(settings['dd_store']) as store:
+            try:
+                cached_cols = store.select(month.stem).columns
+            except KeyError:
+                pass
+
+        newcols = set(cols) - set(cached_cols) - set(id_cols)
+
+        # Assuming no new rows
+        if len(newcols) == 0:
+            logger.info("Using cached {}".format(dd_name))
+            continue
+
+        df = par.read_monthly(str(month), sub_dd)
         df = par.fixup_by_dd(df, dd_name)
         # do special stuff like compute HRHHID2, bin things, etc.
         # TODO: special stuff
 
-        df = df.set_index(['HRHHID', 'HRHHID2', 'PULINENO'])
-        store_path = settings['monthly_path']
+        df = df.set_index(id_cols)
         par.write_monthly(df, store_path, month.stem)
         logging.info("Added {} to {}".format(month, settings['monthly_store']))
 
