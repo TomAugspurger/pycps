@@ -104,7 +104,7 @@ def parse():
                 cached_cols = store.select(month.stem).columns
                 newcols = set(cols) - set(cached_cols) - set(id_cols)
                 if len(newcols) == 0:
-                    logger.info("Using cached {}".format(dd_name))
+                    logger.info("Using cached {}".format(month.stem))
                     continue
 
             except KeyError:
