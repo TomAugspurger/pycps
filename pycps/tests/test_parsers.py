@@ -89,7 +89,7 @@ These are reserved to substitue in other paths.
 class TestDDParser(unittest.TestCase):
 
     def setUp(self):
-        self.testfile = Path(curdir + '/files/jan2007.ddf')
+        self.testfile = Path(curdir + '/files/cpsm2007-01.ddf')
         settings = {'outpath': 'dds/',
                     'dd_path': 'tmp/',
                     'dd_store': 'baz.h5'}
@@ -121,7 +121,7 @@ class TestDDParser(unittest.TestCase):
         self.assertEqual(expected, regex.match(s).groups())
 
     def test_store_name_basic(self):
-        expected = 'jan2007'
+        expected = 'cpsm2007-01'
         self.assertEqual(expected, self.parser.store_name)
 
     def test_aug05_regex_basic(self):

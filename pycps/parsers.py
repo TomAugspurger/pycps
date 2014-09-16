@@ -24,8 +24,9 @@ logger = logging.getLogger(__name__)
 
 _data_path = Path(__file__).parent / 'data.json'
 with _data_path.open() as f:
-    DD_TO_MONTH = json.load(f)['dd_to_month']
-
+    d = json.load(f)
+    DD_TO_MONTH = d['dd_to_month']
+    REPLACER_D = d['col_rename_by_dd']
 
 #-----------------------------------------------------------------------------
 # Settings
@@ -156,6 +157,7 @@ class DDParser:
             self.encoding = 'latin_1'
         else:
             self.encoding = None
+        self.col_rename = REPLACER_D[self.store_name]
 
     def run(self):
         # make this as streamlike as possible.
@@ -174,6 +176,7 @@ class DDParser:
 
         # ensure consistency across lines
         df = self.make_consistent(formatted)
+        df = self.regularize_ids(df, replacer=self.col_rename)
         try:
             assert self.is_consistent(df)
             logger.info("Passed consistency check for {}".format(self.infile))
