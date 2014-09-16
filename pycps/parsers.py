@@ -567,7 +567,7 @@ def fixup_by_dd(df, dd_name):
     dispatch = {'cpsm1995-09': [compute_hrhhid2, year2_to_year4]
                 }
 
-    for func in dispatch[dd_name]:
+    for func in dispatch.get(dd_name, []):
         df = func(df)
     return df
 
