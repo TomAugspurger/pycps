@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Read all the things.
 """
@@ -232,8 +233,8 @@ class DDParser:
         # As new styles are added the current default should be moved into the
         # dict.
         # TODO: this smells terrible
-        default = re.compile(r'[\x0c]{0,1}(\w+)\*?[\s\t]*(\d{1,2})[\s\t]*(.*?)'
-                             '[\s\t]*\(*(\d+)\s*[\-–]\s*(\d+)\)*\s*$')
+        default = re.compile(u'[\x0c]{0,1}(\w+)\*?[\s\t]*(\d{1,2})[\s\t]*(.*?)'
+                             u'[\s\t]*\(*(\d+)\s*[\-–]\s*(\d+)\)*\s*$')
         d = {0: re.compile(r'(\w{1,2}[\$\-%]\w*|PADDING)\s*CHARACTER\*(\d{3})'
                            '\s*\.{0,1}\s*\((\d*):(\d*)\).*'),
              1: re.compile(r'D (\w+) \s* (\d{1,2}) \s* (\d*)'),

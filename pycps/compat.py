@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Aim for 2.7+
 """
