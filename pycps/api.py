@@ -77,12 +77,11 @@ def parse():
 
     knownfailures = ['cpsm2012-05']
     id_cols = ['HRHHID', 'HRHHID2', 'PULINENO']
+    dds = dds + [_HERE_ / Path('cpsm2014-01.ddf')]
 
     for dd in filter(lambda x: x.stem not in knownfailures, dds):
         parser = par.DDParser(dd, settings)
         df = parser.run()
-        df = parser.regularize_ids(df,
-                                   data['col_rename_by_dd'][parser.store_name])
         parser.write(df)
         logging.info("Added {} to {}".format(dd, parser.store_path))
 

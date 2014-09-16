@@ -15,7 +15,8 @@
     "cpsm2009-01": ["2009-01","2009-12"],
     "cpsm2010-01": ["2010-01","2012-04"],
     "cpsm2012-05": ["2012-05","2012-12"],
-    "cpsm2013-01": ["2013-01","2013-03"]
+    "cpsm2013-01": ["2013-01","2013-03"],
+    "cpsm2014-01": ["2014-01","2014-09"]
   },
 
   "dd_to_ids": {
@@ -34,7 +35,8 @@
     "cpsm2009-01": ["HRHHID", "HRHHID2", "PULINENO"],
     "cpsm2010-01": ["HRHHID", "HRHHID2", "PULINENO"],
     "cpsm2012-05": ["HRHHID", "HRHHID2", "PULINENO"],
-    "cpsm2013-01": ["HRHHID", "HRHHID2", "PULINENO"]
+    "cpsm2013-01": ["HRHHID", "HRHHID2", "PULINENO"],
+    "cpsm2014-01": ["HRHHID", "HRHHID2", "PULINENO"]
     },
 
   "col_rename_by_dd": {
@@ -51,9 +53,7 @@
     "cpsm2005-11": {"PEAGE": "PRTAGE"                                                                                                                                                                                        , "HUFAMINC": "HEFAMINC", "PRDTRACE": "PTDTRACE"},
     "cpsm2007-01": {"PEAGE": "PRTAGE"                                                                                                                                                                                        , "HUFAMINC": "HEFAMINC"},
     "cpsm2009-01": {"PEAGE": "PRTAGE"                                                                                                                                                                                        , "HUFAMINC": "HEFAMINC"},
-    "cpsm2010-01": {"PEAGE": "PRTAGE"                                                                                                                                                                                        },
-    "cpsm2012-05": {                                                                                                                                                                                                         },
-    "cpsm2013-01": {                                                                                                                                                                                                         }
+    "cpsm2010-01": {"PEAGE": "PRTAGE"                                                                                                                                                                                        }
     },
 
   "id_rename_by_dd": {
@@ -85,6 +85,7 @@
     "cpsm2005-11": ["HRHHID", "HRHHID2",                         "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"],
     "cpsm2007-01": ["HRHHID", "HRHHID2",                         "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"],
     "cpsm2009-01": ["HRHHID", "HRHHID2",                         "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"],
-    "cpsm2010-01": ["HRHHID", "HRHHID2",                         "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"]
+    "cpsm2010-01": ["HRHHID", "HRHHID2",                         "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"],
+    "cpsm2014-01": ["HRHHID", "HRHHID2", "PULINENO", "HRYEAR4", "HRMONTH", "HRMIS", "PESEX", "PRTAGE", "PTDTRACE"]
   }
 }

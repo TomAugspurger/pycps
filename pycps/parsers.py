@@ -157,7 +157,7 @@ class DDParser:
             self.encoding = 'latin_1'
         else:
             self.encoding = None
-        self.col_rename = REPLACER_D[self.store_name]
+        self.col_rename = REPLACER_D.get(self.store_name)
 
     def run(self):
         # make this as streamlike as possible.
@@ -176,7 +176,8 @@ class DDParser:
 
         # ensure consistency across lines
         df = self.make_consistent(formatted)
-        df = self.regularize_ids(df, replacer=self.col_rename)
+        if self.col_rename:
+            df = self.regularize_ids(df, replacer=self.col_rename)
         try:
             assert self.is_consistent(df)
             logger.info("Passed consistency check for {}".format(self.infile))
