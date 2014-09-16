@@ -99,19 +99,18 @@ def parse():
             raise ValueError("IDs {} are not in the Data "
                              "Dictionary".format(missing))
 
-        with pd.get_store(settings['dd_store']) as store:
+        with pd.get_store(store_path) as store:
             try:
                 cached_cols = store.select(month.stem).columns
+                newcols = set(cols) - set(cached_cols) - set(id_cols)
+                if len(newcols) == 0:
+                    logger.info("Using cached {}".format(dd_name))
+                    continue
+
             except KeyError:
                 pass
 
-        newcols = set(cols) - set(cached_cols) - set(id_cols)
-
         # Assuming no new rows
-        if len(newcols) == 0:
-            logger.info("Using cached {}".format(dd_name))
-            continue
-
         df = par.read_monthly(str(month), sub_dd)
         df = par.fixup_by_dd(df, dd_name)
         # do special stuff like compute HRHHID2, bin things, etc.

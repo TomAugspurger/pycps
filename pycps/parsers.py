@@ -564,8 +564,9 @@ def fixup_by_dd(df, dd_name):
         df['HRYEAR4'] = ('19' + df.HRYEAR4.astype(str)).astype(np.int64)
         return df
 
-    dispatch = {'cpsm1995-09': [compute_hrhhid2, year2_to_year4]
-                }
+    dispatch = {'cpsm1995-09': [compute_hrhhid2, year2_to_year4],
+                'cpsm1998-01': [compute_hrhhid2]
+            }
 
     for func in dispatch.get(dd_name, []):
         df = func(df)
