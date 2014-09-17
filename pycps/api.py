@@ -66,64 +66,71 @@ def download(kind, settings, overwrite=False):
 # Parsing
 #-----------------------------------------------------------------------------
 
-def parse():
-    settings_file = str(_HERE_ / 'settings.json')
-    settings = par.read_settings(settings_file)
+def parse(kind, settings, overwrite=False):
+    """
+    Parse downloaded files, store in HDFStore.
 
-    dd_path = Path(settings['dd_path'])
-    dds = [x for x in dd_path.iterdir() if x.suffix in ('.ddf', '.asc',
-                                                        '.txt')]
-    monthly_path = Path(settings['monthly_path'])
-    months = [x for x in monthly_path.iterdir() if x.suffix in ('.Z', '.zip')]
+    Parameters
+    ----------
 
-    settings['raise_warnings'] = False
+    kind : {'dictionary', 'data'}
+    settings : dict
+    overwrite : bool
+    """
+    s_path = {'dictionary': 'dd_path', 'data': 'monthly_path'}[kind]
+    path_ = Path(settings[s_path])
 
-    logger.info("Reading Data file")
-    with (_HERE_ / 'data.json').open() as f:
+    suffix_d = {'data': ('.Z', '.zip'), 'dictionary': ('.ddf', '.asc', '.txt')}
+    suffixes = suffix_d[kind]
+
+    files = [x for x in path_.iterdir() if x.suffix in suffixes]
+    id_cols = ['HRHHID', 'HRHHID2', 'PULINENO']
+
+    with open(settings['data_json']) as f:
         data = json.load(f)
 
-    id_cols = ['HRHHID', 'HRHHID2', 'PULINENO']
-    dds = dds + [_HERE_ / Path('cpsm2014-01.ddf')]
+    if kind == 'dictionary':
+        files.append(_HERE_ / Path('cpsm2014-01.ddf'))
+        for f in files:
+            parser = par.DDParser(f, settings)
+            df = parser.run()
+            parser.write(df)
+            logging.info("Added {} to {}".format(f, parser.store_path))
+    else:
+        for f in files:
+            dd_name = par._month_to_dd(str(f))
+            store_path = settings['monthly_store']
 
-    for dd in dds:
-        parser = par.DDParser(dd, settings)
-        df = parser.run()
-        parser.write(df)
-        logging.info("Added {} to {}".format(dd, parser.store_path))
+            dd = pd.read_hdf(settings['dd_store'], key=dd_name)
+            cols = data['columns_by_dd'][dd_name]
+            sub_dd = dd[dd.id.isin(cols)]
 
-    for month in months:
-        dd_name = par._month_to_dd(str(month))
-        store_path = settings['monthly_store']
+            if len(cols) != len(sub_dd):
+                missing = set(cols) - set(sub_dd.id.values)
+                raise ValueError("IDs {} are not in the Data "
+                                 "Dictionary".format(missing))
 
-        dd = pd.read_hdf(settings['dd_store'], key=dd_name)
-        cols = data['columns_by_dd'][dd_name]
-        sub_dd = dd[dd.id.isin(cols)]
+            with pd.get_store(store_path) as store:
+                try:
+                    cached_cols = store.select(f.stem).columns
+                    newcols = set(cols) - set(cached_cols) - set(id_cols)
+                    if len(newcols) == 0:
+                        logger.info("Using cached {}".format(f.stem))
+                        continue
 
-        if len(cols) != len(sub_dd):
-            missing = set(cols) - set(sub_dd.id.values)
-            raise ValueError("IDs {} are not in the Data "
-                             "Dictionary".format(missing))
+                except KeyError:
+                    pass
 
-        with pd.get_store(store_path) as store:
-            try:
-                cached_cols = store.select(month.stem).columns
-                newcols = set(cols) - set(cached_cols) - set(id_cols)
-                if len(newcols) == 0:
-                    logger.info("Using cached {}".format(month.stem))
-                    continue
+            # Assuming no new rows
+            df = par.read_monthly(str(f), sub_dd)
+            df = par.fixup_by_dd(df, dd_name)
+            # do special stuff like compute HRHHID2, bin things, etc.
+            # TODO: special stuff
 
-            except KeyError:
-                pass
+            df = df.set_index(id_cols)
+            par.write_monthly(df, store_path, f.stem)
+            logging.info("Added {} to {}".format(f, settings['monthly_store']))
 
-        # Assuming no new rows
-        df = par.read_monthly(str(month), sub_dd)
-        df = par.fixup_by_dd(df, dd_name)
-        # do special stuff like compute HRHHID2, bin things, etc.
-        # TODO: special stuff
-
-        df = df.set_index(id_cols)
-        par.write_monthly(df, store_path, month.stem)
-        logging.info("Added {} to {}".format(month, settings['monthly_store']))
 
 # -----------------------------------------------------------------------------
 # Merge
@@ -154,15 +161,18 @@ def main(config):
     settings = par.read_settings(config.settings)
     overwrite = config.overwrite
 
+    if config.json_path is not None:
+        settings['data_json'] = config.json_path
+
     if config.download_dictionaries:
         download('dictionary', settings, overwrite=overwrite)
     if config.download_monthly:
         download('data', settings, overwrite=overwrite)
 
     if config.parse_monthly:
-        pass
+        parse('data', settings, overwrite=overwrite)
     if config.parse_dictionaries:
-        pass
+        parse('dictionary', settings, overwrite=overwrite)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Invoke pycps")
@@ -177,6 +187,8 @@ if __name__ == '__main__':
     parser.add_argument("-x", "--parse-monthly", default=False,
                         help="Parse monthly data files")
     parser.add_argument("-o", "--overwrite", default=False,
-                        help="Overwrite files when downloading")
+                        help="Overwrite existing cache")
+    parser.add_argument("--json-path", default=None,
+                        help="Path to data.json")
     config = parser.parse_args()
     main(config)
