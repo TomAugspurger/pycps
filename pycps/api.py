@@ -78,6 +78,9 @@ def parse(kind, settings, overwrite=False):
     settings : dict
     overwrite : bool
     """
+    with open(settings['info_path']) as f:
+        info = json.load(f)
+
     s_path = {'dictionary': 'dd_path', 'data': 'monthly_path'}[kind]
     path_ = Path(settings[s_path])
 
@@ -93,7 +96,7 @@ def parse(kind, settings, overwrite=False):
     if kind == 'dictionary':
         files.append(_HERE_ / Path('cpsm2014-01.ddf'))
         for f in files:
-            parser = par.DDParser(f, settings)
+            parser = par.DDParser(f, settings, info)
             df = parser.run()
             parser.write(df)
             logging.info("Added {} to {}".format(f, parser.store_path))

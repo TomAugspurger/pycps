@@ -16,5 +16,5 @@ These are reserved to substitue in other paths.
     "date_end": "2014-05",
     "raise_warnings": true,
     "features": ["GESTFIPS", "GTCBSA", "GTCO", "GTINDVPC"],
-    "data_json": "info.json"
+    "info_path": "pycps/info.json"
 }
