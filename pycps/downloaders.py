@@ -249,7 +249,7 @@ def check_cached(directory, kind='data'):
     if kind == 'data':
         suffixes = ('.Z', '.zip')
     elif kind == 'dictionary':
-        suffixes = ('.ddf', '.asc')
+        suffixes = ('.ddf', '.asc', '.txt')
     else:
         raise ValueError("kind must be 'data' or 'dictionary'.")
     if not isinstance(directory, Path):
