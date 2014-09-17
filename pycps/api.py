@@ -162,8 +162,8 @@ def main(config):
     settings = par.read_settings(config.settings)
     overwrite = config.overwrite
 
-    if config.json_path is not None:
-        settings['info'] = config.json_path
+    if config.info is not None:
+        settings['info'] = config.info
 
     if config.download_dictionaries:
         download('dictionary', settings, overwrite=overwrite)
@@ -176,10 +176,13 @@ def main(config):
         parse('dictionary', settings, overwrite=overwrite)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Invoke pycps")
+    parser = argparse.ArgumentParser(description="Invoke pycps",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-s", "--settings", default="pycps/settings.json",
+                        metavar='',
                         help="path to JSON settings file")
     parser.add_argument("-i", "--info", default="pycps/info.json",
+                        metavar='',
                         help="Path to info.json")
     parser.add_argument("-d", "--download-dictionaries", default=False,
                         action="store_true",
