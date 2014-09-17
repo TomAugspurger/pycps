@@ -254,6 +254,11 @@ def check_cached(directory, kind='data'):
         raise ValueError("kind must be 'data' or 'dictionary'.")
     if not isinstance(directory, Path):
         directory = Path(directory)
-    cached = [x.name for x in directory.iterdir()
-              if x.suffix in suffixes]
+    try:
+        cached = [x.name for x in directory.iterdir()
+                  if x.suffix in suffixes]
+    except OSError:
+        # no cache files
+        cached = []
+
     return cached
