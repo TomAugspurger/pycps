@@ -9,12 +9,14 @@
     "handlers": {
         "console": {
             "level":"INFO",
-            "class":"logging.StreamHandler"
+            "class":"logging.StreamHandler",
+            "formatter": "standard"
         },
         "disk": {
             "level": "INFO",
             "class": "logging.FileHandler",
-            "filename": "history.log"
+            "filename": "history.log",
+            "formatter": "standard"
         }
     },
     "loggers": {
