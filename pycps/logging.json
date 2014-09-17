@@ -1,36 +1,28 @@
 {
-"version": 1,
-"disable_existing_loggers": false,
-"formatters": {
-    "standard": {
-        "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    "version": 2,
+    "disable_existing_loggers": false,
+    "formatters": {
+        "standard": {
+            "format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
         }
     },
-"handlers": {
-    "console": {
-        "class": "logging.StreamHandler",
-        "level": "INFO",
-        "formatter": "standard",
-        "stream": "ext://sys.stdout"
-    },
-    "file": {
-        "class": "logging.FileHandler",
-        "level": "INFO",
-        "formatter": "standard",
-        "filename": "history.log",
-        "encoding": "utf8"
+    "handlers": {
+        "console": {
+            "level":"INFO",
+            "class":"logging.StreamHandler"
+        },
+        "disk": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": "history.log"
         }
     },
-"loggers": {
-    "pycps": {
-        "level": "INFO",
-        "handlers": ["console", "file"],
-        "propagate": "no"
+    "loggers": {
+        "": {
+            "handlers": ["console", "disk"],
+            "level": "INFO",
+            "propagate": true
         }
-    },
-"root": {
-    "level": "INFO",
-    "handlers": ["console", "file"]
     }
 }
 
