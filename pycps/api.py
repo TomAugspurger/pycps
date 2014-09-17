@@ -170,10 +170,11 @@ def main(config):
     if config.download_monthly:
         download('data', settings, overwrite=overwrite)
 
-    if config.parse_monthly:
-        parse('data', settings, overwrite=overwrite)
     if config.parse_dictionaries:
         parse('dictionary', settings, overwrite=overwrite)
+    if config.parse_monthly:
+        parse('data', settings, overwrite=overwrite)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Invoke pycps",
