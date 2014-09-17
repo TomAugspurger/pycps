@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
+import json
+import logging
 import unittest
-import datetime
 from pathlib import Path
-from contextlib import contextmanager
 
 import pandas as pd
 import pandas.util.testing as tm
@@ -12,6 +12,8 @@ import pycps.parsers as p
 from pycps.compat import StringIO
 
 curdir = os.path.dirname(__file__)
+mdir = os.path.dirname(__name__)
+logging.disable(logging.CRITICAL)
 
 def _skip_if_no_tables():
     try:
@@ -94,7 +96,9 @@ class TestDDParser(unittest.TestCase):
         settings = {'outpath': 'dds/',
                     'dd_path': 'tmp/',
                     'dd_store': 'baz.h5'}
-        self.parser = p.DDParser(self.testfile, settings)
+        with open(mdir + 'pycps/info.json') as f:
+            info = json.load(f)
+        self.parser = p.DDParser(self.testfile, settings, info)
 
     def test_formatter(self):
         s = 'H-MONTH     CHARACTER*002 .     (0038:0039)'.rstrip()

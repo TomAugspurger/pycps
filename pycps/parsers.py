@@ -23,12 +23,6 @@ from pycps.compat import StringIO, str_types
 # Globals
 logger = logging.getLogger(__name__)
 
-_data_path = Path(__file__).parent / 'data.json'
-with _data_path.open() as f:
-    d = json.load(f)
-    DD_TO_MONTH = d['dd_to_month']
-    REPLACER_D = d['col_rename_by_dd']
-
 #-----------------------------------------------------------------------------
 # Settings
 
@@ -117,6 +111,7 @@ class DDParser:
 
     infile: pathlib.Path
     settings: dict
+    info: dict
 
     Attributes
     ----------
@@ -134,7 +129,9 @@ class DDParser:
     *file should be a Path object
     *path should be a str.
     """
-    def __init__(self, infile, settings):
+    def __init__(self, infile, settings, info):
+        if not isinstance(infile, Path):
+            infile = Path(infile)
         self.infile = infile
         self.outpath = settings['dd_path']
 
@@ -160,7 +157,8 @@ class DDParser:
             self.encoding = "cp1252"
         else:
             self.encoding = None
-        self.col_rename = REPLACER_D.get(self.store_name)
+        self.info = info
+        self.col_rename = info['col_rename_by_dd'].get(self.store_name)
 
     def run(self):
         # make this as streamlike as possible.
@@ -219,7 +217,7 @@ class DDParser:
         df: DataFrame returned from DDParser.run
         replace: dict
             {cps_id -> regularized_id}
-            probably defined in data.json
+            probably defined in info.json
         """
         return df.replace({'id': replacer})
 
@@ -391,7 +389,8 @@ class DDParser:
             new = formatted.drop(376).reset_index()
             key = 'cpsm2005-11'
             # The debt is real
-            new = self.regularize_ids(new, replacer=REPLACER_D[key])
+            new = self.regularize_ids(new,
+                replacer=self.info['col_rename_by_dd'][key])
             assert self.is_consistent(new)
 
             # write this out.

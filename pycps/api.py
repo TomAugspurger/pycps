@@ -87,7 +87,7 @@ def parse(kind, settings, overwrite=False):
     files = [x for x in path_.iterdir() if x.suffix in suffixes]
     id_cols = ['HRHHID', 'HRHHID2', 'PULINENO']
 
-    with open(settings['data_json']) as f:
+    with open(settings['info']) as f:
         data = json.load(f)
 
     if kind == 'dictionary':
@@ -163,7 +163,7 @@ def main(config):
     overwrite = config.overwrite
 
     if config.json_path is not None:
-        settings['data_json'] = config.json_path
+        settings['info'] = config.json_path
 
     if config.download_dictionaries:
         download('dictionary', settings, overwrite=overwrite)
@@ -179,6 +179,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Invoke pycps")
     parser.add_argument("-s", "--settings", default="pycps/settings.json",
                         help="path to JSON settings file")
+    parser.add_argument("-i", "--info", default="pycps/info.json",
+                        help="Path to info.json")
     parser.add_argument("-d", "--download-dictionaries", default=False,
                         action="store_true",
                         help="Download data dictionaries")
@@ -194,7 +196,5 @@ if __name__ == '__main__':
     parser.add_argument("-o", "--overwrite", default=False,
                         action="store_true",
                         help="Overwrite existing cache")
-    parser.add_argument("--json-path", default=None,
-                        help="Path to data.json")
     config = parser.parse_args()
     main(config)
