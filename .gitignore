@@ -21,3 +21,6 @@ history.log
 docs/_build/
 # Documentation stuff
 docs/_build/
+
+# Development
+pycps/mysettings.json

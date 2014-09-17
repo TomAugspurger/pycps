@@ -13,6 +13,7 @@ Contents:
    :maxdepth: 2
 
    intro
+   API
    settings
    downloading
    parsing
