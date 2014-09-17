@@ -1,7 +1,9 @@
 Introduction to PyCPS
 =====================
 
-PyCPS is a package for working with the [Current Population Survey](http://www.census.gov/cps/).
+PyCPS is a package for working with the `Current Population Survey`_
+
+.. _Current Population Survey: http://www.census.gov/cps/
 
 
 PyCPS package tries to make up for neither the Census Bureau nor the NBER provide a clean, RESTful API for getting CPS data.
@@ -14,8 +16,8 @@ longitudinal dataset.
 
 There's a few related functions PyCPS provides:
 
-1. Downloading data dictionaries and monthly data files
-2. Parse those files
-3. Standardizing variables across months
-4. Merging to create time series
+1. Download data dictionaries and monthly data files
+2. Parse those files and store them in a common, standaradized format
+3. Standardize features across months as much as possible
+4. Merge households across months to create a time series
 

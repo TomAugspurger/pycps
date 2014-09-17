@@ -31,7 +31,8 @@ You should also define the months of data you need for your project.
     * date_start: YYYY-MM string with the first month to download
     * date_end: YYYY-MM string with the last month to download
 
-All months between ``date_start`` and ``date_end``, inclusive, will be downloaded.
+All months between ``date_start`` and ``date_end``, inclusive,
+will be downloaded and parsed.
 
 Example
 -------
@@ -46,6 +47,6 @@ Here's an example settings file:
         "monthly_store": "{monthly_path}/monthly.hdf",
         "date_start": "1995-09",
         "date_end": "2014-05",
-        "raise_warnings": true
+        "data_json": "info.json"
     }
 
