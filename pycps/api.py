@@ -11,6 +11,7 @@ Define your preferences in settings.json in this folder.
 """
 import json
 import logging
+import argparse
 from pathlib import Path
 from functools import partial
 from operator import itemgetter
@@ -20,6 +21,7 @@ import pandas as pd
 import pycps.downloaders as dl
 import pycps.parsers as par
 
+
 logger = logging.getLogger(__name__)
 # TODO argparse CLI
 
@@ -28,33 +30,37 @@ _HERE_ = Path(__file__).parent
 # Downloading
 #-----------------------------------------------------------------------------
 
-def download(overwrite_cached=False):
-    settings = par.read_settings(str(_HERE_ / 'settings.json'))
-    cached_dd = dl.check_cached(settings['dd_path'], kind='dictionary')
-    cached_month = dl.check_cached(settings['monthly_path'], kind='data')
+def download(kind, settings, overwrite=False):
+    """
+    Download files from NBER.
 
-    dds = dl.all_monthly_files(kind='dictionary')
-    dds = filter(itemgetter(1), dds)  # make sure not None cpsdec!
-    dds = dl.filter_dds(dds, months=[par._month_to_dd(settings['date_start']),
-                                     par._month_to_dd(settings['date_end'])])
+    kind : {'dictionary', 'data'}
+    settings : dict
+    overwrite : bool; default True
+        Whether to overwrite existing files
+    """
+    s_path = {'dictionary': 'dd_path', 'data': 'monthly_path'}[kind]
+    cached = dl.check_cached(settings[s_path], kind=kind)
 
-    data = dl.all_monthly_files()
-    data = dl.filter_monthly_files(data, months=[[settings['date_start'],
-                                                  settings['date_end']]])
-    if not overwrite_cached:
-        def is_new(x, cache=None):
-            return dl.rename_cps_monthly(x[1]) not in cache
+    files = dl.all_monthly_files(kind=kind)
+    if kind == 'dictionary':
+        files = filter(itemgetter(1), files)   # make sure not None cpsdec!
+        months = [par._month_to_dd(settings['date_start']),
+                  par._month_to_dd(settings['date_end'])]
+    else:
+        months = [[settings['date_start'], settings['date_end']]]
 
-        dds = filter(partial(is_new, cache=cached_dd), dds)
-        data = filter(partial(is_new, cache=cached_month), data)
+    files = dl.filter_monthly(files, months=months, kind=kind)
 
-    for month, renamed in dds:
-        dl.download_month(month, Path(settings['dd_path']))
-        logging.info("Downloaded {}".format(renamed))
+    def is_new(x, cache=None):
+        return dl.rename_cps_monthly(x[1]) not in cache
 
-    for month, renamed in data:
-        dl.download_month(month, Path(settings['monthly_path']))
-        logging.info("Downloaded {}".format(renamed))
+    for month, renamed in files:
+        if is_new((month, renamed), cache=cached) or overwrite:
+            dl.download_month(month, Path(settings[s_path]))
+            logger.info("Downloaded {}".format(renamed))
+        else:
+            logger.info("Using cached {}".format(renamed))
 
 #-----------------------------------------------------------------------------
 # Parsing
@@ -142,3 +148,35 @@ def merge():
     df = m.merge(dfs)
     df = df.sort_index()
     df = m.make_wave_id(df)
+
+
+def main(config):
+    settings = par.read_settings(config.settings)
+    overwrite = config.overwrite
+
+    if config.download_dictionaries:
+        download('dictionary', settings, overwrite=overwrite)
+    if config.download_monthly:
+        download('data', settings, overwrite=overwrite)
+
+    if config.parse_monthly:
+        pass
+    if config.parse_dictionaries:
+        pass
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Invoke pycps")
+    parser.add_argument("-s", "--settings", default="pycps/settings.json",
+                        help="path to JSON settings file")
+    parser.add_argument("-d", "--download-dictionaries", default=False,
+                        help="Download data dictionaries")
+    parser.add_argument("-m", "--download-monthly", default=False,
+                        help="Download monthly data files")
+    parser.add_argument("-p", "--parse-dictionaries", default=False,
+                        help="Parse data dictionaries")
+    parser.add_argument("-x", "--parse-monthly", default=False,
+                        help="Parse monthly data files")
+    parser.add_argument("-o", "--overwrite", default=False,
+                        help="Overwrite files when downloading")
+    config = parser.parse_args()
+    main(config)
