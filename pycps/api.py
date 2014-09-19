@@ -155,12 +155,22 @@ def merge(settings, overwrite=False):
     -------
     None (IO)
     """
+    STORE_FMT = 'm%Y_%m'
     store_path = settings['monthly_store']
     start = settings['date_start']
     end = settings['date_end']
     all_months = pd.date_range(start=start, end=end, freq='m')
 
-    logger.info("Merging for {}".format(all_months))
+    if overwrite:
+        logger.info("Merging for {}".format(all_months))
+    else:
+        with pd.get_store(settings['merged_store']) as store:
+            cached = set(store.keys())
+            all_m = set([x.strftime('/' + STORE_FMT) for x in all_months])
+            logger.info("Using cached for {}".format(cached & all_m))
+            new = all_m - cached
+            all_months = filter(lambda x: x.strftime('/' + STORE_FMT) in new,
+                                all_months)
 
     for m0 in all_months:
         months = (x.strftime('cpsm%Y-%m')
@@ -169,18 +179,22 @@ def merge(settings, overwrite=False):
 
         mis, month = next(months)
         df0 = pd.read_hdf(store_path, key=month).query('HRMIS == @mis')
-
         match_funcs = [m.match_age, m.match_sex, m.match_race]
         dfs = [df0]
         for mis, month in months:
-            dfn = pd.read_hdf(store_path, key=month).query('HRMIS == @mis')
-            dfs.append(m.match(df0, dfn, match_funcs))
+            try:
+                dfn = pd.read_hdf(store_path, key=month).query('HRMIS == @mis')
+                dfs.append(m.match(df0, dfn, match_funcs))
+            except KeyError:
+                msg = "The panel for {} has no monthly data file for {}"
+                logger.warn(msg.format(m0, month))
+                continue
 
         df = m.merge(dfs)
         df = df.sort_index()
         df = m.make_wave_id(df)
 
-        store_key = df['wave_id'].iloc[0].strftime('m%Y_%m')
+        store_key = df['wave_id'].iloc[0].strftime(STORE_FMT)
         df.to_hdf(settings["merged_store"], store_key)
         logger.info("Added merged {} to {}".format(store_key,
             settings['merged_store']))
