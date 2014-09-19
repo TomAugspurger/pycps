@@ -7,6 +7,7 @@ which takes a number of command line arguments.
 
 .. code-block:: rst
 
+    $ python pycps/api.py -h
     usage: api.py [-h] [-s] [-i] [-d] [-y] [-p] [-x] [-m] [-o]
 
     Invoke pycps
@@ -26,20 +27,22 @@ which takes a number of command line arguments.
       -m, --merge           Merge monthly files by household (default: False)
       -o, --overwrite       Overwrite existing cache (default: False)
 
-``api.py`` takes a number of arguments.
-
-
-- settings (-s): The path to a JSON settings file
-
-- json-path: The path the the JSON schema
-
-- download-dictionaries (-d)
-
 
 In standard fashion, these flags can be combined to do multiple things.
-For example to download and parse data dictionaries only, overwritting
-any you may have downloaded previously, you would use
+If you just want to get going, you'll probably want to download all
+the data dictionaries and monthly files, and merge them together by houehold.
+To do this, use
 
 .. code-block:: rst
 
-    python pycps.py -dpo
+    python pycps/api.py -dypxm
+
+Some settings (such as paths where you want the data to be stored) can
+be specified in a JSON settings file. ``PyCPS`` comes with one, which you can
+edit directly, or copy it, make your adjustments, and point to it when running:
+
+.. code-block:: rst
+
+    python pycps/api.py --settings='pycps/mysettings.json'
+
+The next section describes the settings file.

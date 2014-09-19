@@ -36,3 +36,11 @@ install the development version with
 
 Then setup your configuration. You'll want to look at ``pycps/settings.json``
 to configure the paths for data storage and a few other things.
+
+Or you can use pip:
+
+.. code-block:: rst
+
+    pip install python-cps
+
+

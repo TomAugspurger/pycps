@@ -16,4 +16,3 @@ Contents:
    install
    API
    settings
-
