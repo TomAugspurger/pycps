@@ -56,7 +56,7 @@ class TestDownloaders(unittest.TestCase):
                  ('apr94.zip', 'cpsm1994-04.zip'),
                  ('may94.zip', 'cpsm1994-05.zip')]
         months = ['1994-01', '1994-03', '1994-04']
-        result = list(d.filter_monthly_files(files, months=months))
+        result = list(d.filter_monthly(files, months=months))
         expected = files[0:3]
         self.assertEqual(result, expected)
 
@@ -68,7 +68,7 @@ class TestDownloaders(unittest.TestCase):
                  ('dec94.zip', 'cpsm1994-12.zip'),
                  ('jan95.zip', 'cpsm1995-01.zip')]
         months = [['1994-01', '1994-04'], ['1994-11', '1995-01']]
-        result = list(d.filter_monthly_files(files, months=months))
+        result = list(d.filter_monthly(files, months=months))
         expected = files
         self.assertEqual(result, expected)
 
