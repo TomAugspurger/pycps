@@ -160,6 +160,8 @@ def merge(settings, overwrite=False):
     end = settings['date_end']
     all_months = pd.date_range(start=start, end=end, freq='m')
 
+    logger.info("Merging for {}".format(all_months))
+
     for m0 in all_months:
         months = (x.strftime('cpsm%Y-%m')
                   for x in m.make_months(m0.strftime('%Y-%m-%d')))
@@ -180,6 +182,8 @@ def merge(settings, overwrite=False):
 
         store_key = df['wave_id'].iloc[0].strftime('m%Y_%m')
         df.to_hdf(settings["merged_store"], store_key)
+        logger.info("Added merged {} to {}".format(store_key,
+            settings['merged_store']))
 
 def main(config):
     settings = par.read_settings(config.settings)
@@ -198,6 +202,8 @@ def main(config):
     if config.parse_monthly:
         parse('data', settings, overwrite=overwrite)
 
+    if config.merge:
+        merge(settings, overwrite=overwrite)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Invoke pycps",
