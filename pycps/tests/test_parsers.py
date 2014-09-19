@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+from os.path import sep
 import json
 import logging
 import unittest
@@ -11,8 +12,10 @@ import pandas.util.testing as tm
 import pycps.parsers as p
 from pycps.compat import StringIO
 
-curdir = os.path.dirname(__file__)
-mdir = os.path.dirname(__name__)
+mdir = os.path.dirname(__file__)
+mdir = os.path.sep.join(os.path.abspath(mdir).split(os.path.sep)[:-2])
+# set the working directory to tests
+os.chdir(sep.join(os.path.abspath(__file__).replace('.', sep).split(sep)[:-2]))
 logging.disable(logging.CRITICAL)
 
 def _skip_if_no_tables():
@@ -41,7 +44,7 @@ These are reserved to substitue in other paths.
 }''')
 
     def test_maybe_open_str(self):
-        with p._open_file_or_stringio(curdir + '/files/maybe_open.txt') as f:
+        with p._open_file_or_stringio('files/maybe_open.txt') as f:
             result = f.readline()
 
         expected = "foobarbaz\n"
@@ -92,11 +95,11 @@ These are reserved to substitue in other paths.
 class TestDDParser(unittest.TestCase):
 
     def setUp(self):
-        self.testfile = Path(curdir + '/files/cpsm2007-01.ddf')
+        self.testfile = Path('files/cpsm2007-01.ddf')
         settings = {'outpath': 'dds/',
                     'dd_path': 'tmp/',
                     'dd_store': 'baz.h5'}
-        with open(mdir + 'pycps/info.json') as f:
+        with open(mdir + '/pycps/info.json') as f:
             info = json.load(f)
         self.parser = p.DDParser(self.testfile, settings, info)
 
@@ -259,7 +262,7 @@ class TestDDParser(unittest.TestCase):
 
     def test_full_run(self):
         result = self.parser.run()
-        expected = pd.read_csv(curdir + '/files/jan08expected.csv')
+        expected = pd.read_csv('files/jan08expected.csv')
         tm.assert_frame_equal(result, expected)
 
     def test_standardize_ids(self):
