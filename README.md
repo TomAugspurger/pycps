@@ -3,9 +3,9 @@ PyCPS
 
 A python package for working with the [Current Population Survey](http://www.census.gov/cps/).
 
-**Warning** this is alpha quality. The API will change. Docs are coming.
+**Warning** this is alpha quality. The API will change.
 
-## Why?
+Documentation is available at [readthedocs](http://pycps.readthedocs.org/en/latest/).
 
 Neither the Census Bureau nor the NBER provide a clean, RESTful API for getting CPS data.
 This makes working with the CPS a pain, and reproducibility nearly impossible.
