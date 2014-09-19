@@ -7,8 +7,7 @@ which takes a number of command line arguments.
 
 .. code-block:: rst
 
-    $ python pycps/api.py -h
-    usage: api.py [-h] [-s] [-i] [-d] [-m] [-p] [-x] [-o]
+    usage: api.py [-h] [-s] [-i] [-d] [-y] [-p] [-x] [-m] [-o]
 
     Invoke pycps
 
@@ -19,11 +18,12 @@ which takes a number of command line arguments.
       -i , --info           Path to info.json (default: pycps/info.json)
       -d, --download-dictionaries
                             Download data dictionaries (default: False)
-      -m, --download-monthly
+      -y, --download-monthly
                             Download monthly data files (default: False)
       -p, --parse-dictionaries
                             Parse data dictionaries (default: False)
       -x, --parse-monthly   Parse monthly data files (default: False)
+      -m, --merge           Merge monthly files by household (default: False)
       -o, --overwrite       Overwrite existing cache (default: False)
 
 ``api.py`` takes a number of arguments.

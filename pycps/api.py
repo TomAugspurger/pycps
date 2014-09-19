@@ -13,13 +13,13 @@ import json
 import logging
 import argparse
 from pathlib import Path
-from functools import partial
 from operator import itemgetter
 
 import pandas as pd
 
-import pycps.downloaders as dl
+import pycps.merge as m
 import pycps.parsers as par
+import pycps.downloaders as dl
 from pycps.setup_logging import setup_logging
 
 setup_logging()
@@ -141,25 +141,45 @@ def parse(kind, settings, overwrite=False):
 # -----------------------------------------------------------------------------
 
 
-def merge():
-    # settings = par.read_settings(str(_HERE_ / 'settings.json'))
-    store = pd.HDFStore('data/monthly/monthly.hdf')  # from settings
-    months = (x.strftime('cpsm%Y-%m') for x in m.make_months('1995-09-01'))
-    months = enumerate(months, 1)
+def merge(settings, overwrite=False):
+    """
+    Merges interviews over time by household.
 
-    mis, month = next(months)
-    df0 = store.select(month).query('HRMIS == @mis')
+    Parameters
+    ----------
+    settings : JSON settings file
+    overwrite : bool
+        whether to overwrite existing files
 
-    match_funcs = [m.match_age, m.match_sex, m.match_race]
-    dfs = [df0]
-    for mis, month in months:
-        dfn = store.select(month).query('HRMIS == @mis')
-        dfs.append(m.match(df0, dfn, match_funcs))
+    Returns
+    -------
+    None (IO)
+    """
+    store_path = settings['monthly_store']
+    start = settings['date_start']
+    end = settings['date_end']
+    all_months = pd.date_range(start=start, end=end, freq='m')
 
-    df = m.merge(dfs)
-    df = df.sort_index()
-    df = m.make_wave_id(df)
+    for m0 in all_months:
+        months = (x.strftime('cpsm%Y-%m')
+                  for x in m.make_months(m0.strftime('%Y-%m-%d')))
+        months = enumerate(months, 1)
 
+        mis, month = next(months)
+        df0 = pd.read_hdf(store_path, key=month).query('HRMIS == @mis')
+
+        match_funcs = [m.match_age, m.match_sex, m.match_race]
+        dfs = [df0]
+        for mis, month in months:
+            dfn = pd.read_hdf(store_path, key=month).query('HRMIS == @mis')
+            dfs.append(m.match(df0, dfn, match_funcs))
+
+        df = m.merge(dfs)
+        df = df.sort_index()
+        df = m.make_wave_id(df)
+
+        store_key = df['wave_id'].iloc[0].strftime('m%Y_%m')
+        df.to_hdf(settings["merged_store"], store_key)
 
 def main(config):
     settings = par.read_settings(config.settings)
@@ -191,7 +211,7 @@ if __name__ == '__main__':
     parser.add_argument("-d", "--download-dictionaries", default=False,
                         action="store_true",
                         help="Download data dictionaries")
-    parser.add_argument("-m", "--download-monthly", default=False,
+    parser.add_argument("-y", "--download-monthly", default=False,
                         action="store_true",
                         help="Download monthly data files")
     parser.add_argument("-p", "--parse-dictionaries", default=False,
@@ -200,6 +220,9 @@ if __name__ == '__main__':
     parser.add_argument("-x", "--parse-monthly", default=False,
                         action="store_true",
                         help="Parse monthly data files")
+    parser.add_argument("-m", "--merge", default=False,
+                        action="store_true",
+                        help="Merge monthly files by household")
     parser.add_argument("-o", "--overwrite", default=False,
                         action="store_true",
                         help="Overwrite existing cache")

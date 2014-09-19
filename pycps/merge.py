@@ -18,8 +18,7 @@ def make_months(base):
     Parameters
     ----------
     base: str or Arrow
-        if str it should be iso-8601 style for the month
-        YYYY-mm
+        if str it should be iso-8601 style for the month: YYYY-mm
 
     Returns
     -------
