@@ -86,6 +86,17 @@ class TestDownloaders(unittest.TestCase):
         expected = files
         self.assertEqual(expected, list(result))
 
+    def test_filter_dictionary(self):
+        files = [('cpsbsep95.ddf', 'cpsm1995-09.ddf'),
+                 ('jan98dd.asc', 'cpsm1998-01.asc'),
+                 ('cpsbjan03.ddf', 'cpsm2003-01.ddf')]
+        months = ['cpsm1995-09', 'cpsm1998-01']
+        expected = [('cpsbsep95.ddf', 'cpsm1995-09.ddf'),
+                    ('jan98dd.asc', 'cpsm1998-01.asc')]
+        result = list(d.filter_monthly(files, months=months,
+                                       kind='dictionary'))
+        self.assertEqual(result, expected)
+
     def test_rename_cps_monthly_valueerror_ext(self):
         files = 'cps89.foo'
         with self.assertRaises(ValueError):
@@ -95,6 +106,12 @@ class TestDownloaders(unittest.TestCase):
         files = 'foobarbaz.ddf'
         with self.assertRaises(ValueError):
             d.rename_cps_monthly(files)
+
+    def test_rename_cps_monthly_txt(self):
+        s = "January_2013_Record_Layout.txt"
+        result = d.rename_cps_monthly(s)
+        expected = "cpsm2013-01.txt"
+        self.assertEqual(result, expected)
 
     def test_rename_already_formatted(self):
         dd = expected = 'cpsm1994-01.ddf'
@@ -126,17 +143,33 @@ class TestCached(unittest.TestCase):
             open(f, 'w')
 
     def tearDown(self):
-        [os.remove(x) for x in self.tmpfiles]
-        os.rmdir(self.tmpdir)
+        [os.remove(x) for x in self.tmpfiles if os.path.exists(x)]
+        if os.path.exists(self.tmpdir):
+            os.rmdir(self.tmpdir)
 
     def test_check_cached_data(self):
         result = d.check_cached(self.tmpdir, kind='data')
-        expected = ['c3.zip', 'c4.Z']
+        expected = ['c3.zip', 'z4.Z']
+        self.assertEqual(result, expected)
 
     def test_check_cached_ddf(self):
         result = d.check_cached(self.tmpdir, kind='dictionary')
         expected = ['c1.ddf', 'c2.asc']
+        self.assertEqual(result, expected)
 
     def test_check_cached_other(self):
         with self.assertRaises(ValueError):
-            result = d.check_cached(self.tmpdir, kind='foo')
+            d.check_cached(self.tmpdir, kind='foo')
+
+    def test_check_cached_clean(self):
+        [os.remove(x) for x in self.tmpfiles]
+        result = d.check_cached(self.tmpdir, kind='dictionary')
+        expected = []
+        self.assertEqual(result, expected)
+
+        result = d.check_cached(self.tmpdir, kind='data')
+        self.assertEqual(result, expected)
+
+        os.rmdir(self.tmpdir)
+        result = d.check_cached(self.tmpdir)
+        self.assertEqual(result, expected)

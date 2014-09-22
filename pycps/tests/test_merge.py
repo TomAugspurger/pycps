@@ -8,7 +8,30 @@ import pandas.util.testing as tm
 
 from pycps import merge as m
 
+
 class TestMerge(unittest.TestCase):
+
+    def setUp(self):
+        """
+        Defines age, sex, race.
+
+        The rows should match *only* on:
+        match age
+        match sex
+        match race
+        match age, sex
+        match age, race
+        match sex, race
+        match age, sex, race
+        """
+        self.left = pd.DataFrame({"PRTAGE": [1, 0, 0, 1, 1, 0, 1],
+                                  "PESEX": [0, 1, 0, 1, 0, 1, 1],
+                                  "PTDTRACE": [0, 0, 1, 0, 1, 1, 1],
+                                  "HRMIS": [1, 1, 1, 1, 1, 1, 1]})
+        self.right = pd.DataFrame({"PRTAGE": [1, 9, 9, 1, 1, 9, 1],
+                                   "PESEX": [9, 1, 9, 1, 9, 1, 1],
+                                   "PTDTRACE": [9, 9, 1, 9, 1, 1, 1],
+                                   "HRMIS": [2, 2, 2, 2, 2, 2, 2]})
 
     def test_make_months(self):
         base = arrow.get('2014-01', format='%Y-%m')
@@ -67,4 +90,31 @@ class TestMerge(unittest.TestCase):
         tm.assert_frame_equal(result, expected)
 
         df = df.sort_index()
+        tm.assert_frame_equal(result, expected)
+
+    def test_match_age(self):
+        result = m.match_age(self.left, self.right)
+        expected = pd.Index([0, 3, 4, 6])
+        tm.assert_index_equal(result, expected)
+
+    def test_match_sex(self):
+        result = m.match_sex(self.left, self.right)
+        expected = pd.Index([1, 3, 5, 6])
+        tm.assert_index_equal(result, expected)
+
+    def test_match_race(self):
+        result = m.match_race(self.left, self.right)
+        expected = pd.Index([2, 4, 5, 6])
+        tm.assert_index_equal(result, expected)
+
+    def test_merge(self):
+        df0 = self.left.loc[[6], :]
+        df1 = self.right.loc[[6], :]
+        result = m.merge([df0, df1])
+        idx = pd.MultiIndex.from_tuples([(6, 1), (6, 2)],
+                                        names=[None, "HRMIS"])
+        expected = pd.DataFrame({"PRTAGE": [1, 1],
+                                 "PESEX": [1, 1],
+                                 "PTDTRACE": [1, 1]},
+                                index=idx)
         tm.assert_frame_equal(result, expected)
