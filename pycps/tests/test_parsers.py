@@ -40,7 +40,8 @@ These are reserved to substitue in other paths.
     "data_path": "data/",
     "dd_path": "{data_path}/data_dictionaries/",
     "dd_store": "{dd_path}/dds.hdf",
-    "monthly_path": "{data_path}/monthly/"
+    "monthly_path": "{data_path}/monthly/",
+    "data_dictionary_fixups": ["pycps/data_dictionary_fixups.py"]
 }''')
 
     def test_maybe_open_str(self):
@@ -96,9 +97,7 @@ class TestDDParser(unittest.TestCase):
 
     def setUp(self):
         self.testfile = Path('files/cpsm2007-01.ddf')
-        settings = {'outpath': 'dds/',
-                    'dd_path': 'tmp/',
-                    'dd_store': 'baz.h5'}
+        settings = p.read_settings(mdir + '/pycps/settings.json')
         with open(mdir + '/pycps/info.json') as f:
             info = json.load(f)
         self.parser = p.DDParser(self.testfile, settings, info)

@@ -7,10 +7,11 @@ import re
 import json
 import zipfile
 import logging
+import importlib
 from pathlib import Path
 from functools import partial, wraps
 from itertools import dropwhile
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from contextlib import contextmanager
 
 import arrow
@@ -46,8 +47,8 @@ def _skip_module_docstring(f):
 
 def read_settings(filepath):
     """
-    Mostly internal method to read a (technically invalid) JSON
-    file that has comments mixed in.
+    Read a mostly valid JSON file with comments. Do path substitution
+    and fixup func replacement.
 
     Parameters
     ----------
@@ -87,6 +88,29 @@ def read_settings(filepath):
             raise ValueError
 
     f.update(paths)
+
+    # Parse fixup functions in data_dictionary_fixups
+    # Go from [paths] -> [{dd_name: funcs}]
+    matcher = re.compile(r'(m\d{4}_\d{2})_(.*)')
+    dd_fu_paths = f.get('data_dictionary_fixups', [])
+    f['data_dictionary_fixups'] = defaultdict(list)
+
+    keyfunc = lambda s: matcher.match(s.__name__).groups()[0]
+    from itertools import groupby
+
+    for fu in dd_fu_paths:
+        # get rid of `.py` extension and replace '/' with '.'
+        to_import = _sub_path_import(fu)
+
+        # import stuff from that path. keep ones that match matcher
+        m = importlib.import_module(to_import)
+        funcs = [getattr(m, x) for x in dir(m) if matcher.match(x)]
+        dds = [keyfunc(x) for x in funcs]
+
+        # groupby dd_name (mYYYY_mm) append to a list for that dd
+        for k, group in groupby(zip(dds, funcs), lambda x: x[0]):
+            for func in group:
+                f['data_dictionary_fixups'][k].append(func[1])
     return f
 
 
@@ -97,6 +121,11 @@ def _sub_path(v, f):
         to_sub = m.groups()[0]
         v = re.sub(pat, f[to_sub].rstrip('/\\'), v)
     return v
+
+
+def _sub_path_import(s):
+    return ''.join(s.split('.')[:-1]).replace(os.path.sep, '.')
+
 
 #-----------------------------------------------------------------------------
 # Data Dictionaries
@@ -126,9 +155,17 @@ class DDParser:
     Notes
     -----
 
-    *file should be a Path object
-    *path should be a str.
+    There are two regularization passes:
+
+    1. self.regularize_ids
+        Occurs immediately after parsing the file. Simple replacement
+        of names.
+    2. self.make_consistent
+        Occurs after self.regularize_ids. Any functions depending on a
+        column id should refer to the *regularized* names.
+
     """
+
     def __init__(self, infile, settings, info):
         if not isinstance(infile, Path):
             infile = Path(infile)
@@ -150,7 +187,9 @@ class DDParser:
         self.style = styles.get(self.store_name, max(styles.values()))
         self.regex = self.make_regex(style=self.style)
         self.settings = settings
-        self.ids_dict = {}  # TODO
+        self.fixups = settings['data_dictionary_fixups'].get(
+            self.store_name, {})
+
         if self.store_name in ('cpsm2009-01', 'cpsm2010-01', 'cpsm2012-05'):
             self.encoding = 'latin_1'
         elif self.store_name == 'cpsm2013-01':
@@ -158,12 +197,30 @@ class DDParser:
         else:
             self.encoding = None
         self.info = info
-        self.col_rename = info['col_rename_by_dd'].get(self.store_name)
+        self.col_rename = info['col_rename_by_dd'].get(self.store_name, {})
 
     def run(self):
-        # make this as streamlike as possible.
-        # TODO: break out formatting
+        """
+        Run the parser.
 
+        Returns
+        -------
+        formatted : DataFrame
+
+        Raises
+        ------
+        AssertionError : If the DataFrame is not consistent
+        in both widths per line and steps between line
+
+        Notes
+        -----
+        A few steps
+
+        1. Match lines against a regex
+        2. Transform matched lines to DataFrame
+        3. Renaming via `col_rename` defined in `info`
+        4. Fixups via `self.make_consistent`
+        """
         logger.info("Starting DDParser on {}".format(self.infile))
 
         with self.infile.open(encoding=self.encoding) as f:
@@ -176,9 +233,10 @@ class DDParser:
                                      columns=['id', 'length', 'start', 'end'])
 
         # ensure consistency across lines
-        df = self.make_consistent(formatted)
         if self.col_rename:
-            df = self.regularize_ids(df, replacer=self.col_rename)
+            formatted = self.regularize_ids(formatted,
+                                            replacer=self.col_rename)
+        df = self.make_consistent(formatted)
         try:
             assert self.is_consistent(df)
             logger.info("Passed consistency check for {}".format(self.infile))
@@ -295,80 +353,6 @@ class DDParser:
         """
         redo
         """
-        def _insert_unknown(df, start, end):
-            """
-            For DRYness.
-            start : where the unknown field starts (last known end + 1)
-            end : where the unknown field ends (next known start - 1)
-            """
-            length = end - start + 1
-            good_low = df.loc[:df[df.end == (start - 1)].index[0]]
-            good_high = df.loc[df[df.start == (end + 1)].index[0]:]
-            fixed = pd.concat([good_low,
-                               pd.DataFrame([['unknown', length, start, end]],
-                                            columns=['id', 'length', 'start',
-                                                     'end']),
-                               good_high],
-                              ignore_index=True)
-            return fixed
-
-        # @log_transform(self.__class__)
-        def m1998_01_149_unknown(formatted):
-            return _insert_unknown(formatted, 149, 150)
-
-        # @log_transform(self.__class__)
-        def m1998_01_535_unknown(formatted):
-            return _insert_unknown(formatted, 536, 539)
-
-        # @log_transform(self.__class__)
-        def m1998_01_556_unknown(formatted):
-            return _insert_unknown(formatted, 557, 558)
-
-        def m1998_01_632_unknown(formatted):
-            return _insert_unknown(formatted, 633, 638)
-
-        def m1998_01_680_unknown(formatted):
-            return _insert_unknown(formatted, 681, 682)
-
-        def m1998_01_786_unknown(formatted):
-            return _insert_unknown(formatted, 787, 790)
-
-        # @log_transform(self.__class__)
-        def m2004_05_filler_411(formatted):
-            """
-            See below
-            """
-            fixed = formatted.copy()
-            fixed.loc[185] = ('FILLER', 2, 410, 411)
-            return fixed
-
-        # @log_transform(self.__class__)
-        def m2004_08_filler_411(formatted):
-            """
-            See below
-            """
-            fixed = formatted.copy()
-            fixed.loc[185] = ('FILLER', 2, 410, 411)
-            return fixed
-
-        # @log_transform(self.__class__)
-        def m2005_08_filler_411(formatted):
-            """
-            Mistake in Data Dictionary:
-
-            FILLER          2                                      (411 - 412)
-
-            should be:
-
-            FILLER          2                                      (410 - 411)
-
-            Everything else looks ok.
-            """
-            fixed = formatted.copy()
-            fixed.loc[185] = ('FILLER', 2, 410, 411)
-            return fixed
-
-        # @log_transform(self.__class__)
         def generate_cpsm200511(formatted):
             """
             The CPS added new questions in November 2005 (Katrina related).
@@ -389,8 +373,9 @@ class DDParser:
             new = formatted.drop(376).reset_index()
             key = 'cpsm2005-11'
             # The debt is real
-            new = self.regularize_ids(new,
-                replacer=self.info['col_rename_by_dd'][key])
+            new = self.regularize_ids(
+                new, replacer=self.info['col_rename_by_dd'][key])
+
             assert self.is_consistent(new)
 
             # write this out.
@@ -399,41 +384,9 @@ class DDParser:
             # fix original (for aug. thru oct. 2005)
             return formatted.loc[:376]
 
-        # @log_transform(self.__class__)
-        def m2009_01_filler_399(formatted):
-            assert formatted.loc[399].values.tolist() == ['FILLER', 45, 932,
-                                                          950]
-            fixed = formatted.copy()
-            fixed.loc[399] = ('FILLER', 19, 932, 950)
-            return fixed
+        dispatch = self.fixups
+        dispatch.update({'m2005_08': generate_cpsm200511})
 
-        def m2012_05_remove_filler_114(formatted):
-            """
-            Says
-
-            FILLER	2 Starting February 2004	114 - 115
-
-            which is wrong
-            """
-            fixed = pd.concat([formatted.loc[:42], formatted.loc[44:]],
-                              ignore_index=True)
-            return fixed
-
-        def m2012_05_insert_filler_637(formatted):
-            """
-            The filler is in the file (line 4253) but it's indented for reasons
-            """
-            return _insert_unknown(formatted, start=637, end=638)
-
-        dispatch = {'cpsm1998-01': [m1998_01_149_unknown, m1998_01_535_unknown,
-                                    m1998_01_556_unknown, m1998_01_632_unknown,
-                                    m1998_01_680_unknown, m1998_01_786_unknown],
-                    'cpsm2004-05': [m2004_05_filler_411],
-                    'cpsm2005-08': [m2005_08_filler_411, generate_cpsm200511],
-                    'cpsm2009-01': [m2009_01_filler_399],
-                    'cpsm2012-05': [m2012_05_remove_filler_114,
-                                    m2012_05_insert_filler_637]
-                   }
         for func in dispatch.get(self.store_name, []):
             logger.info("Applying {} to {}".format(func, self.store_name))
             formatted = func(formatted)
