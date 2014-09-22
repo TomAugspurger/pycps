@@ -96,7 +96,7 @@ def merge(dfs):
 
 def match_age(left, right):
     age_diff = left['PRTAGE'] - right['PRTAGE']
-    age_idx = age_diff[(age_diff > -1) & (age_diff < 3)].index
+    age_idx = (age_diff[(age_diff > -1) & (age_diff < 3)]).index
     return age_idx
 
 
