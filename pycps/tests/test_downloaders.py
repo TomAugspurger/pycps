@@ -18,7 +18,11 @@ class TestDownloaders(unittest.TestCase):
     def test_all_monthly_dd(self):
         result = list(d.all_monthly_files(curdir + '/files/trimmed_nber.html',
                                           kind='dictionary'))
-        expected = [('cpsbjan03.ddf', 'cpsm2003-01.ddf')]
+        expected = [('cpsbjan03.ddf', 'cpsm2003-01.ddf'),
+                    ('jan94_mar94_dd.txt', 'cpsm1994-01.txt'),
+                    ('apr94_may95_dd.txt', 'cpsm1994-04.txt'),
+                    ('jun95_aug95_dd.txt', 'cpsm1995-06.txt')
+                    ]
         self.assertEqual(result, expected)
 
     def test_all_monthly_other(self):
@@ -106,6 +110,12 @@ class TestDownloaders(unittest.TestCase):
         files = 'foobarbaz.ddf'
         with self.assertRaises(ValueError):
             d.rename_cps_monthly(files)
+
+    def test_rename_cps_monthly_jan94(self):
+        s = "jan94_mar94_dd.txt"
+        result = d.rename_cps_monthly(s)
+        expected = "cpsm1994-01.txt"
+        self.assertEqual(result, expected)
 
     def test_rename_cps_monthly_txt(self):
         s = "January_2013_Record_Layout.txt"

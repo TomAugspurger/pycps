@@ -495,7 +495,10 @@ def write_monthly(df, storepath, key):
 
 
 def fixup_by_dd(df, dd_name):
-
+    """
+    Fixup *data* by Data Dictionary. Each transformation should
+    take a DataFrame and return a DataFrame.
+    """
     @log_transform(dd_name)
     def compute_hrhhid2(df):
         """

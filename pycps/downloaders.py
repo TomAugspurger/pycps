@@ -24,6 +24,10 @@ from pandas.core.common import is_list_like
 
 logger = logging.getLogger(__name__)
 
+# Special pattern for dds from Jan 1994 - Jun 1995
+DATAWEB_MATCHER = re.compile(r"\w{3}\d{2}_\w{3}\d{2}_dd.txt")
+
+
 def all_monthly_files(site='http://www.nber.org/data/cps_basic.html',
                       kind='data'):
     """
@@ -50,6 +54,15 @@ def all_monthly_files(site='http://www.nber.org/data/cps_basic.html',
     for _, _, fname_, _ in filter(partial_matcher, root.iterlinks()):
         fname = fname_.split('/')[-1]
         yield fname, rename_cps_monthly(fname)
+
+    # nber.org/data/cps_basic.html doesn't have the Jan94 - aug95
+    # data dictionaries
+    # use the ones at http://thedataweb.rm.census.gov/pub/cps/basic/
+
+    if kind == 'dictionary':
+        for fname in ['jan94_mar94_dd.txt', 'apr94_may95_dd.txt',
+                      'jun95_aug95_dd.txt']:
+            yield fname, rename_cps_monthly(fname)
 
 
 def rename_cps_monthly(cpsname):
@@ -90,8 +103,12 @@ def rename_cps_monthly(cpsname):
         else:
             raise ValueError
     elif ext == 'txt':
-        # expecting January_2013_Record_Layout.txt
-        dt = datetime.datetime.strptime(fname.split('_')[1], '%Y')
+        if DATAWEB_MATCHER.match(cpsname):
+            # expecting jan94_mar94_dd
+            dt = datetime.datetime.strptime(fname, "%b%y" + fname[-9:])
+        else:
+            # expecting January_2013_Record_Layout
+            dt = datetime.datetime.strptime(fname.split('_')[1], '%Y')
     else:
         raise ValueError
     return dt.strftime('cpsm%Y-%m') + '.' + ext
@@ -187,7 +204,8 @@ def filter_monthly_files(files, months=None):
 def download_month(month, datapath):
     """
     Fetch and write a single month's data
-    from http://www.nber.org/cps-basic/.
+    from http://www.nber.org/cps-basic/ or
+    http://thedataweb.rm.census.gov/pub/cps/basic/
 
     Parameters
     ----------
@@ -199,8 +217,16 @@ def download_month(month, datapath):
     None: IO ()
 
     """
-    base = "http://www.nber.org/cps-basic/"
-    myname = rename_cps_monthly(month)
+    # special case January 1994 thru June 1995
+    if DATAWEB_MATCHER.match(month):
+        myname = rename_cps_monthly(month)
+        dt_start = datetime.datetime.strptime(month[:5], '%b%y')
+        dt_end = datetime.datetime.strptime(month[6:11], '%b%y')
+        base = "http://thedataweb.rm.census.gov/pub/cps/basic/{}-{}/".format(
+            dt_start.strftime("%Y%m"), dt_end.strftime("%Y%m"))
+    else:
+        base = "http://www.nber.org/cps-basic/"
+        myname = rename_cps_monthly(month)
 
     if myname is None:
         return None

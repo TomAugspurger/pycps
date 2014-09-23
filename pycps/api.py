@@ -199,6 +199,7 @@ def merge(settings, overwrite=False):
         logger.info("Added merged {} to {}".format(store_key,
             settings['merged_store']))
 
+
 def main(config):
     settings = par.read_settings(config.settings)
     overwrite = config.overwrite
@@ -218,6 +219,7 @@ def main(config):
 
     if config.merge:
         merge(settings, overwrite=overwrite)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Invoke pycps",
