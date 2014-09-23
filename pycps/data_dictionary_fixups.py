@@ -36,31 +36,31 @@ def _insert_unknown(df, start, end):
     return fixed
 
 
-def m1998_01_149_unknown(formatted):
+def cpsm1998_01_149_unknown(formatted):
     return _insert_unknown(formatted, 149, 150)
 
 
-def m1998_01_535_unknown(formatted):
+def cpsm1998_01_535_unknown(formatted):
     return _insert_unknown(formatted, 536, 539)
 
 
-def m1998_01_556_unknown(formatted):
+def cpsm1998_01_556_unknown(formatted):
     return _insert_unknown(formatted, 557, 558)
 
 
-def m1998_01_632_unknown(formatted):
+def cpsm1998_01_632_unknown(formatted):
     return _insert_unknown(formatted, 633, 638)
 
 
-def m1998_01_680_unknown(formatted):
+def cpsm1998_01_680_unknown(formatted):
     return _insert_unknown(formatted, 681, 682)
 
 
-def m1998_01_786_unknown(formatted):
+def cpsm1998_01_786_unknown(formatted):
     return _insert_unknown(formatted, 787, 790)
 
 
-def m2004_05_filler_411(formatted):
+def cpsm2004_05_filler_411(formatted):
     """
     See below
     """
@@ -69,7 +69,7 @@ def m2004_05_filler_411(formatted):
     return fixed
 
 
-def m2004_08_filler_411(formatted):
+def cpsm2004_08_filler_411(formatted):
     """
     See below
     """
@@ -78,7 +78,7 @@ def m2004_08_filler_411(formatted):
     return fixed
 
 
-def m2005_08_filler_411(formatted):
+def cpsm2005_08_filler_411(formatted):
     """
     Mistake in Data Dictionary:
 
@@ -95,7 +95,7 @@ def m2005_08_filler_411(formatted):
     return fixed
 
 
-def m2009_01_filler_399(formatted):
+def cpsm2009_01_filler_399(formatted):
     assert formatted.loc[399].values.tolist() == ['FILLER', 45, 932,
                                                   950]
     fixed = formatted.copy()
@@ -103,7 +103,7 @@ def m2009_01_filler_399(formatted):
     return fixed
 
 
-def m2012_05_remove_filler_114(formatted):
+def cpsm2012_05_remove_filler_114(formatted):
     """
     Says
 
@@ -116,7 +116,7 @@ def m2012_05_remove_filler_114(formatted):
     return fixed
 
 
-def m2012_05_insert_filler_637(formatted):
+def cpsm2012_05_insert_filler_637(formatted):
     """
     The filler is in the file (line 4253) but it's indented for reasons
     """

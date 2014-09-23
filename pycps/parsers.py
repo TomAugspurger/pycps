@@ -91,7 +91,7 @@ def read_settings(filepath):
 
     # Parse fixup functions in data_dictionary_fixups
     # Go from [paths] -> [{dd_name: funcs}]
-    matcher = re.compile(r'(m\d{4}_\d{2})_(.*)')
+    matcher = re.compile(r'(cpsm\d{4}_\d{2})_(.*)')
     dd_fu_paths = f.get('data_dictionary_fixups', [])
     f['data_dictionary_fixups'] = defaultdict(list)
 
@@ -187,8 +187,9 @@ class DDParser:
         self.style = styles.get(self.store_name, max(styles.values()))
         self.regex = self.make_regex(style=self.style)
         self.settings = settings
+
         self.fixups = settings['data_dictionary_fixups'].get(
-            self.store_name, {})
+            self.store_name.replace('-', '_'), {})
 
         if self.store_name in ('cpsm2009-01', 'cpsm2010-01', 'cpsm2012-05'):
             self.encoding = 'latin_1'
@@ -385,9 +386,11 @@ class DDParser:
             return formatted.loc[:376]
 
         dispatch = self.fixups
-        dispatch.update({'m2005_08': generate_cpsm200511})
 
-        for func in dispatch.get(self.store_name, []):
+        if self.store_name == 'cpsm2005-08':
+            dispatch.append(generate_cpsm200511)
+
+        for func in dispatch:
             logger.info("Applying {} to {}".format(func, self.store_name))
             formatted = func(formatted)
 

@@ -30,16 +30,16 @@ class TestFixup(unittest.TestCase):
     def test_parser(self):
         # This will have to be updated whenever a new fu func is added
         result = dict(self.settings['data_dictionary_fixups'])
-        expected = {'m1998_01': [ddf.m1998_01_149_unknown,
-                                 ddf.m1998_01_535_unknown,
-                                 ddf.m1998_01_556_unknown,
-                                 ddf.m1998_01_632_unknown,
-                                 ddf.m1998_01_680_unknown,
-                                 ddf.m1998_01_786_unknown],
-                    'm2004_05': [ddf.m2004_05_filler_411],
-                    'm2004_08': [ddf.m2004_08_filler_411],
-                    'm2005_08': [ddf.m2005_08_filler_411],
-                    'm2009_01': [ddf.m2009_01_filler_399],
-                    'm2012_05': [ddf.m2012_05_insert_filler_637,
-                                 ddf.m2012_05_remove_filler_114]}
+        expected = {'cpsm1998_01': [ddf.cpsm1998_01_149_unknown,
+                                    ddf.cpsm1998_01_535_unknown,
+                                    ddf.cpsm1998_01_556_unknown,
+                                    ddf.cpsm1998_01_632_unknown,
+                                    ddf.cpsm1998_01_680_unknown,
+                                    ddf.cpsm1998_01_786_unknown],
+                    'cpsm2004_05': [ddf.cpsm2004_05_filler_411],
+                    'cpsm2004_08': [ddf.cpsm2004_08_filler_411],
+                    'cpsm2005_08': [ddf.cpsm2005_08_filler_411],
+                    'cpsm2009_01': [ddf.cpsm2009_01_filler_399],
+                    'cpsm2012_05': [ddf.cpsm2012_05_insert_filler_637,
+                                    ddf.cpsm2012_05_remove_filler_114]}
         self.assertEqual(result, expected)
