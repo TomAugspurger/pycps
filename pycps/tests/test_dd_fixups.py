@@ -30,7 +30,13 @@ class TestFixup(unittest.TestCase):
     def test_parser(self):
         # This will have to be updated whenever a new fu func is added
         result = dict(self.settings['data_dictionary_fixups'])
-        expected = {'cpsm1998_01': [ddf.cpsm1998_01_149_unknown,
+        expected = {'cpsm1994_01': [ddf.cpsm1994_01_54_bad_start,
+                                    ddf.cpsm1994_01_679_bad_start],
+                    'cpsm1994_04': [ddf.cpsm1994_04_52_bad_start,
+                                    ddf.cpsm1994_04_679_bad_start],
+                    'cpsm1995_06': [ddf.cpsm1995_06_134_bad_start,
+                                    ddf.cpsm1995_06_679_bad_start],
+                    'cpsm1998_01': [ddf.cpsm1998_01_149_unknown,
                                     ddf.cpsm1998_01_535_unknown,
                                     ddf.cpsm1998_01_556_unknown,
                                     ddf.cpsm1998_01_632_unknown,

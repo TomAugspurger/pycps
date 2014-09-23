@@ -13,7 +13,7 @@ These are reserved to substitue in other paths.
     "monthly_path": "{data_path}/monthly/",
     "monthly_store": "{monthly_path}/monthly.hdf",
     "merged_store": "{monthly_path}/merged.hdf",
-    "date_start": "1995-09",
+    "date_start": "1994-01",
     "date_end": "2014-05",
     "raise_warnings": true,
     "features": ["GESTFIPS", "GTCBSA", "GTCO", "GTINDVPC"],

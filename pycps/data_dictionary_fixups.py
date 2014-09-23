@@ -36,6 +36,36 @@ def _insert_unknown(df, start, end):
     return fixed
 
 
+def cpsm1994_01_54_bad_start(formatted):
+    formatted.loc[54] = ['PEAFNOW', 2, 135, 136]
+    return formatted
+
+
+def cpsm1994_01_679_bad_start(formatted):
+    formatted.loc[283] = ['PXFNTVTY', 2, 679, 680]
+    return formatted
+
+
+def cpsm1994_04_52_bad_start(formatted):
+    formatted.loc[52] = ['PEAFNOW', 2, 135, 136]
+    return formatted
+
+
+def cpsm1994_04_679_bad_start(formatted):
+    formatted.loc[281] = ['PXFNTVTY', 2, 679, 680]
+    return formatted
+
+
+def cpsm1995_06_134_bad_start(formatted):
+    formatted.loc[46] = ['PEAFNOW', 2, 135, 136]
+    return formatted
+
+
+def cpsm1995_06_679_bad_start(formatted):
+    formatted.loc[275] = ['PXFNTVTY', 2, 679, 680]
+    return formatted
+
+
 def cpsm1998_01_149_unknown(formatted):
     return _insert_unknown(formatted, 149, 150)
 
