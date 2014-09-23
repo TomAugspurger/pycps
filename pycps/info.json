@@ -19,7 +19,6 @@
     "cpsm2014-01": ["2014-01","2014-09"]
   },
 
-  
   "col_rename_by_dd": {
     "cpsm1989-01": {"age": "PRTAGE", "HhMIS": "HRMIS", "HdYEAR": "HRYEAR4", "AdSEX": "PESEX", "HdMONTH": "HRMONTH", "AdRACE": "PTDTRACE", "AhLFSR": "PEMLR", "AhWERNTP": "PRERNWA", "AhHERNTF": "PTWK", "AdMARIT": "PEMARITL", "HGhREG": "GEREG", "HGhST60": "GESTCEN", "HGhFIPS": "GESTFIPS", "HGhMSAC":"GTCBSA", "HhINDVCC": "GTINDVPC", "HdFAMINC": "HEFAMINC", "HhHHWGT": "HWHHWGT", "AdHRLYWK": "PEERNHRY", "AdUNMEM": "PEERNLAB", "AdMARIT": "PEMARITL", "AdWANTJB": "PERET1", "AhDSCWK": "PRDISC", "AhDTIND": "PRDTIND1", "AhFAMREL": "PRFAMREL", "AhHERNTF": "PTHR", "AhHERNTP": "PUERNH1C", "A-LOSTIM": "PUHROFF1", "AhOVRTIM": "PUHROT1", "AhFAMWGT": "PWFMWGT", "LhLNGWGT": "PWLGWGT", "AhFNLWGT": "PWORWGT"},
     "cpsm1992-01": {"age": "PRTAGE", "HhMIS": "HRMIS", "HdYEAR": "HRYEAR4", "AdSEX": "PESEX", "HdMONTH": "HRMONTH", "AdRACE": "PTDTRACE", "AhLFSR": "PEMLR", "AhWERNTP": "PRERNWA", "AhHERNTF": "PTWK", "AdMARIT": "PEMARITL", "HGhREG": "GEREG", "HGhST60": "GESTCEN", "HGhFIPS": "GESTFIPS", "HGhMSAC":"GTCBSA", "HhINDVCC": "GTINDVPC", "HdFAMINC": "HEFAMINC", "HhHHWGT": "HWHHWGT", "AdHRLYWK": "PEERNHRY", "AdUNMEM": "PEERNLAB", "AdMARIT": "PEMARITL", "AdWANTJB": "PERET1", "AhDSCWK": "PRDISC", "AhDTIND": "PRDTIND1", "AhFAMREL": "PRFAMREL", "AhHERNTF": "PTHR", "AhHERNTP": "PUERNH1C", "A-LOSTIM": "PUHROFF1", "AhOVRTIM": "PUHROT1", "AhFAMWGT": "PWFMWGT", "LhLNGWGT": "PWLGWGT", "AhFNLWGT": "PWORWGT"},
@@ -35,26 +34,6 @@
     "cpsm2007-01": {"PEAGE": "PRTAGE"                                                                                                                                                                                        , "HUFAMINC": "HEFAMINC"},
     "cpsm2009-01": {"PEAGE": "PRTAGE"                                                                                                                                                                                        , "HUFAMINC": "HEFAMINC"},
     "cpsm2010-01": {"PEAGE": "PRTAGE"                                                                                                                                                                                        }
-    },
-
-  "id_rename_by_dd": {
-    "cpsm1989-01": ["HRHHID", "HRHHID2", "PULINENO"],
-    "cpsm1992-01": ["HRHHID", "HRHHID2", "PULINENO"],
-    "cpsm1994-01": ["HRHHID", "HRHHID2", "PULINENO"],
-    "cpsm1994-04": ["HRHHID", "HRHHID2", "PULINENO"],
-    "cpsm1994-06": ["HRHHID", "HRHHID2", "PULINENO"],
-    "cpsm1995-09": ["HRHHID", "HRHHID2", "PULINENO"],
-    "cpsm1998-01": ["HRHHID", "HRHHID2", "PULINENO"],
-    "cpsm2003-01": ["HRHHID", "HRHHID2", "PULINENO"]
-    },
-
-  "special_by_dd": {
-    "cpsm1989-01": ["expand_year", "combine_age", "align_lfsr", "expand_hours", "combine_hours"],
-    "cpsm1992-01": ["expand_year", "combine_age", "align_lfsr", "expand_hours", "combine_hours"],
-    "cpsm1994-01": ["expand_year"],
-    "cpsm1994-04": ["expand_year"],
-    "cpsm1994-06": ["expand_year"],
-    "cpsm1995-09": ["expand_year"]
     },
 
   "columns_by_dd": {
