@@ -22,6 +22,7 @@ import pycps.parsers as par
 import pycps.downloaders as dl
 from pycps.setup_logging import setup_logging
 
+
 setup_logging()
 logger = logging.getLogger(__name__)
 # TODO argparse CLI
@@ -30,6 +31,7 @@ _HERE_ = Path(__file__).parent
 #-----------------------------------------------------------------------------
 # Downloading
 #-----------------------------------------------------------------------------
+
 
 def download(kind, settings, overwrite=False):
     """
@@ -66,6 +68,7 @@ def download(kind, settings, overwrite=False):
 #-----------------------------------------------------------------------------
 # Parsing
 #-----------------------------------------------------------------------------
+
 
 def parse(kind, settings, overwrite=False):
     """
@@ -127,8 +130,9 @@ def parse(kind, settings, overwrite=False):
 
             # Assuming no new rows
             df = par.read_monthly(str(f), sub_dd)
-            df = par.fixup_by_dd(df, dd_name)
-            # do special stuff like compute HRHHID2, bin things, etc.
+
+            fixups = settings['FIXUP_BY_DD'].get(dd_name)
+            df = par.fixup_by_dd(df, fixups)
             # TODO: special stuff
 
             df = df.set_index(id_cols)
@@ -197,15 +201,40 @@ def merge(settings, overwrite=False):
         store_key = df['wave_id'].iloc[0].strftime(STORE_FMT)
         df.to_hdf(settings["merged_store"], store_key)
         logger.info("Added merged {} to {}".format(store_key,
-            settings['merged_store']))
+                                                   settings['merged_store']))
 
 
 def main(config):
     settings = par.read_settings(config.settings)
     overwrite = config.overwrite
 
+    # Overwrite default info file?
     if config.info is not None:
         settings['info'] = config.info
+
+    if config.monthly_data_fixups:
+        import importlib
+        fixup_file = config.monthly_data_fixups.strip('.py')
+        user_fixups = importlib.import_module(fixup_file).FIXUP_BY_DD
+
+        if config.append_fixups:
+            # merge the user supplied with the defaults.
+            from pycps.monthly_data_fixups import FIXUP_BY_DD
+
+            for dd in FIXUP_BY_DD:
+                new = user_fixups.get(dd)
+
+                if new is not None:
+                    for x in new:
+                        FIXUP_BY_DD[dd].append(x)
+
+        else:
+            FIXUP_BY_DD = user_fixups.FIXUP_BY_DD
+    else:
+        from pycps.monthly_data_fixups import FIXUP_BY_DD
+
+    # Fixups will be passed and accessed via settings
+    settings['FIXUP_BY_DD'] = FIXUP_BY_DD
 
     if config.download_dictionaries:
         download('dictionary', settings, overwrite=overwrite)
@@ -222,7 +251,8 @@ def main(config):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Invoke pycps",
+    parser = argparse.ArgumentParser(
+        description="Invoke pycps",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-s", "--settings", default="pycps/settings.json",
                         metavar='',
@@ -230,6 +260,13 @@ if __name__ == '__main__':
     parser.add_argument("-i", "--info", default="pycps/info.json",
                         metavar='',
                         help="Path to info.json")
+    parser.add_argument("--monthly-data-fixups",
+                        default=None, metavar='',
+                        help="path to file containing data fixup functions. "
+                             "This file must be in the current directory")
+    parser.add_argument("--append-fixups", default=True, metavar='',
+                        help="Whether to add or replace with user supplied "
+                             "fixups")
     parser.add_argument("-d", "--download-dictionaries", default=False,
                         action="store_true",
                         help="Download data dictionaries")

@@ -15,7 +15,6 @@ from collections import OrderedDict, defaultdict
 from contextlib import contextmanager
 
 import arrow
-import numpy as np
 import pandas as pd
 
 from pycps.compat import StringIO, str_types
@@ -26,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 #-----------------------------------------------------------------------------
 # Settings
+
 
 @contextmanager
 def _open_file_or_stringio(maybe_file):
@@ -494,73 +494,25 @@ def write_monthly(df, storepath, key):
     df.to_hdf(storepath, key=key, format='f')
 
 
-def fixup_by_dd(df, dd_name):
+def fixup_by_dd(df, fixups):
     """
-    Fixup *data* by Data Dictionary. Each transformation should
-    take a DataFrame and return a DataFrame.
+    Fixup *data* by Data Dictionary.
+
+    Parameters
+    ----------
+    df : DataFrame
+    fixups: [(function, {kwargs})], a list of tuples of functions
+        and dictionaries mapping kwargs to values for that function.
+        Fixups should come from pycps.monthly_data_fixups or
+        a user supplied file.
+
+    Returns
+    -------
+    fixed : DataFrame
     """
-    @log_transform(dd_name)
-    def compute_hrhhid2(df):
-        """
-        pre may2004 need to fill out the ids by creating HRHHID2 manually:
-        (ignore the position values, this is from jan2013)
+    for func, kwargs in fixups:
+        df = func(df, **kwargs)
 
-        HRHHID2        5         HOUSEHOLD IDENTIFIER (part 2) 71 - 75
-
-             EDITED UNIVERSE:    ALL HHLD's IN SAMPLE
-
-             Part 1 of this number is found in columns 1-15 of the record.
-             Concatenate this item with Part 1 for matching forward in time.
-
-             The component parts of this number are as follows:
-             71-72     Numeric component of the sample number (HRSAMPLE)
-             73-74     Serial suffix-converted to numerics (HRSERSUF)
-             75        Household Number (HUHHNUM)
-
-        NOTE: not documented by sersuf of -1 seems to map to '00'
-        """
-        import string
-
-        hrsample = df['HRSAMPLE'].str.extract(r'(\d+)')
-        hrsersuf = df['HRSERSUF'].astype(str)
-
-        huhhnum = df['HUHHNUM'].replace(-1, np.nan)
-
-        to_drop = df[pd.isnull(huhhnum)]
-        if to_drop.shape[1] > 0:
-            logger.info("Dropping {}".format(to_drop.index))
-        huhhnum = huhhnum.dropna().astype(str)
-
-        sersuf_d = {a: str(ord(a.lower()) - 96).zfill(2) for a in hrsersuf.unique()
-                    if a in list(string.ascii_letters)}
-        sersuf_d['-1.0'] = '00'
-        sersuf_d['-1'] = '00'
-        hrsersuf = hrsersuf.map(sersuf_d)  # 10x faster than replace
-
-        hrhhid2 = hrsample + hrsersuf + huhhnum
-        to_drop = df[pd.isnull(hrhhid2)]
-        if to_drop.shape[1] > 0:
-            logger.info("Dropping {}".format(to_drop.index))
-
-        hrhhid2 = hrhhid2.dropna()
-        df = df.copy()
-        df['HRHHID2'] = hrhhid2.str.strip('.0').astype(np.int64)
-        return df
-
-    @log_transform(dd_name)
-    def year2_to_year4(df):
-        df['HRYEAR4'] = ('19' + df.HRYEAR4.astype(str)).astype(np.int64)
-        return df
-
-    dispatch = {'cpsm1994-01': [compute_hrhhid2, year2_to_year4],
-                'cpsm1994-04': [compute_hrhhid2, year2_to_year4],
-                'cpsm1995-06': [compute_hrhhid2, year2_to_year4],
-                'cpsm1995-09': [compute_hrhhid2, year2_to_year4],
-                'cpsm1998-01': [compute_hrhhid2],
-                'cpsm2003-01': [compute_hrhhid2]}
-
-    for func in dispatch.get(dd_name, []):
-        df = func(df)
     return df
 
 
