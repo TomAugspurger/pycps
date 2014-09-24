@@ -132,6 +132,7 @@ def parse(kind, settings, overwrite=False):
             df = par.read_monthly(str(f), sub_dd)
 
             fixups = settings['FIXUP_BY_DD'].get(dd_name)
+            logger.info("Applying {} to {}".format(fixups, f.stem))
             df = par.fixup_by_dd(df, fixups)
             # TODO: special stuff
 
