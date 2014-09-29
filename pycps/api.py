@@ -87,6 +87,9 @@ def parse(kind, settings, overwrite=False):
     s_path = {'dictionary': 'dd_path', 'data': 'monthly_path'}[kind]
     path_ = Path(settings[s_path])
 
+    if not path_.exists():
+        path_.mkdir(parents=True)
+
     suffix_d = {'data': ('.Z', '.zip'), 'dictionary': ('.ddf', '.asc', '.txt')}
     suffixes = suffix_d[kind]
 
