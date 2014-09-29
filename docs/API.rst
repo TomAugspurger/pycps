@@ -8,7 +8,8 @@ which takes a number of command line arguments.
 .. code-block:: rst
 
     $ python pycps/api.py -h
-    usage: api.py [-h] [-s] [-i] [-d] [-y] [-p] [-x] [-m] [-o]
+    usage: api.py [-h] [-s] [-i] [--monthly-data-fixups] [--append-fixups] [-d]
+                  [-y] [-p] [-x] [-m] [-o]
 
     Invoke pycps
 
@@ -17,6 +18,11 @@ which takes a number of command line arguments.
       -s , --settings       path to JSON settings file (default:
                             pycps/settings.json)
       -i , --info           Path to info.json (default: pycps/info.json)
+      --monthly-data-fixups
+                            path to file containing data fixup functions. This
+                            file must be in the current directory (default: None)
+      --append-fixups       Whether to add or replace with user supplied fixups
+                            (default: True)
       -d, --download-dictionaries
                             Download data dictionaries (default: False)
       -y, --download-monthly
@@ -26,7 +32,6 @@ which takes a number of command line arguments.
       -x, --parse-monthly   Parse monthly data files (default: False)
       -m, --merge           Merge monthly files by household (default: False)
       -o, --overwrite       Overwrite existing cache (default: False)
-
 
 In standard fashion, these flags can be combined to do multiple things.
 If you just want to get going, you'll probably want to download all
