@@ -3,8 +3,6 @@ PyCPS
 
 A python package for working with the [Current Population Survey](http://www.census.gov/cps/).
 
-**Warning** this is alpha quality. The API will change.
-
 Documentation is available at [readthedocs](http://pycps.readthedocs.org/en/latest/).
 
 Neither the Census Bureau nor the NBER provide a clean, RESTful API for getting CPS data.
@@ -28,16 +26,13 @@ There's a few related functions PyCPS provides:
     cd pycps
     pip install .
     pip install -r requirements.txt
+    pip install git+https://github.com/PyTables/PyTables
+    python setup.py install
     ```
 
 ## Dependencies
 
 See `requirements.txt`
-
-Installing via `pip` will take care of most everything, however I've had
-some troubles automating the installation of pytables. I recommend installing
-that separately with `pip instsall tables`.
-
 
 ## Python
 
