@@ -9,5 +9,5 @@ pathlib==1.0.1
 python-cps==0.2.0
 python-dateutil==2.2
 pytz==2014.7
-requests==2.4.1
+requests==2.20.0
 six==1.8.0
